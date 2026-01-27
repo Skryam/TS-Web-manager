@@ -4,7 +4,6 @@
   "description": "",
   "license": "ISC",
   "author": "Zahar",
-  "type": "commonjs",
   "main": "index.js",
   "type": "module",
   "scripts": {

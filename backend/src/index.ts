@@ -4,17 +4,64 @@ import { expressMiddleware } from '@as-integrations/express5';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import http from 'http';
 import cors from 'cors';
+import { prisma } from '../lib/prisma';
+import session from 'express-session';
+import passport from 'passport';
+
 
 
 const typeDefs = `#graphql
+  type User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    passwordDigest: String!
+    createdAt: String!
+    updatedAt: String
+  }
+
+  input CreateUserInput {
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
+  }
+
+  type Mutation {
+    createUser( data: CreateUserInput! ): User!
+  }
+
   type Query {
-    hello: String
+    users: [User!]!
   }
 `;
 
 const resolvers = {
   Query: {
-    hello: () => 'opaaaa'
+    users: (_, __, { prisma }) => prisma.user.findMany()
+  },
+
+  Mutation: {
+    createUser: async (_, { data }, { prisma }) => {
+      const { firstName, lastName, email, password } = data;
+
+      const passwordDigest = require('crypto')
+        .createHash('sha256')
+        .update(password)
+        .digest('hex');
+
+      const user = await prisma.user.create({
+         data: {
+          firstName,
+          lastName,
+          email,
+          passwordDigest,
+        },
+      });
+
+      return user;
+    },
   },
 };
 
@@ -22,22 +69,29 @@ const app = express();
 const httpServer = http.createServer(app);
 
 const server = new ApolloServer({ typeDefs, resolvers });
-await server.start();
 
-app.use(
-  '/graphql',
-  cors<cors.CorsRequest>(),
-  express.json(),
-  expressMiddleware(server)
-)
+const main = async () => {
+  await server.start();
 
-app.get('/', (req, res) => {
-  res.send('oopaa')
-})
+  app.use(
+    '/graphql',
+    cors<cors.CorsRequest>(),
+    express.json(),
+    expressMiddleware(server, {
+      context: async () => ({ prisma }),
+    })
+  )
 
-const PORT = 4000
-httpServer.listen(PORT, () => {
-  console.log(`Server ready at:`);
-  console.log(`   Main page: http://localhost:${PORT}/`);
-  console.log(`   GraphQL:   http://localhost:${PORT}/graphql`);
-})
+  app.get('/', (req, res) => {
+    res.send('oopaa')
+  })
+
+  const PORT = 4000
+  httpServer.listen(PORT, () => {
+    console.log(`Server ready at:`);
+    console.log(`   Main page: http://localhost:${PORT}/`);
+    console.log(`   GraphQL:   http://localhost:${PORT}/graphql`);
+  })
+}
+
+main().catch(console.error)

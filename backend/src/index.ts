@@ -7,6 +7,7 @@ import cors from 'cors';
 import { prisma } from '../lib/prisma';
 import session from 'express-session';
 import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
 
 
 
@@ -79,12 +80,19 @@ const main = async () => {
     express.json(),
     expressMiddleware(server, {
       context: async () => ({ prisma }),
-    })
-  )
+    }),
+    session({
+      secret: process.env.SESSION_SECRET || 'secret',
+      resave: false,
+      saveUninitialized: false,
+    }),
+    passport.initialize(),
+    passport.session(),
+  );
 
-  app.get('/', (req, res) => {
-    res.send('oopaa')
-  })
+  passport.serializeUser((user: any, done) => {
+    done(null, user.id);
+  });
 
   const PORT = 4000
   httpServer.listen(PORT, () => {

@@ -35,10 +35,10 @@
     "@apollo/utils.keyvaluecache" "^4.0.0"
     "@apollo/utils.logger" "^3.0.0"
 
-"@apollo/server@^5.3.0":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@apollo/server/-/server-5.3.0.tgz#e32a848094142337501d9e78a79b282708c28e70"
-  integrity sha512-ixchCUA38gjB7k1eGU2fra3eUhGyvFhMsKAr72+DaCRl9NhzXf3V4EVlVdiyS6qrR8xWQ+IdZlj2lb52dkqj+A==
+"@apollo/server@^5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@apollo/server/-/server-5.4.0.tgz#ad161a6e8b14f5227027205e0970a91667351e49"
+  integrity sha512-E0/2C5Rqp7bWCjaDh4NzYuEPDZ+dltTf2c0FI6GCKJA6GBetVferX3h1//1rS4+NxD36wrJsGGJK+xyT/M3ysg==
   dependencies:
     "@apollo/cache-control-types" "^1.0.3"
     "@apollo/server-gateway-interface" "^2.0.0"
@@ -53,6 +53,7 @@
     "@graphql-tools/schema" "^10.0.0"
     async-retry "^1.2.1"
     body-parser "^2.2.2"
+    content-type "^1.0.5"
     cors "^2.8.5"
     finalhandler "^2.1.0"
     loglevel "^1.6.8"
@@ -281,25 +282,25 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@prisma/adapter-better-sqlite3@^7.4.0":
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/@prisma/adapter-better-sqlite3/-/adapter-better-sqlite3-7.4.0.tgz#ef71956bf8ab4bea80619cfbf81fc9cb9497d91d"
-  integrity sha512-oQbd9oI1t1q0DXpxZKlRPehxTKSEYYureTQC0pNS/5tV4xBFYk2meWBiSPOp3Gd8ErkWc5Iy4ENI0aZ+KSsCxg==
+"@prisma/adapter-better-sqlite3@^7.4.2":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@prisma/adapter-better-sqlite3/-/adapter-better-sqlite3-7.4.2.tgz#25952886875932236f0b6f71612c61c037714f7a"
+  integrity sha512-FkhPMbEieT/oCz2VYqn3LqZf0N1yBrFsAe4ZMkS/ZplBfwXLZclUxFrWjg50tTjqdEjWewTFN4xxYfxap7UW+g==
   dependencies:
-    "@prisma/driver-adapter-utils" "7.4.0"
+    "@prisma/driver-adapter-utils" "7.4.2"
     better-sqlite3 "^12.6.0"
 
-"@prisma/client-runtime-utils@7.4.0":
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/@prisma/client-runtime-utils/-/client-runtime-utils-7.4.0.tgz#feeb5a09f247ce1f0f8ef4cc817e9ccd6c8f46c3"
-  integrity sha512-jTmWAOBGBSCT8n7SMbpjCpHjELgcDW9GNP/CeK6CeqjUFlEL6dn8Cl81t/NBDjJdXDm85XDJmc+PEQqqQee3xw==
+"@prisma/client-runtime-utils@7.4.2":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@prisma/client-runtime-utils/-/client-runtime-utils-7.4.2.tgz#faeebbf458610b5b55a0130ba1214d163f052bf2"
+  integrity sha512-cID+rzOEb38VyMsx5LwJMEY4NGIrWCNpKu/0ImbeooQ2Px7TI+kOt7cm0NelxUzF2V41UVVXAmYjANZQtCu1/Q==
 
-"@prisma/client@^7.4.0":
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-7.4.0.tgz#c3f19a15d4a678807035987b251293474639f1cc"
-  integrity sha512-Sc+ncr7+ph1hMf1LQfn6UyEXDEamCd5pXMsx8Q3SBH0NGX+zjqs3eaABt9hXwbcK9l7f8UyK8ldxOWA2LyPynQ==
+"@prisma/client@^7.4.2":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-7.4.2.tgz#923135eb218f94dee34c9ae0d8153580cb4d8278"
+  integrity sha512-ts2mu+cQHriAhSxngO3StcYubBGTWDtu/4juZhXCUKOwgh26l+s4KD3vT2kMUzFyrYnll9u/3qWrtzRv9CGWzA==
   dependencies:
-    "@prisma/client-runtime-utils" "7.4.0"
+    "@prisma/client-runtime-utils" "7.4.2"
 
 "@prisma/config@7.4.0":
   version "7.4.0"
@@ -320,6 +321,11 @@
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/@prisma/debug/-/debug-7.4.0.tgz#447c09556b3b530900255d0df3b637e1cd9715c2"
   integrity sha512-fZicwzgFHvvPMrRLCUinrsBTdadJsi/1oirzShjmFvNLwtu2DYlkxwRVy5zEGhp85mrEGnLeS/PdNRCdE027+Q==
+
+"@prisma/debug@7.4.2":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@prisma/debug/-/debug-7.4.2.tgz#9fd2b4bd210384c74000843683953c38d2165656"
+  integrity sha512-aP7qzu+g/JnbF6U69LMwHoUkELiserKmWsE2shYuEpNUJ4GrtxBCvZwCyCBHFSH2kLTF2l1goBlBh4wuvRq62w==
 
 "@prisma/dev@0.20.0":
   version "0.20.0"
@@ -344,12 +350,12 @@
     valibot "1.2.0"
     zeptomatch "2.1.0"
 
-"@prisma/driver-adapter-utils@7.4.0":
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/@prisma/driver-adapter-utils/-/driver-adapter-utils-7.4.0.tgz#d4a865a59d8aa64d77a10d21279976ae6a054b91"
-  integrity sha512-jEyE5LkqZ27Ba/DIOfCGOQl6nKMLxuwJNRceCfh7/LRs46UkIKn3bmkI97MEH2t7zkYV3PGBrUr+6sMJaHvc0A==
+"@prisma/driver-adapter-utils@7.4.2":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@prisma/driver-adapter-utils/-/driver-adapter-utils-7.4.2.tgz#286c02d5fe73f79706f6fb0d01013c17f8b9940e"
+  integrity sha512-REdjFpT/ye9KdDs+CXAXPIbMQkVLhne9G5Pe97sNY4Ovx4r2DAbWM9hOFvvB1Oq8H8bOCdu0Ri3AoGALquQqVw==
   dependencies:
-    "@prisma/debug" "7.4.0"
+    "@prisma/debug" "7.4.2"
 
 "@prisma/engines-version@7.4.0-20.ab56fe763f921d033a6c195e7ddeb3e255bdbb57":
   version "7.4.0-20.ab56fe763f921d033a6c195e7ddeb3e255bdbb57"
@@ -521,7 +527,7 @@
     "@types/range-parser" "*"
     "@types/send" "*"
 
-"@types/express@^5.0.6":
+"@types/express@*", "@types/express@^5.0.6":
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/@types/express/-/express-5.0.6.tgz#2d724b2c990dcb8c8444063f3580a903f6d500cc"
   integrity sha512-sKYVuV7Sv9fbPIt/442koC7+IIwK5olP1KWeD88e/idgoJqDm3JV/YUiPwkoKK92ylff2MGxSz1CSjsXelx0YA==
@@ -547,12 +553,19 @@
   dependencies:
     undici-types "~7.16.0"
 
-"@types/node@^25.2.3":
-  version "25.2.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-25.2.3.tgz#9c18245be768bdb4ce631566c7da303a5c99a7f8"
-  integrity sha512-m0jEgYlYz+mDJZ2+F4v8D1AyQb+QzsNqRuI7xg1VQX/KlKS0qT9r1Mo16yo5F/MtifXFgaofIFsdFMox2SxIbQ==
+"@types/node@^25.3.3":
+  version "25.3.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-25.3.3.tgz#605862544ee7ffd7a936bcbf0135a14012f1e549"
+  integrity sha512-DpzbrH7wIcBaJibpKo9nnSQL0MTRdnWttGyE5haGwK86xgMOkFLp7vEyfQPGLOJh5wNYiJ3V9PmUMDhV9u8kkQ==
   dependencies:
-    undici-types "~7.16.0"
+    undici-types "~7.18.0"
+
+"@types/passport@^1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@types/passport/-/passport-1.0.17.tgz#718a8d1f7000ebcf6bbc0853da1bc8c4bc7ea5e6"
+  integrity sha512-aciLyx+wDwT2t2/kJGJR2AEeBz0nJU4WuRX04Wu9Dqc5lSUtwu0WERPHYsLhF9PtseiAMPBGNUOtFjxZ56prsg==
+  dependencies:
+    "@types/express" "*"
 
 "@types/qs@*":
   version "6.14.0"
@@ -1565,9 +1578,9 @@ long@^5.2.1:
   integrity sha512-mNAgZ1GmyNhD7AuqnTG3/VQ26o760+ZYBPKjPvugO8+nLbYfX6TVpJPseBvopbdY+qpZ/lKUnmEc1LeZYS3QAA==
 
 lru-cache@^11.0.0, lru-cache@^11.1.0:
-  version "11.2.5"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-11.2.5.tgz#6811ae01652ae5d749948cdd80bcc22218c6744f"
-  integrity sha512-vFrFJkWtJvJnD5hg+hJvVE8Lh/TcMzKnTgCWmtBipwI5yLX/iX+5UB2tfuyODF5E7k9xEzMdYgGqaSb1c0c5Yw==
+  version "11.2.6"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-11.2.6.tgz#356bf8a29e88a7a2945507b31f6429a65a192c58"
+  integrity sha512-ESL2CrkS/2wTPfuend7Zhkzo2u0daGJ/A2VucJOgQ/C48S/zB8MMeMHSGKYpXhIjbPxfuezITkaBH1wqv00DDQ==
 
 lru-cache@^6.0.0:
   version "6.0.0"
@@ -2473,6 +2486,11 @@ undici-types@~7.16.0:
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-7.16.0.tgz#ffccdff36aea4884cbfce9a750a0580224f58a46"
   integrity sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==
+
+undici-types@~7.18.0:
+  version "7.18.2"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-7.18.2.tgz#29357a89e7b7ca4aef3bf0fd3fd0cd73884229e9"
+  integrity sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==
 
 unique-filename@^1.1.1:
   version "1.1.1"

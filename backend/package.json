@@ -20,7 +20,8 @@
     "prisma": "^7.4.0",
     "rest": "^2.0.0",
     "sqlite3": "^5.1.7",
-    "yarn": "^1.22.22"
+    "yarn": "^1.22.22",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@apollo/server": "^5.4.0",

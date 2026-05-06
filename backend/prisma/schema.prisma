@@ -9,10 +9,51 @@ datasource db {
 
 model User {
   id              Int      @id @default(autoincrement())
-  firstName       String
-  lastName        String
+  firstName       String   @map("first_name")
+  lastName        String   @map("last_name")
   email           String   @unique
-  passwordDigest  String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  passwordDigest  String   @map("password_digest")
+  createdAt       DateTime @map("created_at") @default(now())
+  updatedAt       DateTime @map("updated_at") @updatedAt
+
+  createdTasks Task[] @relation("TaskCreator")
+
+  assignedTasks Task[] @relation("TaskExecutor")
+  @@map("users")
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  statusId    Int      @map("status_id")
+  status      Status   @relation("TaskStatus", fields: [statusId], references: [id])
+  executorId  Int?     @map("executor_id")
+  executor    User?    @relation("TaskExecutor", fields: [executorId], references: [id])
+  creatorId   Int      @map("creator_id")
+  creator     User     @relation("TaskCreator", fields: [creatorId], references: [id])
+  labels      Label[]  @relation("TaskLabels")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("tasks")
+}
+
+model Status {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  tasksWithStatus Task[] @relation("TaskStatus")
+
+  @@map("statuses")
+}
+
+model Label {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  tasksWithLabels Task[] @relation("TaskLabels")
+
+  @@map("labels")
 }

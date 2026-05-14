@@ -1,14 +1,10 @@
+// src/types/express.d.ts
 declare global {
   namespace Express {
     interface User {
-      id: number | string;
+      id: number;
       email: string;
-    }
-    
-    interface Request {
-      user?: Express.User;
     }
   }
 }
-
 export {};

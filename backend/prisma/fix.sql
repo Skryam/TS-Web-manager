@@ -1,0 +1,1 @@
+UPDATE statuses SET name = 'Новая' WHERE id = 1

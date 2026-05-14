@@ -27,11 +27,11 @@ model Task {
   name        String
   description String?
   statusId    Int      @map("status_id")
-  status      Status   @relation("TaskStatus", fields: [statusId], references: [id])
+  status      Status   @relation("TaskStatus", fields: [statusId], references: [id], onDelete: Restrict)
   executorId  Int?     @map("executor_id")
   executor    User?    @relation("TaskExecutor", fields: [executorId], references: [id])
   creatorId   Int      @map("creator_id")
-  creator     User     @relation("TaskCreator", fields: [creatorId], references: [id])
+  creator     User     @relation("TaskCreator", fields: [creatorId], references: [id], onDelete: Restrict)
   labels      Label[]  @relation("TaskLabels")
   createdAt   DateTime @default(now()) @map("created_at")
 

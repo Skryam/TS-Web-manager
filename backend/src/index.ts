@@ -21,7 +21,10 @@ const server = new ApolloServer({ typeDefs, resolvers });
 const main = async () => {
   await server.start();
 
-  app.use(cors<cors.CorsRequest>());
+  app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  }));
   app.use(express.json())
   app.use(session({
     secret: process.env.SESSION_KEY || 'fallback-secret',

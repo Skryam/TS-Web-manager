@@ -3,24 +3,39 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ApolloProvider } from '@apollo/client/react';
 import client from './apollo/client.ts';
+import { BrowserRouter } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import Welcome from './components/welcome.tsx';
+import UsersList from './components/UsersList.tsx';
 
 const App = () => {
   return (
-    <body className='d-flex flex-column min-vh-100 bg-light'>
+    <div className='d-flex flex-column min-vh-100 bg-light'>
       <nav className='navbar navbar-expand-lg navbar-light mb-3 bg-secondary bg-opacity-25 container-fluid'>
-        <a className='navbar-brand' href='/'>Рут</a>
-        <button className='navbar-toggler' data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent">
+        <Link to="/" className='navbar-brand'>Рут</Link>
+        <button
+        className='navbar-toggler'
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarToggleExternalContent"
+        >
           <span className='navbar-toggler-icon' />
+        </button>
+        <div className="collapse navbar-collapse" id="navbarToggleExternalContent">
           <ul className='navbar-nav.mr-auto'>
             <li className='nav-item'>
-              <a className='nav-link' href='/'>Юзеры</a>
+              
             </li>
           </ul>
-        </button>
+        </div>
       </nav>
-      <Welcome />
-    </body>
+
+      <div className='container flex-grow-1'>
+        <Routes>
+          <Route path='/' element={<Welcome />} />
+          <Route path='/users' element={<UsersList />} />
+        </Routes>
+      </div>
+    </div>
   )
 }
 
@@ -28,7 +43,9 @@ const App = () => {
 const mountNode = document.getElementById('root')!;
 const root = ReactDOM.createRoot(mountNode);
 root.render(
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>
+  <BrowserRouter>
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+  </BrowserRouter>
 );

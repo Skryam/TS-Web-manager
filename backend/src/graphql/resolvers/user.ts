@@ -5,6 +5,9 @@ export const userResolver = {
   Query: {
     users: (_, __, { prisma }) => prisma.user.findMany(),
     user: (_, { id }, { prisma }) => prisma.user.findUnique({ where: { id: Number(id) } }),
+    me: (_, __, { user }) => {
+      return user || null;
+    },
   },
   Mutation: {
     updateUser: async (_, { id, data }, { prisma, user }) => {

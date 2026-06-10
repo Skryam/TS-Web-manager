@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Routes, Route, Link } from 'react-router-dom';
 import Welcome from './components/welcome.tsx';
 import UsersList from './components/UsersList.tsx';
+import StatusesList from './components/StatusesList.tsx';
 import NewUser from './components/NewUser.tsx';
 import Login from './components/Login.tsx';
 import LogoutButton from './components/Logout.tsx';
@@ -22,7 +23,6 @@ interface Medata {
 const App = () => {
   const { data } = useQuery<Medata>(GET_ME);
   const isAuthenticated = !!data?.me;
-  console.log(isAuthenticated)
 
   return (
     <div className='d-flex flex-column min-vh-100 bg-light'>
@@ -47,16 +47,17 @@ const App = () => {
           <ul className='navbar-nav'>
             {isAuthenticated ? (
               <>
+                <li className='nav-item'><Link to='/statuses' className='nav-link'>Статусы</Link></li>
+                <li className='nav-item'>Лейблы</li>
+                <li className='nav-item'>Задачи</li>
                 <li className='nav-item'>
-                  <li className='nav-item'>
-                    <LogoutButton />
-                  </li>
+                  <LogoutButton />
                 </li>
               </>
             ) : (
               <>
-                <li className='nav-item'><Link to='newUser' className='nav-link'>Регистрация</Link></li>
-                <li className='nav-item'><Link to='login' className='nav-link'>Вход</Link></li>
+                <li className='nav-item'><Link to='/newUser' className='nav-link'>Регистрация</Link></li>
+                <li className='nav-item'><Link to='/login' className='nav-link'>Вход</Link></li>
               </>
             )}
           </ul>
@@ -69,6 +70,7 @@ const App = () => {
           <Route path='/users' element={<UsersList />} />
           <Route path='/newUser' element={<NewUser />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/statuses' element={<StatusesList />} />
         </Routes>
       </div>
     </div>

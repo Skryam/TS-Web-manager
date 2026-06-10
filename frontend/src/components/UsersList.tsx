@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client/react';
 import { useEffect } from 'react';
 import { GET_USERS } from '../graphql/queries';
 import { Table, Spinner, Alert, Container } from 'react-bootstrap';
+import { formatDate } from '../utils/formatDate';
 
 interface GetUsersData {
   users: {
@@ -9,6 +10,7 @@ interface GetUsersData {
     firstName: string;
     lastName: string;
     email: string;
+    createdAt: string;
   }[];
 }
 
@@ -39,6 +41,7 @@ export default function UsersList() {
             <th>Имя</th>
             <th>Фамилия</th>
             <th>Email</th>
+            <th>Дата создания</th>
           </tr>
         </thead>
         <tbody>
@@ -48,6 +51,7 @@ export default function UsersList() {
               <td>{user.firstName}</td>
               <td>{user.lastName}</td>
               <td>{user.email}</td>
+              <td>{formatDate(user.createdAt)}</td>
             </tr>
           ))}
         </tbody>

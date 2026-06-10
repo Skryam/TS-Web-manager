@@ -7,6 +7,7 @@ export const GET_USERS = gql`
       email
       firstName
       lastName
+      createdAt
     }
   }
 `;
@@ -16,7 +17,16 @@ export const GET_ME = gql`
     me {
       id
       email
-      fistName
+      firstName
     }
   }
 `;
+
+export const GET_STATUSES = gql`
+  query GetStatuses {
+    statuses {
+      id
+      name
+    }
+  }
+`

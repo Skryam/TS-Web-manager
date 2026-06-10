@@ -1,3 +1,4 @@
+import client from "../apollo/client";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { api } from "../api/client";
@@ -18,8 +19,8 @@ export default function Login() {
 
   const onSubmit = async (data: CreateLoginInput) => {
     try {
-      const response = await api.post('/auth/login', data);
-      console.log(response)
+      await api.post('/auth/login', data);
+      await client.resetStore();
       navigate("/");
     } catch (err: any) {
       console.log(err)

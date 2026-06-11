@@ -1,6 +1,7 @@
-import { useQuery } from '@apollo/client/react';
+import { useQuery, useMutation, useApolloClient } from '@apollo/client/react';
+import { api } from '../api/client';
 import { useEffect } from 'react';
-import { GET_USERS } from '../graphql/queries';
+import { GET_USERS, GET_ME, DELETE_USER } from '../graphql/queries';
 import { Table, Spinner, Alert, Container } from 'react-bootstrap';
 import { formatDate } from '../utils/formatDate';
 
@@ -12,10 +13,35 @@ interface GetUsersData {
     email: string;
     createdAt: string;
   }[];
-}
+};
+
+interface Medata {
+  me: {
+    id: string;
+    email: string;
+    firstName: string;
+  } | null;
+};
+
 
 export default function UsersList() {
+  const client = useApolloClient();
   const { loading, error, data, refetch } = useQuery<GetUsersData>(GET_USERS);
+  const [deleteUser] = useMutation(DELETE_USER);
+  
+  const { data: meData } = useQuery<Medata>(GET_ME);
+  const isAuthenticated = !!meData?.me;
+  console.log(isAuthenticated)
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteUser({ variables: { id: id }})
+      await client.resetStore();
+      navigate('/');
+    } catch (err) {
+      console.log(err)
+    }
+  };
   
   useEffect(() => {
     const handleFocus = () => {
@@ -52,6 +78,12 @@ export default function UsersList() {
               <td>{user.lastName}</td>
               <td>{user.email}</td>
               <td>{formatDate(user.createdAt)}</td>
+              {isAuthenticated && meData.me?.id === user.id ? (
+                <>
+                  <button className="btn btn-primary me-1" onClick={handleLogout}>Редактировать</button>
+                  <button className="btn btn-danger" onClick={handleDelete}>Удалить</button>
+                </>
+              ) : null}
             </tr>
           ))}
         </tbody>

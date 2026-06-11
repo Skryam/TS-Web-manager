@@ -29,4 +29,12 @@ export const GET_STATUSES = gql`
       name
     }
   }
-`
+`;
+
+export const DELETE_USER = gql`
+  mutation DeleteUser($id: Int!) {
+    deleteUser(id: $id) {
+      id
+    }
+  }
+`;

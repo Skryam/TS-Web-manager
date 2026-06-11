@@ -1,7 +1,8 @@
-export const formatDate = (dbDate: number | string): string => {
+export const formatDate = (dbDate: any): string => {
   if (!dbDate) return '';
-  console.log(dbDate)
-  const date = new Date(dbDate);
+
+  const tymestamp = Number (dbDate);
+  const date = new Date(tymestamp);
   return date.toLocaleString('ru-RU', {
     year: 'numeric',
     month: '2-digit',

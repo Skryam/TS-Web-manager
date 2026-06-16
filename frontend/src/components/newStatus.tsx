@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { api } from "../api/client";
 import { GET_ME } from "../graphql/queries";
-import { createUserSchema, CreateUserInput } from '../zodSchemas/user';
+import { CreateStatusInput, createStatusSchema } from "../zodSchemas/status";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export default function NewUser() {
+export default function NewStatus() {
   const navigate = useNavigate();
   const client = useApolloClient();
 
@@ -14,12 +14,12 @@ export default function NewUser() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<CreateUserInput>({
-    resolver: zodResolver(createUserSchema),
+  } = useForm<CreateStatusInput>({
+    resolver: zodResolver(createStatusSchema),
     mode: 'onBlur',
   });
 
-  const onSubmit = async (data: CreateUserInput) => {
+  const onSubmit = async (data: CreateStatusInput) => {
     try {
       await api.post('/auth/signup', data);
       await client.refetchQueries({ include: [GET_ME]});

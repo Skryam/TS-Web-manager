@@ -1,40 +1,85 @@
-import { useApolloClient } from "@apollo/client/react";
-import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation } from "@apollo/client/react";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form"
-import { api } from "../api/client";
-import { GET_ME } from "../graphql/queries";
-import { createUserSchema, CreateUserInput } from '../zodSchemas/user';
+import { GET_USER_BY_ID, UPDATE_USER } from "../graphql/queries";
+import { Alert, Spinner } from "react-bootstrap";
+import { updateUserSchema, UpdateUserInput } from '../zodSchemas/user';
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export default function NewUser() {
+interface GetUserData {
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+};
+
+export default function EditUser() {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const client = useApolloClient();
+  const { error, data: userData, loading } = useQuery<GetUserData>(GET_USER_BY_ID, {
+    variables: { id },
+    skip: !id,
+  });
+  const [updateUser] = useMutation(UPDATE_USER);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm<CreateUserInput>({
-    resolver: zodResolver(createUserSchema),
+  } = useForm<UpdateUserInput>({
+    resolver: zodResolver(updateUserSchema),
     mode: 'onBlur',
+    defaultValues: {
+      firstName: userData?.user.firstName || '',
+      lastName: userData?.user.lastName || '',
+      email: userData?.user.email || '',
+      password: '',
+    },
   });
 
-  const onSubmit = async (data: CreateUserInput) => {
+  useEffect(() => {
+    if (userData?.user) {
+      reset({
+        firstName: userData.user.firstName,
+        lastName: userData.user.lastName,
+        email: userData.user.email,
+        password: '',
+      });
+    }
+  }, [userData, reset])
+
+  const onSubmit = async (data: UpdateUserInput) => {
     try {
-      await api.post('/auth/signup', data);
-      await client.refetchQueries({ include: [GET_ME]});
-      navigate("/");
+      await updateUser({ variables: {
+        id: id,
+        data: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password || undefined,
+        },
+      }
+    });
+    navigate('/users')
     } catch (err: any) {
       console.log(err)
     }
   };
 
+  if (loading) return <Spinner animation="border" role="status" />;
+  if (error) return <Alert variant="danger">Ошибка: {error.message}</Alert>;
+  if (!userData?.user) return <div>Пользователь не найден</div>;;
+
   return (
     <div className="container mt-5" style={{ maxWidth: '500px' }}>
-      <h3 className="display-4 fw-bold mt-4">Регистрация</h3>
+      <h4 className="display-4 fw-bold mt-4">Редактирование пользователя</h4>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        
+
         <div className="mb-3">
           <label htmlFor="firstName" className="form-label">Имя</label>
           <input
@@ -88,7 +133,7 @@ export default function NewUser() {
           className="btn btn-primary"
           disabled={isSubmitting}
           >
-            {isSubmitting ? 'Загрузка' : 'Зарегистрироваться'}
+            {isSubmitting ? 'Загрузка' : 'Подтвердить'}
           </button>
     </form>
   </div>

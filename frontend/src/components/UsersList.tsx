@@ -1,6 +1,5 @@
-import { useQuery, useMutation, useApolloClient } from '@apollo/client/react';
-import { api } from '../api/client';
-import { useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/client/react';
+import { useNavigate } from 'react-router-dom';
 import { GET_USERS, GET_ME, DELETE_USER } from '../graphql/queries';
 import { Table, Spinner, Alert, Container } from 'react-bootstrap';
 import { formatDate } from '../utils/formatDate';
@@ -25,33 +24,26 @@ interface Medata {
 
 
 export default function UsersList() {
-  const client = useApolloClient();
-  const { loading, error, data, refetch } = useQuery<GetUsersData>(GET_USERS);
-  const [deleteUser] = useMutation(DELETE_USER);
+  const navigate = useNavigate();
+  const { loading, error, data } = useQuery<GetUsersData>(GET_USERS, { fetchPolicy: 'network-only' });
+  const [deleteUser] = useMutation(DELETE_USER, {
+    refetchQueries: [
+      { query: GET_USERS },
+      { query: GET_ME }
+    ],
+  });
   
   const { data: meData } = useQuery<Medata>(GET_ME);
   const isAuthenticated = !!meData?.me;
   console.log(isAuthenticated)
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     try {
-      await deleteUser({ variables: { id: id }})
-      await client.resetStore();
-      navigate('/');
+      await deleteUser({ variables: { id: id }});
     } catch (err) {
       console.log(err)
     }
   };
-  
-  useEffect(() => {
-    const handleFocus = () => {
-      refetch();
-    };
-    window.addEventListener('focus', handleFocus);
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-    }
-  }, [refetch]);
 
   if (loading) return <Spinner animation="border" role="status" />;
   if (error) return <Alert variant="danger">Ошибка: {error.message}</Alert>;
@@ -79,10 +71,12 @@ export default function UsersList() {
               <td>{user.email}</td>
               <td>{formatDate(user.createdAt)}</td>
               {isAuthenticated && meData.me?.id === user.id ? (
-                <>
-                  <button className="btn btn-primary me-1" onClick={handleLogout}>Редактировать</button>
-                  <button className="btn btn-danger" onClick={handleDelete}>Удалить</button>
-                </>
+                <td>
+                <div className='d-flex flex-wrap'>
+                  <button className="btn btn-primary me-2" onClick={() => navigate(`/editUser/${user.id}`)}>Редактировать</button>
+                  <button className="btn btn-danger" onClick={() => handleDelete(user.id)}>Удалить</button>
+                </div>
+              </td>
               ) : null}
             </tr>
           ))}

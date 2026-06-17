@@ -93,15 +93,15 @@ export default `#graphql
     updateUser(id: ID!, data: UpdateUserInput!): User!
     deleteUser(id: ID!): User!
 
-    createTask(input: CreateTaskInput!): Task!
+    createTask(data: CreateTaskInput!): Task!
     updateTask(id: ID!, data: UpdateTaskInput!): Task!
     deleteTask(id: ID!): Task!
 
-    createStatus(input: CreateStatusInput!): Status!
+    createStatus(data: CreateStatusInput!): Status!
     updateStatus(id: ID!, data: UpdateStatusInput!): Status!
     deleteStatus(id: ID!): Status!
 
-    createLabel(input: CreateLabelInput!): Label!
+    createLabel(data: CreateLabelInput!): Label!
     updateLabel(id: ID!, data: UpdateLabelInput!): Label!
     deleteLabel(id: ID!): Label!
   }

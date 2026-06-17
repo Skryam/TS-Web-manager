@@ -12,11 +12,12 @@ export const statusResolver = {
     },
   },
   Mutation: {
-    createStatus: async (_, { input }, { prisma, user }) => {
+    createStatus: async (_, { data }, { prisma, user }) => {
+      console.log(data)
       if (!user) throw new Error('Unauthorized');
 
       try {
-        const validated = createStatusSchema.parse(input);
+        const validated = createStatusSchema.parse(data);
 
         return prisma.status.create({
           data: validated,
@@ -24,7 +25,7 @@ export const statusResolver = {
         });
      } catch (e) {
         console.log(e)
-        return e
+        throw e
       }
     },
     updateStatus: async (_, { id, data }, { prisma, user }) => {

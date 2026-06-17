@@ -68,6 +68,12 @@ export const UPDATE_USER = gql`
   }
 `;
 
+export const CREATE_STATUS = gql`
+  mutation CreateStatus($data: CreateStatusInput!) {
+    createStatus(data: $data) { id name }
+  }
+`;
+
 export const UPDATE_STATUS = gql`
   mutation UpdateStatus($id: ID!, $data: UpdateStatusInput!) {
     updateStatus(id: $id, data: $data) { id name }

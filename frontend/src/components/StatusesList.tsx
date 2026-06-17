@@ -26,7 +26,7 @@ export default function StatusesList() {
     <Container className="mt-4 d-flex justify-content-center">
     <div style={{ maxWidth: '600px', width: '100%' }}> 
       <h2 className="text-center mb-4">Статусы</h2>
-      <button className="btn btn-primary" onClick={() => navigate('/newStatus')}>Добавить статус</button>
+      <button className="btn btn-primary mb-3" onClick={() => navigate('/newStatus')}>Добавить статус</button>
       
       <Table striped bordered hover className="bg-white shadow-sm rounded">
         <thead className="table-gray">

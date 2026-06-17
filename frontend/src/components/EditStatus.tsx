@@ -71,7 +71,7 @@ export default function EditStatus() {
       <form onSubmit={handleSubmit(onSubmit)}>
 
         <div className="mb-3">
-          <label htmlFor="firstName" className="form-label">Название</label>
+          <label htmlFor="name" className="form-label">Название</label>
           <input
             id="name"
             className={`form-control ${errors.name ? 'is-invalid' : ''}`}

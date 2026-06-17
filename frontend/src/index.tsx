@@ -13,6 +13,8 @@ import LogoutButton from './components/Logout.tsx';
 import EditUser from './components/editUser.tsx';
 import EditStatus from './components/EditStatus.tsx';
 import { GET_ME } from './graphql/queries.ts';
+import NewStatus from './components/newStatus.tsx';
+import ProtectedLayout from './components/ProtectedLayout.tsx';
 
 interface Medata {
   me: {
@@ -72,9 +74,12 @@ const App = () => {
           <Route path='/users' element={<UsersList />} />
           <Route path='/newUser' element={<NewUser />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/statuses' element={<StatusesList />} />
-          <Route path='/editUser/:id' element={<EditUser />} />
-          <Route path='/editStatus/:id' element={<EditStatus />} />
+          <Route element={<ProtectedLayout />}>
+            <Route path='/statuses' element={<StatusesList />} />
+            <Route path='/editUser/:id' element={<EditUser />} />
+            <Route path='/newStatus' element={<NewStatus />} />
+            <Route path='/editStatus/:id' element={<EditStatus />} />
+          </Route>
         </Routes>
       </div>
     </div>

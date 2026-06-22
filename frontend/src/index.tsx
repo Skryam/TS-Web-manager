@@ -10,10 +10,10 @@ import StatusesList from './components/StatusesList.tsx';
 import NewUser from './components/NewUser.tsx';
 import Login from './components/Login.tsx';
 import LogoutButton from './components/Logout.tsx';
-import EditUser from './components/editUser.tsx';
+import EditUser from './components/EditUser.tsx';
 import EditStatus from './components/EditStatus.tsx';
 import { GET_ME } from './graphql/queries.ts';
-import NewStatus from './components/newStatus.tsx';
+import NewStatus from './components/NewStatus.tsx';
 import ProtectedLayout from './components/ProtectedLayout.tsx';
 
 interface Medata {

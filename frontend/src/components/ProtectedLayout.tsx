@@ -13,8 +13,12 @@ interface Medata {
 export default function ProtectedLayout() {
   const { data, loading } = useQuery<Medata>(GET_ME);
 
-  if (loading) return <div>Загрузка...</div>;
-  if (!data?.me) return <Navigate to="/login" replace />;
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
+  if (!data?.me) {
+    return <Navigate to="/login" replace />;
+  }
 
   return <Outlet />;
 }

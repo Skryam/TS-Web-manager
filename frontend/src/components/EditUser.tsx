@@ -70,9 +70,15 @@ export default function EditUser() {
     }
   };
 
-  if (loading) return <Spinner animation="border" role="status" />;
-  if (error) return <Alert variant="danger">Ошибка: {error.message}</Alert>;
-  if (!userData?.user) return <div>Пользователь не найден</div>;;
+  if (loading) {
+    return <Spinner animation="border" role="status" />;
+  }
+  if (error) {
+    return <Alert variant="danger">Ошибка: {error.message}</Alert>;
+  }
+  if (!userData?.user) {
+    return <div>Пользователь не найден</div>;
+  }
 
   return (
     <div className="container mt-5" style={{ maxWidth: '500px' }}>

@@ -1,12 +1,14 @@
 import express, { Router, Request, Response } from 'express';
-import { prisma } from '../lib/prisma';
-import passport from 'passport';
-import encrypt from '../lib/secure';
-import { createUserSchema } from './graphql/resolvers/schemas/user';
+import { getPrisma } from '../../lib/prisma';
+import passport from './passport';
+import encrypt from '../../lib/secure';
+import { createUserSchema } from '.././graphql/resolvers/schemas/user';
 
 const router: Router = express.Router();
 
 router.use(express.json());
+
+const prisma = getPrisma();
 
 router.post('/signup', async (req, res) => {
   try {
@@ -23,7 +25,9 @@ router.post('/signup', async (req, res) => {
     });
 
     req.login(user, (err) => {
-      if (err) return res.status(500).json({ error: 'Login failed' });
+      if (err) {
+        return res.status(500).json({ error: 'Login failed' });
+      }
       return res.status(201).json({ id: user.id, email: user.email });
     });
   } catch (e) {

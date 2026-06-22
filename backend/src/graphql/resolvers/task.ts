@@ -3,13 +3,21 @@ import { createTaskSchema, updateTaskSchema } from './schemas/task';
 export const taskResolver = {
   Query: {
     tasks: async (_, { filter }, { prisma, user }) => {
-      if (!user) throw new Error('Unauthorized');
+      if (!user) {
+ throw new Error('Unauthorized');
+}
 
       const where: any = {};
 
-      if (filter?.statusId) where.statusId = Number(filter.statusId);
-      if (filter?.executorId) where.executorId = Number(filter.executorId);
-      if (filter?.creatorId) where.creatorId = Number(filter.creatorId);
+      if (filter?.statusId) {
+        where.statusId = Number(filter.statusId);
+      }
+      if (filter?.executorId) {
+        where.executorId = Number(filter.executorId);
+      }
+      if (filter?.creatorId) {
+        where.creatorId = Number(filter.creatorId);
+      }
       if (filter?.labelId) {
         where.labels = { some: { id: Number(filter.labelId)}};
       };
@@ -25,7 +33,9 @@ export const taskResolver = {
       }); 
     },
     task: (_, { id }, { prisma, user }) => {
-      if (!user) throw new Error('Unauthorized');
+      if (!user) {
+ throw new Error('Unauthorized');
+}
 
       return prisma.task.findUnique({
         where: { id: Number(id) },
@@ -39,7 +49,9 @@ export const taskResolver = {
   },
   Mutation: {
     createTask: async (_, { input }, { prisma, user }) => {
-      if (!user) throw new Error('Unauthorized');
+      if (!user) {
+ throw new Error('Unauthorized');
+}
 
       try {
         const validated = createTaskSchema.parse(input);
@@ -54,7 +66,9 @@ export const taskResolver = {
       }
     },
     updateTask: async (_, { id, data }, { prisma, user }) => {
-      if (!user) throw new Error('Unauthorized');
+      if (!user) {
+ throw new Error('Unauthorized');
+}
 
       const validated = updateTaskSchema.parse(data);
 
@@ -64,7 +78,9 @@ export const taskResolver = {
       });
     },
     deleteTask: async (_, { id }, { prisma, user }) => {
-      if (!user) throw new Error('Unauthorized');
+      if (!user) {
+ throw new Error('Unauthorized');
+}
 
       return prisma.task.delete({
         where: { id: Number(id) },

@@ -1,6 +1,7 @@
 import { createLabelSchema, updateLabelSchema} from './schemas/label';
+import { Resolvers } from '../resolversTypes';
 
-export const labelResolver = {
+export const labelResolver: Resolvers = {
   Query: {
     labels: (_, __, { prisma, user }) => {
       if (!user) {

@@ -5,7 +5,12 @@ export interface GraphQLContext {
   user: User | null;
 }
 
-export type ResolverFn<TArgs = any, TResult = any> = (
+export interface DefaultArgs {
+  id?: string;
+  data?: any;
+}
+
+export type ResolverFn<TArgs = DefaultArgs, TResult = any> = (
   parent: any,
   args: TArgs,
   context: GraphQLContext,
@@ -13,6 +18,6 @@ export type ResolverFn<TArgs = any, TResult = any> = (
 ) => Promise<TResult> | TResult;
 
 export interface Resolvers {
-  Query?: Record<string, ResolverFn<any, any>>;
-  Mutation?: Record<string, ResolverFn<any, any>>;
+  Query?: Record<string, ResolverFn>;
+  Mutation?: Record<string, ResolverFn>;
 }

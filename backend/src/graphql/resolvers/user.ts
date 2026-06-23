@@ -1,6 +1,6 @@
 import encrypt from '../../../lib/secure';
-import { updateUserSchema, CreateUserInput } from './schemas/user';
-import { Resolvers } from '../resolversTypes';
+import { updateUserSchema, CreateUserInput as UpdateUserInput } from './schemas/user';
+import { DefaultArgs, Resolvers } from '../resolversTypes';
 
 
 export const userResolver: Resolvers = {
@@ -11,8 +11,9 @@ export const userResolver: Resolvers = {
       return user || null;
     },
   },
+
   Mutation: {
-    updateUser: async (_, { id, data }, { prisma, user }) => {
+    updateUser: async (_, { id, data }: DefaultArgs<UpdateUserInput>, { prisma, user }) => {
       if (!user) {
  throw new Error('Unauthorized');
 }

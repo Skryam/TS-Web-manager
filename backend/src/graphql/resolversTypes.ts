@@ -5,12 +5,17 @@ export interface GraphQLContext {
   user: User | null;
 }
 
-export interface DefaultArgs {
-  id?: string;
-  data?: any;
+interface WithId {
+  id: string;
 }
 
-export type ResolverFn<TArgs = DefaultArgs, TResult = any> = (
+type Args<T = unknown> = {
+  data: T
+}
+
+export type ArgsWithId<T = unknown> = WithId & Args<T>;
+
+export type ResolverFn<TArgs, TResult> = (
   parent: any,
   args: TArgs,
   context: GraphQLContext,

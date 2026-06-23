@@ -1,25 +1,33 @@
 import { createTaskSchema, updateTaskSchema } from './schemas/task';
+import { ArgsWithId } from '../resolversTypes';
+
+interface Filter {
+  statusId?: string;
+  executorId?: string;
+  creatorId?: string;
+  labelId?: string;
+}
 
 export const taskResolver = {
   Query: {
-    tasks: async (_, { filter }, { prisma, user }) => {
+    tasks: async (_, { data }: ArgsWithId<Filter>, { prisma, user }) => {
       if (!user) {
  throw new Error('Unauthorized');
 }
 
       const where: any = {};
 
-      if (filter?.statusId) {
-        where.statusId = Number(filter.statusId);
+      if (data?.statusId) {
+        where.statusId = Number(data.statusId);
       }
-      if (filter?.executorId) {
-        where.executorId = Number(filter.executorId);
+      if (data?.executorId) {
+        where.executorId = Number(data.executorId);
       }
-      if (filter?.creatorId) {
-        where.creatorId = Number(filter.creatorId);
+      if (data?.creatorId) {
+        where.creatorId = Number(data.creatorId);
       }
-      if (filter?.labelId) {
-        where.labels = { some: { id: Number(filter.labelId)}};
+      if (data?.labelId) {
+        where.labels = { some: { id: Number(data.labelId)}};
       };
 
       return prisma.task.findMany({

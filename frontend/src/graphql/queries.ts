@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const GET_USERS = gql`
   query GetUsers {
-    users {
+    getUsers {
       id
       email
       firstName
@@ -14,7 +14,7 @@ export const GET_USERS = gql`
 
 export const GET_USER_BY_ID = gql`
   query GetUserById($id: ID!) {
-    user(id: $id) {
+    getUser(id: $id) {
       id
       firstName
       lastName
@@ -26,7 +26,7 @@ export const GET_USER_BY_ID = gql`
 
 export const GET_STATUS_BY_ID = gql`
   query GetStatusById($id: ID!) {
-    status(id: $id) {
+    getStatus(id: $id) {
       id
       name
       createdAt
@@ -46,7 +46,7 @@ export const GET_ME = gql`
 
 export const GET_STATUSES = gql`
   query GetStatuses {
-    statuses {
+    getStatuses {
       id
       name
       createdAt

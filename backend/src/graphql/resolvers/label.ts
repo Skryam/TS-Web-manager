@@ -1,15 +1,15 @@
-import { createLabelSchema, updateLabelSchema} from './schemas/label';
-import { Resolvers } from '../resolversTypes';
+import { createLabelSchema, CreateLabelInput, updateLabelSchema} from './schemas/label';
+import { Resolvers, DefaultArgs } from '../resolversTypes';
 
 export const labelResolver: Resolvers = {
   Query: {
-    labels: (_, __, { prisma, user }) => {
+    getLabels: (_, __, { prisma, user }) => {
       if (!user) {
  throw new Error('Unauthorized');
 }
       return prisma.label.findMany()
     },
-    label: (_, { id }, { prisma, user }) => {
+    getLabel: (_, { id }, { prisma, user }) => {
       if (!user) {
  throw new Error('Unauthorized');
 }
@@ -17,13 +17,13 @@ export const labelResolver: Resolvers = {
     }
   },
   Mutation: {
-    createLabel: async (_, { input }, { prisma, user }) => {
+    createLabel: async (_, { data }: DefaultArgs<CreateLabelInput>, { prisma, user }) => {
       if (!user) {
  throw new Error('Unauthorized');
 }
 
       try {
-        const validated = createLabelSchema.parse(input);
+        const validated = createLabelSchema.parse(data);
 
         return prisma.label.create({
           data: validated,

@@ -2,12 +2,13 @@ import client from "../apollo/client";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useForm } from "react-hook-form"
-import { api } from "../api/client";
+import { getApi } from "../api/client";
 import { createLoginSchema, CreateLoginInput } from "../zodSchemas/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "react-bootstrap";
 
 export default function Login() {
+  const api = getApi();
   const navigate = useNavigate();
   const [submitErrors, setErrors] = useState(null)
 

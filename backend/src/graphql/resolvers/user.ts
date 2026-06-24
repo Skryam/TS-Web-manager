@@ -1,12 +1,12 @@
 import encrypt from '../../../lib/secure';
 import { updateUserSchema, CreateUserInput as UpdateUserInput } from './schemas/user';
-import { DefaultArgs, Resolvers } from '../resolversTypes';
+import { Resolvers, DefaultArgs } from '../resolversTypes';
 
 
 export const userResolver: Resolvers = {
   Query: {
-    users: (_, __, { prisma }) => prisma.user.findMany(),
-    user: (_, { id }, { prisma }) => prisma.user.findUnique({ where: { id: Number(id) } }),
+    getUsers: (_, __, { prisma }) => prisma.user.findMany(),
+    getUser: (_, { id }, { prisma }) => prisma.user.findUnique({ where: { id: Number(id) } }),
     me: (_, __, { user }) => {
       return user || null;
     },

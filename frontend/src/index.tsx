@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import ReactDOM from 'react-dom/client';
 import { ApolloProvider, useQuery } from '@apollo/client/react';
-import client from './apollo/client.ts';
+import { getClient } from './apollo/client.ts';
 import { BrowserRouter } from 'react-router-dom';
 import { Routes, Route, Link } from 'react-router-dom';
 import Welcome from './components/welcome.tsx';
@@ -23,6 +23,8 @@ interface Medata {
     firstName: string;
   } | null;
 };
+
+const client = getClient();
 
 const App = () => {
   const { data } = useQuery<Medata>(GET_ME);

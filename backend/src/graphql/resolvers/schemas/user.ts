@@ -36,19 +36,3 @@ export const updateUserSchema = createUserSchema.omit({ password: true })
     path: ['password'],
   });
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
-
-
-export const userResponseSchema = z.object({
-  id: z.number().int().positive(),
-  firstName: z.string(),
-  lastName: z.string(),
-  email: z.email(),
-  passwordDigest: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date().nullable(),
-});
-export type UserResponse = z.infer<typeof userResponseSchema>;
-
-
-export const userPublicSchema = userResponseSchema.omit({ passwordDigest: true });
-export type UserPublic = z.infer<typeof userPublicSchema>;

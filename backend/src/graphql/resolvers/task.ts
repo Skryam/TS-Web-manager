@@ -1,5 +1,5 @@
 import { createTaskSchema, updateTaskSchema } from './schemas/task';
-import { ArgsWithId } from '../resolversTypes';
+import { ArgsWithId, Resolvers } from '../resolversTypes';
 
 interface Filter {
   statusId?: string;
@@ -8,9 +8,9 @@ interface Filter {
   labelId?: string;
 }
 
-export const taskResolver = {
+export const taskResolver: Resolvers = {
   Query: {
-    tasks: async (_, { data }: ArgsWithId<Filter>, { prisma, user }) => {
+    getTasks: async (_, { data }: ArgsWithId<Filter>, { prisma, user }) => {
       if (!user) {
  throw new Error('Unauthorized');
 }
@@ -40,7 +40,7 @@ export const taskResolver = {
         }
       }); 
     },
-    task: (_, { id }, { prisma, user }) => {
+    getTask: (_, { id }, { prisma, user }) => {
       if (!user) {
  throw new Error('Unauthorized');
 }
@@ -60,18 +60,12 @@ export const taskResolver = {
       if (!user) {
  throw new Error('Unauthorized');
 }
-
-      try {
         const validated = createTaskSchema.parse(input);
 
         return prisma.task.create({
           data: { ...validated, creatorId: user.id },
           include: { status: true, creator: true, executor: true, labels: true }
         });
-     } catch (e) {
-        console.log(e)
-        return e
-      }
     },
     updateTask: async (_, { id, data }, { prisma, user }) => {
       if (!user) {

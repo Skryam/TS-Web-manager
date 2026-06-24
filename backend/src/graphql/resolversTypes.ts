@@ -9,13 +9,15 @@ interface WithId {
   id: string;
 }
 
-type Args<T = unknown> = {
-  data: T
-}
+type Args<T = Record<string, unknown>> = {
+  data: T;
+};
 
-export type ArgsWithId<T = unknown> = WithId & Args<T>;
+export type ArgsWithId<T = Args> = WithId & Args<T>;
 
-export type ResolverFn<TArgs, TResult> = (
+export type DefaultArgs<T = any> = Partial<ArgsWithId<T>>;
+
+export type ResolverFn<TArgs = DefaultArgs, TResult = any> = (
   parent: any,
   args: TArgs,
   context: GraphQLContext,

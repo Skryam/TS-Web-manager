@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import { useTranslation } from 'react-i18next';
 
 export const createStatusSchema = z.object({
   name: z.string()
-    .min(2, { message: 'Название должно содержать минимум 2 символа' })
-    .max(100, { message: 'Максимум 100 символов' })
+    .min(2)
+    .max(100)
 });
 export type CreateStatusInput = z.infer<typeof createStatusSchema>;
 

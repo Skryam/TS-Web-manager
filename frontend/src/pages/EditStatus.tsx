@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { GET_STATUS_BY_ID, UPDATE_STATUS } from "../graphql/queries";
-import { Alert, Spinner } from "react-bootstrap";
+import { Alert, Spinner, Form } from "react-bootstrap";
 import { updateStatusSchema, UpdateStatusInput } from "../zodSchemas/status";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -74,11 +74,11 @@ export default function EditStatus() {
     <div className="container mt-5" style={{ maxWidth: '500px' }}>
       <h4 className="display-4 fw-bold mt-4">Редактирование статуса</h4>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
 
         <div className="mb-3">
-          <label htmlFor="name" className="form-label">Название</label>
-          <input
+          <Form.Label htmlFor="name" className="form-label">Название</Form.Label>
+          <Form.Control
             id="name"
             className={`form-control ${errors.name ? 'is-invalid' : ''}`}
             {...register('name')}
@@ -95,7 +95,7 @@ export default function EditStatus() {
           >
             {isSubmitting ? 'Загрузка' : 'Подтвердить'}
           </button>
-    </form>
+    </Form>
   </div>
   );
 };

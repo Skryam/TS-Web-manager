@@ -33,11 +33,11 @@ export default function NewUser() {
     <div className="container mt-5" style={{ maxWidth: '500px' }}>
       <h3 className="display-4 fw-bold mt-4">Регистрация</h3>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         
         <div className="mb-3">
-          <label htmlFor="firstName" className="form-label">Имя</label>
-          <input
+          <Form.label htmlFor="firstName" className="form-label">Имя</Form.label>
+          <Form.Control
             id="firstName"
             className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
             {...register('firstName')}
@@ -48,8 +48,8 @@ export default function NewUser() {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="lastName" className="form-label">Фамилия</label>
-          <input
+          <Form.label htmlFor="lastName" className="form-label">Фамилия</Form.label>
+          <Form.Control
             id="lastName"
             className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
             {...register('lastName')}
@@ -60,8 +60,8 @@ export default function NewUser() {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">email</label>
-          <input
+          <Form.label htmlFor="email" className="form-label">email</Form.label>
+          <Form.Control
             id="email"
             className={`form-control ${errors.email ? 'is-invalid' : ''}`}
             {...register('email')}
@@ -72,8 +72,8 @@ export default function NewUser() {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">Пароль</label>
-          <input
+          <Form.label htmlFor="password" className="form-label">Пароль</Form.label>
+          <Form.Control
             id="password"
             className={`form-control ${errors.password ? 'is-invalid' : ''}`}
             {...register('password')}
@@ -90,7 +90,7 @@ export default function NewUser() {
           >
             {isSubmitting ? 'Загрузка' : 'Зарегистрироваться'}
           </button>
-    </form>
+    </Form>
   </div>
   );
 };

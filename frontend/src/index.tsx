@@ -1,96 +1,16 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import ReactDOM from 'react-dom/client';
-import { ApolloProvider, useQuery } from '@apollo/client/react';
+import { ApolloProvider } from '@apollo/client/react';
 import { getClient } from './apollo/client.ts';
 import { BrowserRouter } from 'react-router-dom';
-import { Routes, Route, Link } from 'react-router-dom';
-import Welcome from './components/welcome.tsx';
-import UsersList from './components/UsersList.tsx';
-import StatusesList from './components/StatusesList.tsx';
-import NewUser from './components/NewUser.tsx';
-import Login from './components/Login.tsx';
-import LogoutButton from './components/Logout.tsx';
-import EditUser from './components/EditUser.tsx';
-import EditStatus from './components/EditStatus.tsx';
-import { GET_ME } from './graphql/queries.ts';
-import NewStatus from './components/NewStatus.tsx';
-import ProtectedLayout from './components/ProtectedLayout.tsx';
-
-interface Medata {
-  me: {
-    id: string;
-    email: string;
-    firstName: string;
-  } | null;
-};
+import { App } from './App.tsx';
+import './i18n/i18n.ts';
 
 const client = getClient();
 
-const App = () => {
-  const { data } = useQuery<Medata>(GET_ME);
-  const isAuthenticated = !!data?.me;
-
-  return (
-    <div className='d-flex flex-column min-vh-100 bg-light'>
-      <nav className='navbar navbar-expand-lg navbar-light mb-3 bg-secondary bg-opacity-25 container-fluid'>
-        <Link to="/" className='navbar-brand'>Рут</Link>
-
-        <button
-        className='navbar-toggler'
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarToggleExternalContent"
-        >
-          <span className='navbar-toggler-icon' />
-        </button>
-
-        <div className="collapse navbar-collapse" id="navbarToggleExternalContent">
-          <ul className='navbar-nav me-auto'>
-            <li className='nav-item'>
-              <Link to="/users" className='navbar-brand'>Пользователи</Link>
-            </li>
-          </ul>
-
-          <ul className='navbar-nav'>
-            {isAuthenticated ? (
-              <>
-                <li className='nav-item'><Link to='/statuses' className='nav-link'>Статусы</Link></li>
-                <li className='nav-item'>Лейблы</li>
-                <li className='nav-item'>Задачи</li>
-                <li className='nav-item'>
-                  <LogoutButton />
-                </li>
-              </>
-            ) : (
-              <>
-                <li className='nav-item'><Link to='/newUser' className='nav-link'>Регистрация</Link></li>
-                <li className='nav-item'><Link to='/login' className='nav-link'>Вход</Link></li>
-              </>
-            )}
-          </ul>
-        </div>
-      </nav>
-
-      <div className='container flex-grow-1'>
-        <Routes>
-          <Route path='/' element={<Welcome />} />
-          <Route path='/users' element={<UsersList />} />
-          <Route path='/newUser' element={<NewUser />} />
-          <Route path='/login' element={<Login />} />
-          <Route element={<ProtectedLayout />}>
-            <Route path='/statuses' element={<StatusesList />} />
-            <Route path='/editUser/:id' element={<EditUser />} />
-            <Route path='/newStatus' element={<NewStatus />} />
-            <Route path='/editStatus/:id' element={<EditStatus />} />
-          </Route>
-        </Routes>
-      </div>
-    </div>
-  )
-}
-
-
 const mountNode = document.getElementById('root')!;
 const root = ReactDOM.createRoot(mountNode);
+
 root.render(
   <BrowserRouter>
     <ApolloProvider client={client}>

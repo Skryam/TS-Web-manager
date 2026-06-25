@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { getApi } from "../api/client";
 import { createLoginSchema, CreateLoginInput } from "../zodSchemas/login";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Alert } from "react-bootstrap";
+import { Alert, Form } from "react-bootstrap";
 
 export default function Login() {
   const api = getApi();
@@ -37,10 +37,10 @@ export default function Login() {
 
       {submitErrors ? <Alert variant="danger">Неверный логин либо пароль</Alert> : null}
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">email</label>
-          <input
+          <Form.label htmlFor="email" className="form-label">email</Form.label>
+          <Form.Control
             id="email"
             className={`form-control ${errors.email ? 'is-invalid' : ''}`}
             {...register('email')}
@@ -51,8 +51,8 @@ export default function Login() {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">Пароль</label>
-          <input
+          <Form.label htmlFor="password" className="form-label">Пароль</Form.label>
+          <Form.Control
             id="password"
             className={`form-control ${errors.password ? 'is-invalid' : ''}`}
             {...register('password')}
@@ -69,7 +69,7 @@ export default function Login() {
           >
             {isSubmitting ? 'Загрузка' : 'Вход'}
           </button>
-    </form>
+    </Form>
   </div>
   );
 };

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { CREATE_STATUS } from "../graphql/queries";
 import { CreateStatusInput, createStatusSchema } from "../zodSchemas/status";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Form } from "react-bootstrap";
 
 export default function NewStatus() {
   const navigate = useNavigate();
@@ -34,11 +35,11 @@ export default function NewStatus() {
     <div className="container mt-5" style={{ maxWidth: '500px' }}>
       <h3 className="display-4 fw-bold mt-4">Добавление статуса</h3>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         
         <div className="mb-3">
-          <label htmlFor="name" className="form-label">Название</label>
-          <input
+          <Form.label htmlFor="name" className="form-label">Название</Form.label>
+          <Form.Control
             id="name"
             className={`form-control ${errors.name ? 'is-invalid' : ''}`}
             {...register('name')}
@@ -55,7 +56,7 @@ export default function NewStatus() {
           >
             {isSubmitting ? 'Загрузка' : 'Подтвердить'}
           </button>
-    </form>
+    </Form>
   </div>
   );
 };

@@ -2,10 +2,12 @@ import { useQuery, useMutation } from "@apollo/client/react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form"
-import { GET_STATUS_BY_ID, UPDATE_STATUS } from "../graphql/queries";
 import { Alert, Spinner, Form } from "react-bootstrap";
-import { updateStatusSchema, UpdateStatusInput } from "../zodSchemas/status";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { GET_STATUS_BY_ID, UPDATE_STATUS } from "../graphql/queries";
+import { updateStatusSchema, UpdateStatusInput } from "../zodSchemas/status";
+
 
 interface GetStatusData {
   status: {

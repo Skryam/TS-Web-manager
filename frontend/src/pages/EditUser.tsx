@@ -2,10 +2,12 @@ import { useQuery, useMutation } from "@apollo/client/react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form"
-import { GET_USER_BY_ID, UPDATE_USER } from "../graphql/queries";
 import { Alert, Spinner, Form } from "react-bootstrap";
-import { updateUserSchema, UpdateUserInput } from '../zodSchemas/user';
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { GET_USER_BY_ID, UPDATE_USER } from "../graphql/queries";
+import { updateUserSchema, UpdateUserInput } from '../zodSchemas/user';
+
 
 interface GetUserData {
   user: {

@@ -1,7 +1,8 @@
 import { useQuery } from '@apollo/client/react';
-import { GET_STATUSES } from '../graphql/queries';
 import { useNavigate } from 'react-router-dom';
 import { Table, Spinner, Alert, Container } from 'react-bootstrap';
+
+import { GET_STATUSES } from '../graphql/queries';
 import { formatDate } from '../utils/formatDate';
 
 interface GetStatusesData {

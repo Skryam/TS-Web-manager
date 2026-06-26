@@ -1,10 +1,11 @@
 import { useMutation } from "@apollo/client/react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
-import { CREATE_STATUS } from "../graphql/queries";
-import { CreateStatusInput, createStatusSchema } from "../zodSchemas/status";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "react-bootstrap";
+
+import { CREATE_STATUS } from "../graphql/queries";
+import { CreateStatusInput, createStatusSchema } from "../zodSchemas/status";
 
 export default function NewStatus() {
   const navigate = useNavigate();

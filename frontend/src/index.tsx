@@ -1,8 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import ReactDOM from 'react-dom/client';
 import { ApolloProvider } from '@apollo/client/react';
-import { getClient } from './apollo/client.ts';
 import { BrowserRouter } from 'react-router-dom';
+
+import { getClient } from './apollo/client.ts';
 import { App } from './App.tsx';
 import './i18n/i18n.ts';
 

@@ -1,10 +1,11 @@
 import { useApolloClient } from "@apollo/client/react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { api } from "../api/client";
 import { GET_ME } from "../graphql/queries";
 import { createUserSchema, CreateUserInput } from '../zodSchemas/user';
-import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function NewUser() {
   const navigate = useNavigate();

@@ -9,13 +9,13 @@ interface WithId {
   id: string;
 }
 
-type Args<T = Record<string, unknown>> = {
+type Args<T = any> = {
   data: T;
 };
 
-export type ArgsWithId<T = Args> = WithId & Args<T>;
+export type ArgsWithId<T = any> = WithId & Args<T>;
 
-export type DefaultArgs<T = any> = Partial<ArgsWithId<T>>;
+export type DefaultArgs<T = any> = ArgsWithId<T>;
 
 export type ResolverFn<TArgs = DefaultArgs, TResult = any> = (
   parent: any,

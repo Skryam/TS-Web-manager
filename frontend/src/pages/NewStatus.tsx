@@ -6,16 +6,15 @@ import { Form } from "react-bootstrap";
 
 import { CREATE_STATUS } from "../graphql/queries";
 import { CreateStatusInput, createStatusSchema } from "../zodSchemas/status";
+import { TextInput } from "../components/textInput";
+import { SubmitButton } from "../components/submitButton";
+import { FormProvider } from "react-hook-form";
 
 export default function NewStatus() {
   const navigate = useNavigate();
   const [CreateStatus] = useMutation(CREATE_STATUS);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<CreateStatusInput>({
+  const methods = useForm<CreateStatusInput>({
     resolver: zodResolver(createStatusSchema),
     mode: 'onBlur',
   });
@@ -36,28 +35,18 @@ export default function NewStatus() {
     <div className="container mt-5" style={{ maxWidth: '500px' }}>
       <h3 className="display-4 fw-bold mt-4">Добавление статуса</h3>
 
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <FormProvider {...methods}>
+        <Form onSubmit={methods.handleSubmit(onSubmit)}>
         
-        <div className="mb-3">
-          <Form.label htmlFor="name" className="form-label">Название</Form.label>
-          <Form.Control
-            id="name"
-            className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-            {...register('name')}
+          <TextInput 
+            fieldName='name'
+            label='Название'
           />
-          {errors.name && (
-            <div className="invalid-feedback">{errors.name.message}</div>
-          )}
-        </div>
 
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Загрузка' : 'Подтвердить'}
-          </button>
-    </Form>
+          <SubmitButton />
+
+      </Form>
+    </FormProvider>
   </div>
   );
 };

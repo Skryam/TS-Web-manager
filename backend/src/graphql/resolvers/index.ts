@@ -2,8 +2,16 @@ import { userResolver } from "./user";
 import { taskResolver } from "./task";
 import { statusResolver } from "./status";
 import { labelResolver } from "./label";
+import { ResolverFn } from "../resolversTypes";
 
-export default () => {
+export interface Resolvers {
+  [key: string]: any;
+
+  Query?: Record<string, ResolverFn>;
+  Mutation?: Record<string, ResolverFn>;
+}
+
+export const getResolvers = (): Resolvers => {
   const controllers = [
   userResolver,
   taskResolver,

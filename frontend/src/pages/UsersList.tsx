@@ -5,28 +5,9 @@ import { Table, Spinner, Alert, Container } from 'react-bootstrap';
 import { GET_USERS, GET_ME, DELETE_USER } from '../graphql/queries';
 import { formatDate } from '../utils/formatDate';
 
-interface GetUsersData {
-  users: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    createdAt: string;
-  }[];
-};
-
-interface Medata {
-  me: {
-    id: string;
-    email: string;
-    firstName: string;
-  } | null;
-};
-
-
 export default function UsersList() {
   const navigate = useNavigate();
-  const { loading, error, data } = useQuery<GetUsersData>(GET_USERS, { fetchPolicy: 'network-only' });
+  const { loading, error, data } = useQuery(GET_USERS, { fetchPolicy: 'network-only' });
   const [deleteUser] = useMutation(DELETE_USER, {
     refetchQueries: [
       { query: GET_USERS },
@@ -34,7 +15,7 @@ export default function UsersList() {
     ],
   });
   
-  const { data: meData } = useQuery<Medata>(GET_ME);
+  const { data: meData } = useQuery(GET_ME);
   const isAuthenticated = !!meData?.me;
   console.log(isAuthenticated)
 

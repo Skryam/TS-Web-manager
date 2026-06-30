@@ -2,22 +2,23 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Alert, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
+import { FormProvider } from "react-hook-form";
 
 import { getApi } from "../api/client";
 import { createLoginSchema, CreateLoginInput } from "../zodSchemas/login";
-import client from "../apollo/client";
+import { getClient } from "../apollo/client";
+import { TextInput } from "../components/TextInput";
+import { SubmitButton } from "../components/SubmitButton";
+import { FormLayout } from "../components/FormLayout";
 
 export default function Login() {
+  const client = getClient();
   const api = getApi();
   const navigate = useNavigate();
-  const [submitErrors, setErrors] = useState(null)
+  const [submitErrors, setSubmitErrors] = useState<string | null>(null)
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<CreateLoginInput>({
+  const methods = useForm<CreateLoginInput>({
     resolver: zodResolver(createLoginSchema),
     mode: 'onBlur',
   });
@@ -28,49 +29,29 @@ export default function Login() {
       await client.resetStore();
       navigate("/");
     } catch (err: any) {
-      setErrors(err.response?.data?.message || err.message);
+      setSubmitErrors(err.response?.data?.message || err.message);
     }
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: '500px' }}>
-      <h3 className="display-4 fw-bold mt-4">Вход</h3>
-
-      {submitErrors ? <Alert variant="danger">Неверный логин либо пароль</Alert> : null}
-
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-3">
-          <Form.label htmlFor="email" className="form-label">email</Form.label>
-          <Form.Control
-            id="email"
-            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-            {...register('email')}
+    <FormLayout title='Вход' error={submitErrors ? 'Неверный логин либо пароль' : null}>
+      <FormProvider {...methods}>
+        <Form onSubmit={methods.handleSubmit(onSubmit)}>
+        
+          <TextInput 
+            fieldName='email'
+            label='email'
           />
-          {errors.email && (
-            <div className="invalid-feedback">{errors.email.message}</div>
-          )}
-        </div>
 
-        <div className="mb-3">
-          <Form.label htmlFor="password" className="form-label">Пароль</Form.label>
-          <Form.Control
-            id="password"
-            className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-            {...register('password')}
+          <TextInput 
+            fieldName='password'
+            label='Пароль'
           />
-          {errors.password && (
-            <div className="invalid-feedback">{errors.password.message}</div>
-          )}
-        </div>
 
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Загрузка' : 'Вход'}
-          </button>
-    </Form>
-  </div>
+          <SubmitButton />
+
+        </Form>
+      </FormProvider>
+    </FormLayout>
   );
 };

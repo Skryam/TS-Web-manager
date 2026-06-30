@@ -4,9 +4,10 @@ import initGraphql from './graphql/setupGraphql';
 import http from 'http';
 import cors from 'cors';
 import session from 'express-session';
+
 import passport from './auth/passport';
 import typeDefs from './graphql/typeDefs';
-import getResolvers from './graphql/resolvers/index';
+import { getResolvers } from './graphql/resolvers/index';
 import authRoutes from './auth/routes';
 
 const app = express();

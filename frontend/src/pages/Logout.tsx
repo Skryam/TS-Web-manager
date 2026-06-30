@@ -1,9 +1,11 @@
 import { useApolloClient } from "@apollo/client/react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
-import { api } from "../api/client";
+import { getApi } from "../api/client";
 
 export default function LogoutButton() {
+  const api = getApi();
   const client = useApolloClient();
   const navigate = useNavigate();
 
@@ -18,6 +20,6 @@ export default function LogoutButton() {
   };
 
   return (
-    <button className="btn btn-link nav-link" onClick={handleLogout}>Выйти</button>
+    <Button className="btn btn-link nav-link" onClick={handleLogout}>Выйти</Button>
   )
 }

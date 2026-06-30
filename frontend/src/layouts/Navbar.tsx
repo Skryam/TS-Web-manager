@@ -2,20 +2,13 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
 
 import { GET_ME } from "../graphql/queries";
+import LogoutButton from "../pages/Logout";
 
-import LogoutButton from "./Logout";
 
-interface Medata {
-  me: {
-    id: string;
-    email: string;
-    firstName: string;
-  } | null;
-};
 
 export default function Navbar () {
 
-  const { data } = useQuery<Medata>(GET_ME);
+  const { data } = useQuery(GET_ME);
   const isAuthenticated = !!data?.me;
 
   return (

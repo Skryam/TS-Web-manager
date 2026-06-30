@@ -1,6 +1,41 @@
-import { gql } from '@apollo/client';
+import { gql, TypedDocumentNode } from '@apollo/client';
 
-export const GET_USERS = gql`
+interface GetUserData {
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+};
+
+interface GetUsersData {
+  users: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    createdAt: string;
+  }[];
+};
+
+interface GetStatusData {
+  status: {
+    id: string;
+    name: string;
+    createdAt: string;
+  };
+};
+
+interface MeData {
+  me: {
+    id: string;
+    email: string;
+    firstName: string;
+  } | null;
+};
+
+export const GET_USERS: TypedDocumentNode<GetUsersData> = gql`
   query GetUsers {
     getUsers {
       id
@@ -12,7 +47,7 @@ export const GET_USERS = gql`
   }
 `;
 
-export const GET_USER_BY_ID = gql`
+export const GET_USER_BY_ID: TypedDocumentNode<GetUserData> = gql`
   query GetUserById($id: ID!) {
     getUser(id: $id) {
       id
@@ -24,7 +59,7 @@ export const GET_USER_BY_ID = gql`
   }
 `;
 
-export const GET_STATUS_BY_ID = gql`
+export const GET_STATUS_BY_ID: TypedDocumentNode<GetStatusData> = gql`
   query GetStatusById($id: ID!) {
     getStatus(id: $id) {
       id
@@ -34,7 +69,7 @@ export const GET_STATUS_BY_ID = gql`
   }
 `;
 
-export const GET_ME = gql`
+export const GET_ME: TypedDocumentNode<MeData> = gql`
   query GetMe {
     me {
       id

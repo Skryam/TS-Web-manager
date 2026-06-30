@@ -1,38 +1,31 @@
 import { useQuery, useMutation } from "@apollo/client/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { Alert, Spinner, Form } from "react-bootstrap";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FormProvider } from "react-hook-form";
 
 import { GET_USER_BY_ID, UPDATE_USER } from "../graphql/queries";
 import { updateUserSchema, UpdateUserInput } from '../zodSchemas/user';
-
-
-interface GetUserData {
-  user: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
-};
+import { TextInput } from "../components/TextInput";
+import { SubmitButton } from "../components/SubmitButton";
+import { FormLayout } from "../components/FormLayout";
 
 export default function EditUser() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { error, data: userData, loading } = useQuery<GetUserData>(GET_USER_BY_ID, {
+
+  const [submitErrors, setSubmitErrors] = useState<string | null>(null)
+
+  const { error, data: userData, loading } = useQuery(GET_USER_BY_ID, {
     variables: { id },
     skip: !id,
   });
+  
   const [updateUser] = useMutation(UPDATE_USER);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<UpdateUserInput>({
+  const methods = useForm<UpdateUserInput>({
     resolver: zodResolver(updateUserSchema),
     mode: 'onBlur',
     defaultValues: {
@@ -42,6 +35,8 @@ export default function EditUser() {
       password: '',
     },
   });
+
+  const { reset } = methods;
 
   useEffect(() => {
     if (userData?.user) {
@@ -69,6 +64,7 @@ export default function EditUser() {
     navigate('/users')
     } catch (err: any) {
       console.log(err)
+      setSubmitErrors(err.response?.data?.message || err.message)
     }
   };
 
@@ -83,67 +79,37 @@ export default function EditUser() {
   }
 
   return (
-    <div className="container mt-5" style={{ maxWidth: '500px' }}>
-      <h4 className="display-4 fw-bold mt-4">Редактирование пользователя</h4>
-
-      <Form onSubmit={handleSubmit(onSubmit)}>
-
-        <div className="mb-3">
-          <Form.label htmlFor="firstName" className="form-label">Имя</Form.label>
-          <Form.Control
-            id="firstName"
-            className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
-            {...register('firstName')}
+    <FormLayout
+      title='Редактирование пользователя'
+      error={submitErrors}
+    >
+      <FormProvider {...methods}>
+        <Form onSubmit={methods.handleSubmit(onSubmit)}>
+        
+          <TextInput 
+            fieldName='firstName'
+            label='Имя'
           />
-          {errors.firstName && (
-            <div className="invalid-feedback">{errors.firstName.message}</div>
-          )}
-        </div>
 
-        <div className="mb-3">
-          <Form.label htmlFor="lastName" className="form-label">Фамилия</Form.label>
-          <Form.Control
-            id="lastName"
-            className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
-            {...register('lastName')}
+          <TextInput 
+            fieldName='lastName'
+            label='Фамилия'
           />
-          {errors.lastName && (
-            <div className="invalid-feedback">{errors.lastName.message}</div>
-          )}
-        </div>
-
-        <div className="mb-3">
-          <Form.label htmlFor="email" className="form-label">email</Form.label>
-          <Form.Control
-            id="email"
-            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-            {...register('email')}
+          
+          <TextInput 
+            fieldName='email'
+            label='email'
           />
-          {errors.email && (
-            <div className="invalid-feedback">{errors.email.message}</div>
-          )}
-        </div>
 
-        <div className="mb-3">
-          <Form.label htmlFor="password" className="form-label">Пароль</Form.label>
-          <Form.Control
-            id="password"
-            className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-            {...register('password')}
+          <TextInput 
+            fieldName='password'
+            label='Пароль'
           />
-          {errors.password && (
-            <div className="invalid-feedback">{errors.password.message}</div>
-          )}
-        </div>
 
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Загрузка' : 'Подтвердить'}
-          </button>
-    </Form>
-  </div>
+          <SubmitButton />
+
+        </Form>
+      </FormProvider>
+    </FormLayout>
   );
 };

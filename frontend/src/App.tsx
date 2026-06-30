@@ -1,4 +1,4 @@
-import Navbar from './pages/Navbar.tsx';
+import Navbar from './layouts/Navbar.tsx';
 import { AppRoutes } from './AppRoutes.tsx';
 
 export const App = () => (

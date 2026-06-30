@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom"
 
-import Welcome from './pages/welcome.tsx';
+import Welcome from './pages/Welcome.tsx'
 import UsersList from './pages/UsersList.tsx';
 import StatusesList from './pages/StatusesList.tsx';
 import NewUser from './pages/NewUser.tsx';

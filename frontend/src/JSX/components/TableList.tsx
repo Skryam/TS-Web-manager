@@ -1,16 +1,34 @@
 import { Container, Table } from "react-bootstrap";
+import { formatDate } from "../../utils/formatDate";
 
-interface BaseTableItem {
+type Data = {
   id: string;
   createdAt: string;
+} & object;
+
+export interface TableConfig<T extends Data> {
+  columns: Array<{
+    name: string;
+    label: string;
+  }>;
+  data: Array<T>;
+  actionButtons: Array<{
+    type: 'primary' | 'danger',
+    label: string;
+    action: () => void;
+  }>
 }
 
-interface DataTable<T extends BaseTableItem> {
-  data: T[];
-  columns: 
-}
+export const TableList<T> = (config: TableConfig<T>) => {
+  const defaultIdColumn = {
+    name: 'id',
+    label: 'ID'
+  };
 
-export const TableList = (data) => {
+  const defaultCreatedAtColumn = {
+    name:' createdAt',
+    label: 'Created At',
+  };
 
   { id } = data;
   { createdAt } = data;
@@ -24,23 +42,33 @@ export const TableList = (data) => {
           <thead className="table-gray">
             <tr>
               <th style={{ width: '50px' }} className="text-center">ID</th>
-              <th>Название</th>
+              {config.columns.map}
               <th>Дата создания</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {data.statuses.map((status) => (
-              <tr key={status.id}>
-                <td className="text-center align-middle">{status.id}</td>
-                <td className="align-middle">{status.name}</td>
+            {data.statuses.map((entity) => (
+              <tr key={entity.id}>
+                <td className="text-center align-middle">{entity.id}</td>
+
+                {config.columns.map(({name}) => {
+                  if (!entity[name]) {
+                    return null;
+                  }
+
+                  return <td className="align-middle">{entity[name]}</td>
+                })}
+                <td className="align-middle">{entity.name}</td>
+
                 <td className='align-middle'>{formatDate(status.createdAt)}</td>
-                <td>
+                {config.actionButtons.length
+                  && <td>
                   <div className='d-flex flex-wrap'>
-                    <button className="btn btn-primary me-2" onClick={() => navigate(`/editStatus/${status.id}`)}>Редактировать</button>
-                    <button className="btn btn-danger" onClick={() => console.log(1)}>Удалить</button>
+                    {config.actionButtons}
+                    <button className="btn btn-{name} me-2" onClick={() => action}>{label}</button>
                   </div>
-                </td>
+                </td>}
               </tr>
             ))}
           </tbody>

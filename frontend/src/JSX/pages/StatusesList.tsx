@@ -4,6 +4,18 @@ import { Table, Spinner, Alert, Container } from 'react-bootstrap';
 
 import { GET_STATUSES } from '../../graphql/queries';
 import { formatDate } from '../../utils/formatDate';
+import { TableConfig } from '../components/TableList';
+
+const tableConfig: TableConfig['columns'] = [
+  {
+    name: 'id',
+    label: 'ID',
+  },
+  {
+    name: 'title',
+    label: 'Название',
+  }
+];
 
 export default function StatusesList() {
   const navigate = useNavigate();

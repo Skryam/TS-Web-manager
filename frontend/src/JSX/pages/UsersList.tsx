@@ -2,8 +2,8 @@ import { useQuery, useMutation } from '@apollo/client/react';
 import { useNavigate } from 'react-router-dom';
 import { Table, Spinner, Alert, Container } from 'react-bootstrap';
 
-import { GET_USERS, GET_ME, DELETE_USER } from '../graphql/queries';
-import { formatDate } from '../utils/formatDate';
+import { GET_USERS, GET_ME, DELETE_USER } from '../../graphql/queries';
+import { formatDate } from '../../utils/formatDate';
 
 export default function UsersList() {
   const navigate = useNavigate();

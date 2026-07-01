@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client/react";
 import { Navigate, Outlet } from "react-router-dom";
 
-import { GET_ME } from "../graphql/queries";
+import { GET_ME } from "../../graphql/queries";
 
 interface Medata {
   me: {

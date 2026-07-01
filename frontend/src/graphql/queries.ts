@@ -27,6 +27,14 @@ interface GetStatusData {
   };
 };
 
+interface GetStatusesData {
+  statuses: {
+    id: string;
+    name: string;
+    createdAt: string;
+  }[];
+}
+
 interface MeData {
   me: {
     id: string;
@@ -79,7 +87,7 @@ export const GET_ME: TypedDocumentNode<MeData> = gql`
   }
 `;
 
-export const GET_STATUSES = gql`
+export const GET_STATUSES: TypedDocumentNode<GetStatusesData> = gql`
   query GetStatuses {
     getStatuses {
       id

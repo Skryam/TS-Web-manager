@@ -4,7 +4,7 @@ import { ApolloProvider } from '@apollo/client/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { getClient } from './apollo/client.ts';
-import { App } from './App.tsx';
+import { App } from './JSX/App.tsx';
 import './i18n/i18n.ts';
 
 const client = getClient();

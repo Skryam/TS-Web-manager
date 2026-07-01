@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "react-bootstrap";
 import { FormProvider } from "react-hook-form";
 
-import { CREATE_STATUS } from "../graphql/queries";
-import { CreateStatusInput, createStatusSchema } from "../zodSchemas/status";
+import { CREATE_STATUS } from "../../graphql/queries";
+import { CreateStatusInput, createStatusSchema } from "../../zodSchemas/status";
 import { TextInput } from "../components/TextInput";
 import { SubmitButton } from "../components/SubmitButton";
 import { FormLayout } from "../components/FormLayout";

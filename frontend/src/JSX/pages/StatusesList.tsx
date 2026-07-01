@@ -2,20 +2,12 @@ import { useQuery } from '@apollo/client/react';
 import { useNavigate } from 'react-router-dom';
 import { Table, Spinner, Alert, Container } from 'react-bootstrap';
 
-import { GET_STATUSES } from '../graphql/queries';
-import { formatDate } from '../utils/formatDate';
-
-interface GetStatusesData {
-  statuses: {
-    id: string;
-    name: string;
-    createdAt: string;
-  }[];
-}
+import { GET_STATUSES } from '../../graphql/queries';
+import { formatDate } from '../../utils/formatDate';
 
 export default function StatusesList() {
   const navigate = useNavigate();
-  const { loading, error, data } = useQuery<GetStatusesData>(GET_STATUSES, {
+  const { loading, error, data } = useQuery(GET_STATUSES, {
     fetchPolicy: 'network-only',
   });
 

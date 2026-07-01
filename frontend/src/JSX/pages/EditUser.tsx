@@ -6,8 +6,8 @@ import { Alert, Spinner, Form } from "react-bootstrap";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider } from "react-hook-form";
 
-import { GET_USER_BY_ID, UPDATE_USER } from "../graphql/queries";
-import { updateUserSchema, UpdateUserInput } from '../zodSchemas/user';
+import { GET_USER_BY_ID, UPDATE_USER } from "../../graphql/queries";
+import { updateUserSchema, UpdateUserInput } from '../../zodSchemas/user';
 import { TextInput } from "../components/TextInput";
 import { SubmitButton } from "../components/SubmitButton";
 import { FormLayout } from "../components/FormLayout";

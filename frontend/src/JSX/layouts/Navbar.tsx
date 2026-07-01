@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
 
-import { GET_ME } from "../graphql/queries";
-import LogoutButton from "../pages/Logout";
+import { GET_ME } from "../../graphql/queries";
+import LogoutButton from "../../pages/Logout";
 
 
 

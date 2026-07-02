@@ -1,4 +1,5 @@
-import { Container, Table } from "react-bootstrap";
+import { Container, Table, Button } from "react-bootstrap";
+
 import { formatDate } from "../../utils/formatDate";
 
 type Data = {
@@ -7,31 +8,23 @@ type Data = {
 } & object;
 
 export interface TableConfig<T extends Data> {
+  title: string;
+
   columns: Array<{
-    name: string;
+    name: keyof T;
     label: string;
   }>;
+
   data: Array<T>;
+
   actionButtons: Array<{
-    type: 'primary' | 'danger',
+    type: 'primary' | 'danger';
     label: string;
     action: () => void;
   }>
 }
 
-export const TableList<T> = (config: TableConfig<T>) => {
-  const defaultIdColumn = {
-    name: 'id',
-    label: 'ID'
-  };
-
-  const defaultCreatedAtColumn = {
-    name:' createdAt',
-    label: 'Created At',
-  };
-
-  { id } = data;
-  { createdAt } = data;
+export function TableList<T extends Data>({ title, columns, data, actionButtons }: TableConfig<T>) {
 
   return (
     <Container className="mt-4 d-flex justify-content-center">
@@ -42,33 +35,36 @@ export const TableList<T> = (config: TableConfig<T>) => {
           <thead className="table-gray">
             <tr>
               <th style={{ width: '50px' }} className="text-center">ID</th>
-              {config.columns.map}
+              {columns.map(({ label }) => {
+                return <th>{label}</th>
+              })}
               <th>Дата создания</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {data.statuses.map((entity) => (
+            {data.map((entity) => (
               <tr key={entity.id}>
                 <td className="text-center align-middle">{entity.id}</td>
 
-                {config.columns.map(({name}) => {
+                {columns.map(({name}) => {
                   if (!entity[name]) {
                     return null;
                   }
-
-                  return <td className="align-middle">{entity[name]}</td>
+                  return <td className="align-middle">{String(entity[name])}</td>
                 })}
-                <td className="align-middle">{entity.name}</td>
 
-                <td className='align-middle'>{formatDate(status.createdAt)}</td>
-                {config.actionButtons.length
-                  && <td>
+                <td className='align-middle'>{formatDate(entity.createdAt)}</td>
+
+                {actionButtons.length &&
+                <td>
                   <div className='d-flex flex-wrap'>
-                    {config.actionButtons}
-                    <button className="btn btn-{name} me-2" onClick={() => action}>{label}</button>
+                    {actionButtons.map(({ type, label, action }) => {
+                      return <Button className={`btn btn-${type} me-2`} onClick={() => action}>{label}</Button>
+                    })}
                   </div>
                 </td>}
+
               </tr>
             ))}
           </tbody>

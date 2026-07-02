@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Table, Spinner, Alert, Container } from 'react-bootstrap';
 
 import { GET_USERS, GET_ME, DELETE_USER } from '../../graphql/queries';
+import { TableList, TableConfig } from '../components/TableList';
 import { formatDate } from '../../utils/formatDate';
 
 export default function UsersList() {
@@ -37,7 +38,16 @@ export default function UsersList() {
     return null;
   }
 
+  const TableConfig: TableConfig = {
+    title: 
+  }
+
   return (
+    <TableList>
+
+    </TableList>
+
+
     <Container className="mt-4">
       <h2>Пользователи</h2>
       <Table striped bordered hover>

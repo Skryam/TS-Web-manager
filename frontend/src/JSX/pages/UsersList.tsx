@@ -43,9 +43,7 @@ export default function UsersList() {
   }
 
   return (
-    <TableList>
 
-    </TableList>
 
 
     <Container className="mt-4">

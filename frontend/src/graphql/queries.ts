@@ -19,20 +19,18 @@ interface GetUsersData {
   }[];
 };
 
+export interface Status {
+  id: string;
+  name: string;
+  createdAt: string;
+}
+
 interface GetStatusData {
-  status: {
-    id: string;
-    name: string;
-    createdAt: string;
-  };
+  status: Status;
 };
 
 interface GetStatusesData {
-  statuses: {
-    id: string;
-    name: string;
-    createdAt: string;
-  }[];
+  statuses: Status[];
 }
 
 interface MeData {

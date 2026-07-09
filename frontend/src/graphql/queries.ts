@@ -1,22 +1,19 @@
 import { gql, TypedDocumentNode } from '@apollo/client';
 
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  createdAt: string;
+};
+
 interface GetUserData {
-  user: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
+  users: User;
 };
 
 interface GetUsersData {
-  users: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    createdAt: string;
-  }[];
+  users: User[];
 };
 
 export interface Status {
@@ -26,8 +23,8 @@ export interface Status {
 }
 
 interface GetStatusData {
-  status: Status;
-};
+  statuses: Status;
+};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 
 interface GetStatusesData {
   statuses: Status[];
@@ -53,7 +50,7 @@ export const GET_USERS: TypedDocumentNode<GetUsersData> = gql`
   }
 `;
 
-export const GET_USER_BY_ID: TypedDocumentNode<GetUserData> = gql`
+export const GET_USER_BY_ID: TypedDocumentNode<User> = gql`
   query GetUserById($id: ID!) {
     getUser(id: $id) {
       id

@@ -1,13 +1,10 @@
 import { useQuery } from '@apollo/client/react';
-import { useNavigate } from 'react-router-dom';
-import { Table, Spinner, Alert, Container } from 'react-bootstrap';
+import { Spinner, Alert } from 'react-bootstrap';
 
 import { GET_STATUSES, Status } from '../../graphql/queries';
-import { formatDate } from '../../utils/formatDate';
 import { TableConfig, TableList } from '../components/TableList';
 
 export default function StatusesList() {
-  const navigate = useNavigate();
   const { loading, error, data } = useQuery(GET_STATUSES, {
     fetchPolicy: 'network-only',
   });
@@ -29,16 +26,14 @@ export default function StatusesList() {
     label: 'Название',
   }];
 
-  const actionButtons = [
-    {
+  const actionButtons = {
       editPageName: 'editStatus',
-      deleteAction: () => console.log(1)
-    },
-  ];
+      deleteAction: console.log
+    };
 
   return (
   <TableList
-    title='Добавить статус'
+    title='Статусы'
     columns={columns}
     data={statuses}
     actionButtons={actionButtons}

@@ -18,6 +18,8 @@ export interface TableConfig<T extends Data> {
 
   data: Array<T>;
 
+  showActionsIf?: (entity: T) => boolean;
+
   actionButtons: {
     editPageName: string;
     deleteAction: (id: string) => void;
@@ -26,7 +28,7 @@ export interface TableConfig<T extends Data> {
 
 const navigate = useNavigate();
 
-export function TableList<T extends Data>({ title, columns, data, actionButtons }: TableConfig<T>) {
+export function TableList<T extends Data>({ title, columns, data, showActionsIf, actionButtons }: TableConfig<T>) {
 
    const { editPageName, deleteAction } = actionButtons;
 
@@ -48,7 +50,10 @@ export function TableList<T extends Data>({ title, columns, data, actionButtons 
           </thead>
           <tbody>
             {data.map((entity) => {
+
               const { id } = entity;
+              const showActionButtons = showActionsIf ? showActionsIf(entity) : true
+
               return (
               <tr key={entity.id}>
                 <td className="text-center align-middle">{id}</td>
@@ -65,13 +70,14 @@ export function TableList<T extends Data>({ title, columns, data, actionButtons 
 
                 <td className='align-middle'>{formatDate(entity.createdAt)}</td>
 
-                <td>
-                  <div className='d-flex flex-wrap'>
-                    <Button className="btn btn-primary me-2" onClick={() => navigate(`/${editPageName}/${id}`)}>Редактировать</Button>
-                    <Button className="btn btn-danger" onClick={() => deleteAction(id)}>Удалить</Button>
-                  </div>
-                </td>
-
+                {showActionButtons &&
+                  <td>
+                    <div className='d-flex flex-wrap'>
+                      <Button className="btn btn-primary me-2" onClick={() => navigate(`/${editPageName}/${id}`)}>Редактировать</Button>
+                      <Button className="btn btn-danger" onClick={() => deleteAction(id)}>Удалить</Button>
+                    </div>
+                  </td>
+                }
               </tr>
               )
             }

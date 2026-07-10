@@ -34,7 +34,8 @@ export default function UsersList() {
     return null;
   }
 
-  const users = data?.users || [];
+  const users = data?.getUsers || [];
+  console.log(users)
 
   const columns: TableConfig<User>['columns'] = [
     {

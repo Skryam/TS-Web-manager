@@ -26,11 +26,10 @@ export interface TableConfig<T extends Data> {
   }
 }
 
-const navigate = useNavigate();
-
 export function TableList<T extends Data>({ title, columns, data, showActionsIf, actionButtons }: TableConfig<T>) {
 
    const { editPageName, deleteAction } = actionButtons;
+   const navigate = useNavigate();
 
   return (
     <Container className="mt-4 d-flex justify-content-center">
@@ -41,8 +40,8 @@ export function TableList<T extends Data>({ title, columns, data, showActionsIf,
           <thead className="table-gray">
             <tr>
               <th style={{ width: '50px' }} className="text-center">ID</th>
-              {columns.map(({ label }) => {
-                return <th>{label}</th>
+              {columns.map(({ label }, ind) => {
+                return <th key={ind}>{label}</th>
               })}
               <th>Дата создания</th>
               <th></th>

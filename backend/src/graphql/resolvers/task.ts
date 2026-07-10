@@ -56,11 +56,11 @@ export const taskResolver: Resolvers = {
     },
   },
   Mutation: {
-    createTask: async (_, { input }, { prisma, user }) => {
+    createTask: async (_, { data }, { prisma, user }) => {
       if (!user) {
  throw new Error('Unauthorized');
 }
-        const validated = createTaskSchema.parse(input);
+        const validated = createTaskSchema.parse(data);
 
         return prisma.task.create({
           data: { ...validated, creatorId: user.id },

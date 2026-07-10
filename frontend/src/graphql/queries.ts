@@ -13,7 +13,7 @@ interface GetUserData {
 };
 
 interface GetUsersData {
-  users: User[];
+  getUsers: User[];
 };
 
 export interface Status {

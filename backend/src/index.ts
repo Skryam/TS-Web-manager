@@ -14,6 +14,8 @@ const app = express();
 const httpServer = http.createServer(app);
 const resolvers = getResolvers();
 
+app.use(express.json());
+
 const server = new ApolloServer({ typeDefs, resolvers });
 
 const main = async () => {
@@ -25,8 +27,6 @@ const main = async () => {
   }));
 
   initGraphql(app, server);
-
-  app.use(express.json())
 
   app.use(session({
     secret: process.env.SESSION_KEY,

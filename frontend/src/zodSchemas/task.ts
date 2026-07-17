@@ -1,0 +1,63 @@
+import { z } from 'zod';
+
+    name: String!
+    description: String
+    statusId: ID!
+    executorId: ID
+    labels: [ID]
+
+export const createTaskSchema = z.object({
+  name: z.string()
+    .min(2, { error: 'Имя должно содержать минимум 2 символа' })
+    .max(50, { error: 'Имя не должно превышать 50 символов' })
+    .regex(/^[a-zA-Zа-яА-ЯёЁ\-'\s]+$/, { error: 'Недопустимые символы в имени' }),
+
+  description: z.string()
+    .min(2, { error: 'Фамилия должна содержать минимум 2 символа' })
+    .max(50, { error: 'Фамилия не должна превышать 50 символов' })
+    .regex(/^[a-zA-Zа-яА-ЯёЁ\-'\s]+$/, { error: 'Недопустимые символы в фамилии' }),
+
+  statusId: z.email({ error: 'Некорректный формат email' })
+    .max(255, { error: 'Email слишком длинный' })
+    .toLowerCase(),
+
+  executorId: z.string()
+    .min(8, { error: 'Пароль должен содержать минимум 8 символов' })
+    .max(100, { error: 'Пароль слишком длинный' })
+    .regex(/[A-Z]/, { error: 'Пароль должен содержать хотя бы одну заглавную букву' })
+    .regex(/[a-z]/, { error: 'Пароль должен содержать хотя бы одну строчную букву' })
+    .regex(/[0-9]/, { error: 'Пароль должен содержать хотя бы одну цифру' }),
+
+  labels
+});
+
+export type CreateUserInput = z.infer<typeof createUserSchema>;
+
+
+export const updateUserSchema = createUserSchema.omit({ password: true })
+  .extend({ password: z.string().optional() })
+  .refine((data) => {
+    if (!data.password || data.password.length === 0) {
+      return true;
+    }
+  }, {
+    error: 'Пароль должен содержать минимум 8 символов, заглавную и строчную буквы, а также цифру',
+    path: ['password'],
+  });
+export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+
+
+export const userResponseSchema = z.object({
+  id: z.number().int().positive(),
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.email(),
+  passwordDigest: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date().nullable(),
+});
+export type UserResponse = z.infer<typeof userResponseSchema>;
+
+
+export const userPublicSchema = userResponseSchema.omit({ passwordDigest: true });
+export type UserPublic = z.infer<typeof userPublicSchema>;

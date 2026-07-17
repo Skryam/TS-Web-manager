@@ -19,14 +19,10 @@ app.use(express.json());
 const server = new ApolloServer({ typeDefs, resolvers });
 
 const main = async () => {
-  await server.start();
-
   app.use(cors({
     origin: process.env.FRONTEND_URL,
     credentials: true,
   }));
-
-  initGraphql(app, server);
 
   app.use(session({
     secret: process.env.SESSION_KEY,
@@ -39,6 +35,10 @@ const main = async () => {
   app.use(passport.session());
 
   app.use('/auth', authRoutes);
+
+  await server.start();
+
+  initGraphql(app, server);
 
   const PORT = 4000
   httpServer.listen(PORT, () => {

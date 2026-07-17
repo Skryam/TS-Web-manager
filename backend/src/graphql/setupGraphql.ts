@@ -9,10 +9,18 @@ export default (app: Express, server: ApolloServer) => {
   app.use(
     '/graphql',
     expressMiddleware(server, {
-      context: async ({ req }) => ({
-        prisma,
-        user: req.user || null,
-      }),
+      context: async ({ req }) => {
+
+        console.log('=== DEBUG AUTH CONTEXT ===');
+        console.log('Cookies:', req.cookies);          // Что видит cookie-parser
+        console.log('SignedCookies:', req.signedCookies); // Что видит signed cookies      // ID сессии из куки     // Данные сессии (должен быть user)
+        console.log('=========================');
+
+        return {
+          prisma,
+          user: req.user || null,
+        }
+      },
     }),
   )
 };

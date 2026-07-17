@@ -1,8 +1,8 @@
 import { useQuery, useMutation } from '@apollo/client/react';
 import { Spinner, Alert } from 'react-bootstrap';
 
-import { User, GET_ME, GET_USERS, DELETE_USER } from '../../graphql/queries';
-import { TableList, TableConfig } from '../components/TableList';
+import { User, GET_ME, GET_USERS, DELETE_USER } from '../../../graphql/queries';
+import { TableList, TableConfig } from '../../components/TableList';
 
 export default function UsersList() {
   const { data: meData } = useQuery(GET_ME);

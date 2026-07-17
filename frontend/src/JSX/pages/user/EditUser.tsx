@@ -6,11 +6,11 @@ import { Alert, Spinner, Form } from "react-bootstrap";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider } from "react-hook-form";
 
-import { GET_USER_BY_ID, UPDATE_USER } from "../../graphql/queries";
-import { updateUserSchema, UpdateUserInput } from '../../zodSchemas/user';
-import { TextInput } from "../components/TextInput";
-import { SubmitButton } from "../components/SubmitButton";
-import { FormLayout } from "../components/FormLayout";
+import { GET_USER_BY_ID, UPDATE_USER } from "../../../graphql/queries";
+import { updateUserSchema, UpdateUserInput } from '../../../zodSchemas/user';
+import { TextInput } from "../../components/TextInput";
+import { SubmitButton } from "../../components/SubmitButton";
+import { FormLayout } from "../../components/FormLayout";
 
 export default function EditUser() {
   const { id } = useParams();
@@ -18,10 +18,12 @@ export default function EditUser() {
 
   const [submitErrors, setSubmitErrors] = useState<string | null>(null)
 
-  const { error, data: userData, loading } = useQuery(GET_USER_BY_ID, {
+  const { error, data, loading } = useQuery(GET_USER_BY_ID, {
     variables: { id },
     skip: !id,
   });
+
+  const user = data?.getUser;
   
   const [updateUser] = useMutation(UPDATE_USER);
 
@@ -29,9 +31,9 @@ export default function EditUser() {
     resolver: zodResolver(updateUserSchema),
     mode: 'onBlur',
     defaultValues: {
-      firstName: userData?.user.firstName || '',
-      lastName: userData?.user.lastName || '',
-      email: userData?.user.email || '',
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      email: user?.email || '',
       password: '',
     },
   });
@@ -39,15 +41,15 @@ export default function EditUser() {
   const { reset } = methods;
 
   useEffect(() => {
-    if (userData?.user) {
+    if (user) {
       reset({
-        firstName: userData.user.firstName,
-        lastName: userData.user.lastName,
-        email: userData.user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
         password: '',
       });
     }
-  }, [userData, reset])
+  }, [user, reset])
 
   const onSubmit = async (data: UpdateUserInput) => {
     try {
@@ -74,7 +76,7 @@ export default function EditUser() {
   if (error) {
     return <Alert variant="danger">Ошибка: {error.message}</Alert>;
   }
-  if (!userData?.user) {
+  if (!user) {
     return <div>Пользователь не найден</div>;
   }
 

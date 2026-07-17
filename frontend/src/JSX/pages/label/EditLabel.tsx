@@ -6,53 +6,53 @@ import { Alert, Spinner, Form } from "react-bootstrap";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider } from "react-hook-form";
 
-import { GET_STATUS_BY_ID, UPDATE_STATUS } from "../../graphql/queries";
-import { updateStatusSchema, UpdateStatusInput } from "../../zodSchemas/status";
-import { TextInput } from "../components/TextInput";
-import { SubmitButton } from "../components/SubmitButton";
-import { FormLayout } from "../components/FormLayout";
+import { GET_LABEL_BY_ID, UPDATE_LABEL } from "../../../graphql/queries";
+import { updateLabelSchema, UpdateLabelInput } from "../../../zodSchemas/label";
+import { TextInput } from "../../components/TextInput";
+import { SubmitButton } from "../../components/SubmitButton";
+import { FormLayout } from "../../components/FormLayout";
 
-export default function EditStatus() {
+export default function EditLabel() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [submitErrors, setSubmitErrors] = useState<string | null>(null)
 
-  const { error, data: statusData, loading } = useQuery(GET_STATUS_BY_ID, {
+  const { error, data, loading } = useQuery(GET_LABEL_BY_ID, {
     variables: { id },
     skip: !id,
   });
 
-  const [updateStatus] = useMutation(UPDATE_STATUS);
+  const [updateLabel] = useMutation(UPDATE_LABEL);
 
-  const methods = useForm<UpdateStatusInput>({
-    resolver: zodResolver(updateStatusSchema),
+  const methods = useForm<UpdateLabelInput>({
+    resolver: zodResolver(updateLabelSchema),
     mode: 'onBlur',
     defaultValues: {
-      name: statusData?.status.name || '',
+      name: data?.getLabel?.name || '',
     },
   });
 
   const { reset } = methods;
 
   useEffect(() => {
-    if (statusData?.status) {
+    if (data?.getLabel) {
       reset({
-        name: statusData.status.name,
+        name: data.getLabel.name,
       });
     }
-  }, [statusData, reset])
+  }, [data, reset])
 
-  const onSubmit = async (data: UpdateStatusInput) => {
+  const onSubmit = async (data: UpdateLabelInput) => {
     try {
-      await updateStatus({ variables: {
-        id: id,
-        data: {
-        name: data.name,
-        },
-      }
-    });
-    navigate('/statuses')
+      await updateLabel({ variables: {
+          id: id,
+          data: {
+          name: data.name,
+          },
+        }
+      });
+      navigate('/labels')
     } catch (err: any) {
       console.log(err);
       setSubmitErrors(err.response?.data?.message || err.message)
@@ -65,13 +65,14 @@ export default function EditStatus() {
   if (error) {
     return <Alert variant="danger">Ошибка: {error.message}</Alert>;
   }
-  if (!statusData?.status) {
-    return <div>Статус не найден</div>;
+  if (!data?.getLabel) {
+    console.log(data)
+    return <div>Лейбл не найден</div>;
   }
 
   return (
     <FormLayout
-      title='Редактирование статуса'
+      title='Редактирование Лейбла'
       error={submitErrors}
     >
       <FormProvider {...methods}>

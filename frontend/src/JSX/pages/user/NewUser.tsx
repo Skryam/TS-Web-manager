@@ -5,12 +5,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "react-bootstrap";
 import { FormProvider } from "react-hook-form";
 
-import { getApi } from "../../api/client";
-import { GET_ME } from "../../graphql/queries";
-import { createUserSchema, CreateUserInput } from '../../zodSchemas/user';
-import { TextInput } from "../components/TextInput";
-import { SubmitButton } from "../components/SubmitButton";
-import { FormLayout } from "../components/FormLayout";
+import { getApi } from "../../../api/client";
+import { GET_ME } from "../../../graphql/queries";
+import { createUserSchema, CreateUserInput } from '../../../zodSchemas/user';
+import { TextInput } from "../../components/TextInput";
+import { SubmitButton } from "../../components/SubmitButton";
+import { FormLayout } from "../../components/FormLayout";
 
 export default function NewUser() {
   const api = getApi();

@@ -5,7 +5,7 @@ interface Filter {
   statusId?: string;
   executorId?: string;
   creatorId?: string;
-  labelId?: string;
+  labelId?: string[];
 }
 
 export const taskResolver: Resolvers = {
@@ -27,7 +27,10 @@ export const taskResolver: Resolvers = {
         where.creatorId = Number(data.creatorId);
       }
       if (data?.labelId) {
-        where.labels = { some: { id: Number(data.labelId)}};
+        where.labels = { some: { id: {
+          in: data.labelId.map(Number)
+        }
+      }};
       };
 
       return prisma.task.findMany({

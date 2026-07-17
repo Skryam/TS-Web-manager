@@ -11,6 +11,11 @@ type Data = {
 export interface TableConfig<T extends Data> {
   title: string;
 
+  addButton?: {
+    page: string,
+    label: string
+  };
+
   columns: Array<{
     name: string;
     label: string;
@@ -26,65 +31,87 @@ export interface TableConfig<T extends Data> {
   }
 }
 
-export function TableList<T extends Data>({ title, columns, data, showActionsIf, actionButtons }: TableConfig<T>) {
+export function TableList<T extends Data>({ title, addButton, columns, data, showActionsIf, actionButtons }: TableConfig<T>) {
 
    const { editPageName, deleteAction } = actionButtons;
    const navigate = useNavigate();
 
   return (
-    <Container className="mt-4 d-flex justify-content-center">
-      <div style={{ maxWidth: '600px', width: '100%' }}> 
-        <h2 className="text-center mb-4">{title}</h2>
-        
-        <Table striped bordered hover className="bg-white shadow-sm rounded">
-          <thead className="table-gray">
+    <Container fluid className="mt-4 px-4">
+      {/* Шапка: Заголовок слева, кнопка добавления справа */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h2 className="mb-0">{title}</h2>
+        {addButton && (
+          <Button 
+            variant="primary" 
+            onClick={() => navigate(`/${addButton.page}`)}
+          >
+            {addButton.label}
+          </Button>
+        )}
+      </div>
+
+      {/* Таблица без жестких ограничений ширины */}
+      <div className="table-responsive bg-white rounded shadow-sm">
+        <Table hover striped className="mb-0 align-middle">
+          <thead className="table-light">
             <tr>
-              <th style={{ width: '50px' }} className="text-center">ID</th>
-              {columns.map(({ label }, ind) => {
-                return <th key={ind}>{label}</th>
-              })}
-              <th>Дата создания</th>
-              <th></th>
+              <th style={{ width: '60px' }} className="text-center">#</th>
+              {columns.map(({ label }, i) => (
+                <th key={i}>{label}</th>
+              ))}
+              <th style={{ width: '150px' }}>Создан</th>
+              <th style={{ width: '200px' }} className="text-end">Действия</th>
             </tr>
           </thead>
           <tbody>
             {data.map((entity) => {
-
-              const { id } = entity;
-              const showActionButtons = showActionsIf ? showActionsIf(entity) : true
-
+              const showActions = showActionsIf ? showActionsIf(entity) : true;
+              
               return (
-              <tr key={entity.id}>
-                <td className="text-center align-middle">{id}</td>
+                <tr key={entity.id}>
+                  <td className="text-center text-muted fw-bold">{entity.id}</td>
+                  
+                  {columns.map(({ name }, i) => {
+                    const value = entity[name as keyof T];
+                    return (
+                      <td key={i} className="text-truncate" style={{ maxWidth: '200px' }}>
+                        {value ? String(value) : '—'}
+                      </td>
+                    );
+                  })}
 
-                {columns.map(({name}) => {
-
-                  const value = entity[name as keyof T];
-
-                  if (!value) {
-                    return null;
-                  }
-                  return <td className="align-middle">{String(value)}</td>
-                })}
-
-                <td className='align-middle'>{formatDate(entity.createdAt)}</td>
-
-                {showActionButtons &&
-                  <td>
-                    <div className='d-flex flex-wrap'>
-                      <Button className="btn btn-primary me-2" onClick={() => navigate(`/${editPageName}/${id}`)}>Редактировать</Button>
-                      <Button className="btn btn-danger" onClick={() => deleteAction(id)}>Удалить</Button>
-                    </div>
+                  <td className="text-nowrap text-muted small">
+                    {formatDate(entity.createdAt)}
                   </td>
-                }
-              </tr>
-              )
-            }
-            )}
+
+                  {showActions ? (
+                    <td className="text-end">
+                      <Button 
+                        size="sm" 
+                        variant="outline-primary" 
+                        className="me-2"
+                        onClick={() => navigate(`/${editPageName}/${entity.id}`)}
+                      >
+                        Изм.
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline-danger"
+                        onClick={() => deleteAction(entity.id)}
+                      >
+                        Удал.
+                      </Button>
+                    </td>
+                  ) : (
+                    <td></td>
+                  )}
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
-
       </div>
     </Container>
-  )
+  );
 }

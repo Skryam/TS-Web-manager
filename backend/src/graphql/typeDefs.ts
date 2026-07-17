@@ -32,8 +32,6 @@ export default `#graphql
     createdAt: String!
     tasksWithLabels: [Task!]!
   }
-
-
   
   input CreateUserInput {
     firstName: String!

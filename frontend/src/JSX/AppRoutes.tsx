@@ -1,14 +1,18 @@
 import { Routes, Route } from "react-router-dom"
 
 import Welcome from './pages/Welcome.tsx'
-import UsersList from './pages/UsersList.tsx';
-import StatusesList from './pages/StatusesList.tsx';
-import NewUser from './pages/NewUser.tsx';
+import UsersList from './pages/user/UsersList.tsx';
+import StatusesList from './pages/status/StatusesList.tsx';
+import NewUser from './pages/user/NewUser.tsx';
 import Login from './pages/Login.tsx';
-import EditUser from './pages/EditUser.tsx';
-import EditStatus from './pages/EditStatus.tsx';
-import NewStatus from './pages/NewStatus.tsx';
+import EditUser from './pages/user/EditUser.tsx';
+import EditStatus from './pages/status/EditStatus.tsx';
+import NewStatus from './pages/status/NewStatus.tsx';
 import ProtectedLayout from './pages/ProtectedLayout.tsx';
+import LabelsList from "./pages/label/LabelsList.tsx";
+import NewLabel from "./pages/label/NewLabel.tsx";
+import EditLabel from "./pages/label/EditLabel.tsx";
+import TasksList from "./pages/task/TasksList.tsx";
 
 export const AppRoutes = () => (
   <Routes>
@@ -21,6 +25,10 @@ export const AppRoutes = () => (
       <Route path='/editUser/:id' element={<EditUser />} />
       <Route path='/newStatus' element={<NewStatus />} />
       <Route path='/editStatus/:id' element={<EditStatus />} />
+      <Route path='/labels' element={<LabelsList />} />
+      <Route path='/newLabel' element={<NewLabel />} />
+      <Route path='/editLabel/:id' element={<EditLabel />} />
+      <Route path='/tasks' element={<TasksList />} />
     </Route>
   </Routes>
 )

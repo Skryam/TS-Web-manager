@@ -34,8 +34,8 @@ export default function Navbar () {
           {isAuthenticated ? (
             <>
               <li className='nav-item'><Link to='/statuses' className='nav-link'>Статусы</Link></li>
-              <li className='nav-item'>Лейблы</li>
-              <li className='nav-item'>Задачи</li>
+              <li className='nav-item'><Link to='/labels' className="nav-link">Лейблы</Link></li>
+              <li className='nav-item'><Link to='/tasks' className="nav-link">Задачи</Link></li>
               <li className='nav-item'>
                 <LogoutButton />
               </li>

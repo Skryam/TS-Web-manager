@@ -228,3 +228,9 @@ export const DELETE_LABEL = gql`
     }
   }
 `;
+
+export const CREATE_TASK = gql`
+  mutation CreateTask($data: CreateTaskInput!) {
+    createTask(data: $data) { id name }
+  }
+`

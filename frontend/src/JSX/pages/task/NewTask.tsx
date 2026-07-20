@@ -5,22 +5,30 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "react-bootstrap";
 import { FormProvider } from "react-hook-form";
 
-import { CREATE_STATUS, GET_STATUSES } from "../../../graphql/queries";
-import { CreateStatusInput, createStatusSchema } from "../../../zodSchemas/status";
+import { CREATE_TASK, GET_STATUSES, GET_TASKS, GET_USERS } from "../../../graphql/queries";
 import { TextInput } from "../../components/TextInput";
 import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
 import { SelectInput } from "../../components/SelectInput";
+import { CreateTaskInput, createTaskSchema } from "../../../zodSchemas/task";
 
-export default function NewStatus() {
+export default function NewTask() {
   const navigate = useNavigate();
   const client = useApolloClient();
-  //const [CreateTask] = useMutation(CREATE_TASK);
+  const [CreateTask] = useMutation(CREATE_TASK);
 
   const { data: statusesData } = useQuery(GET_STATUSES);
+
   const statuses = statusesData?.getStatuses?.map((s) => ({
     id: s.id,
     label: s.name
+  })) ?? [];
+
+  const { data: usersData } = useQuery(GET_USERS);
+
+  const users = usersData?.getUsers?.map((u) => ({
+    id: u.id,
+    label: `${u.firstName} ${u.lastName}`
   })) ?? [];
 
   const methods = useForm<CreateTaskInput>({
@@ -31,18 +39,18 @@ export default function NewStatus() {
   const onSubmit = async (data: CreateStatusInput) => {
     console.log(data)
     try {
-      await CreateStatus({ variables: {
+      await CreateTask({ variables: {
         data: data
       }});
-      await client.refetchQueries({ include: [GET_STATUSES]});
-      navigate('/statuses');
+      await client.refetchQueries({ include: [GET_TASKS]});
+      navigate('/tasks');
     } catch (err: any) {
       console.log(err)
     }
   };
 
   return (
-    <FormLayout title='Добавление статуса'>
+    <FormLayout title='Добавление задачи'>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
         
@@ -62,6 +70,12 @@ export default function NewStatus() {
             fieldName="statusId"
             label="Статус"
             options={statuses}
+          />
+
+          <SelectInput
+            fieldName="executorId"
+            label="Исполнитель"
+            options={users}
           />
 
 

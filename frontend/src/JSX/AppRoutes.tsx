@@ -13,6 +13,7 @@ import LabelsList from "./pages/label/LabelsList.tsx";
 import NewLabel from "./pages/label/NewLabel.tsx";
 import EditLabel from "./pages/label/EditLabel.tsx";
 import TasksList from "./pages/task/TasksList.tsx";
+import NewTask from "./pages/task/NewTask.tsx";
 
 export const AppRoutes = () => (
   <Routes>
@@ -29,6 +30,7 @@ export const AppRoutes = () => (
       <Route path='/newLabel' element={<NewLabel />} />
       <Route path='/editLabel/:id' element={<EditLabel />} />
       <Route path='/tasks' element={<TasksList />} />
+      <Route path='/newTask' element={<NewTask />} />
     </Route>
   </Routes>
 )

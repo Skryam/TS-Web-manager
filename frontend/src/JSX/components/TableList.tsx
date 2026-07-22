@@ -19,6 +19,7 @@ export interface TableConfig<T extends Data> {
   columns: Array<{
     name: string;
     label: string;
+    render?: (id :string, label: string) => React.ReactNode
   }>;
 
   data: Array<T>;
@@ -38,7 +39,6 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
 
   return (
     <Container fluid className="mt-4 px-4">
-      {/* Шапка: Заголовок слева, кнопка добавления справа */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="mb-0">{title}</h2>
         {addButton && (
@@ -51,7 +51,6 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
         )}
       </div>
 
-      {/* Таблица без жестких ограничений ширины */}
       <div className="table-responsive bg-white rounded shadow-sm">
         <Table hover striped className="mb-0 align-middle">
           <thead className="table-light">
@@ -72,11 +71,15 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
                 <tr key={entity.id}>
                   <td className="text-center text-muted fw-bold">{entity.id}</td>
                   
-                  {columns.map(({ name }, i) => {
+                  {columns.map(({ name, render }, i) => {
                     const value = entity[name as keyof T];
+
                     return (
                       <td key={i} className="text-truncate" style={{ maxWidth: '200px' }}>
-                        {value ? String(value) : '—'}
+                        {render
+                          ? render(entity.id, String(value))
+                          : (value ? String(value) : '—')
+                        }
                       </td>
                     );
                   })}

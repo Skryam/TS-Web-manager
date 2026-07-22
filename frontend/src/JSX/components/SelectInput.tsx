@@ -11,35 +11,51 @@ interface SelectInputProps {
   label: string;
   options: SelectOption[];
   placeholder?: string;
+  multiple?: boolean;
 }
 
 export const SelectInput = ({
   fieldName,
   label,
   options,
-  placeholder = "Выберите значение..."
+  placeholder = "Выберите значение...",
+  multiple = false,
 }: SelectInputProps) => {
-  const { register, formState: { errors }, setValue } = useFormContext();
+  const { register, formState: { errors }, setValue, watch } = useFormContext();
 
-  const { onChange: rhOnChange, ...rhfRest } = register(fieldName)
-
+  const { onChange: rhOnChange, ...rhfRest } = register(fieldName);
   const fieldErrors = errors[fieldName] as FieldError;
+
+  const currentValue = watch(fieldName);
+
+  const normalizedValue = multiple
+    ? (Array.isArray(currentValue) ? currentValue.map(String) : [])
+    : String(currentValue ?? "");
 
   return (
     <div className="mb-3">
       <Form.Label htmlFor={fieldName} className="form-label">{label}</Form.Label>
       <Form.Select
         id={fieldName}
+        multiple={multiple}
+        value={normalizedValue}
+        {...(multiple ? { rows: 5 } : {})}
         className={`form-select ${fieldErrors ? 'is-invalid' : ''}`}
         onChange={(e) => {
-          const val = e.target.value;
-          setValue(fieldName, val === '' ? undefined : val, { shouldValidate: true });
+          if (multiple) {
+            const selected = Array.from(e.target.selectedOptions, opt => opt.value);
+            setValue(fieldName, selected.length > 0 ? selected : [], { shouldValidate: true });
+          } else {
+            const val = e.target.value;
+            setValue(fieldName, val === '' ? undefined : val, { shouldValidate: true });
+          }
           rhOnChange(e);
         }}
+        {...rhfRest}
         >
-          <option id=''>{placeholder}</option>
+          {!multiple && <option value="">{placeholder}</option>}
           {options.map((opt) => (
-            <option key={opt.id} id={String(opt.id)}>
+            <option key={opt.id} id={String(opt.id)} value={opt.id}>
               {opt.label}
             </option>
           ))}

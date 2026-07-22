@@ -46,9 +46,12 @@ interface GetLabelsData {
 
 export interface Task {
   id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
+  name: string;
+  description: string;
+  status: Status;
+  executor: User;
+  creator: User;
+  labels: Label[]
   createdAt: string;
 };
 

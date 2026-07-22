@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "react-bootstrap";
 import { FormProvider } from "react-hook-form";
 
-import { CREATE_TASK, GET_STATUSES, GET_TASKS, GET_USERS } from "../../../graphql/queries";
+import { CREATE_TASK, GET_LABELS, GET_STATUSES, GET_TASKS, GET_USERS } from "../../../graphql/queries";
 import { TextInput } from "../../components/TextInput";
 import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
@@ -18,17 +18,21 @@ export default function NewTask() {
   const [CreateTask] = useMutation(CREATE_TASK);
 
   const { data: statusesData } = useQuery(GET_STATUSES);
-
   const statuses = statusesData?.getStatuses?.map((s) => ({
     id: s.id,
     label: s.name
   })) ?? [];
 
   const { data: usersData } = useQuery(GET_USERS);
-
   const users = usersData?.getUsers?.map((u) => ({
     id: u.id,
     label: `${u.firstName} ${u.lastName}`
+  })) ?? [];
+
+  const { data: labelsData } = useQuery(GET_LABELS);
+  const labels = labelsData?.getLabels.map((l) => ({
+    id: l.id,
+    label: l.name
   })) ?? [];
 
   const methods = useForm<CreateTaskInput>({
@@ -36,8 +40,7 @@ export default function NewTask() {
     mode: 'onBlur',
   });
 
-  const onSubmit = async (data: CreateStatusInput) => {
-    console.log(data)
+  const onSubmit = async (data: CreateTaskInput) => {
     try {
       await CreateTask({ variables: {
         data: data
@@ -78,6 +81,12 @@ export default function NewTask() {
             options={users}
           />
 
+          <SelectInput
+            fieldName="labels"
+            label="Лейблы"
+            options={labels}
+            multiple
+          />
 
           <SubmitButton />
 

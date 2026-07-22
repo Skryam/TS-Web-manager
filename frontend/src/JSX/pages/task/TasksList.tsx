@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { Spinner, Alert, Form } from 'react-bootstrap';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { GET_TASKS, Task, TaskFilterInput } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
@@ -28,20 +29,39 @@ export default function TasksList() {
     label: 'Добавить задачу'
   }
 
-  const tasks = data?.getTasks || [];
+  const tasks = data?.getTasks
+    ? data.getTasks.map(({ id, name, description, status, executor, creator, labels, createdAt }) => ({
+        id,
+        name,
+        description,
+        status: status.name,
+        executor: `${executor.firstName} ${executor.lastName}`,
+        creator: `${creator.firstName} ${creator.lastName}`,
+        labels,
+        createdAt
+      })) : []
 
   const columns: TableConfig<Task>['columns'] = [
     {
-      name: 'firstName',
-      label: 'Имя',
+      name: 'name',
+      label: 'Название',
+      render: (id, label) => <Link to={`/viewTask/${id}`} className='link'>{label}</Link>
     },
     {
-      name: 'lastName',
-      label: 'Фамилия',
+      name: 'description',
+      label: 'Описание',
     },
     {
-      name: 'email',
-      label: 'email',
+      name: 'status',
+      label: 'Статус',
+    },
+    {
+      name: 'executor',
+      label: 'Исполнитель',
+    },
+    {
+      name: 'labels',
+      label: 'Лейблы',
     }
 ];
 

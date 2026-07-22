@@ -8,9 +8,13 @@ export const createTaskSchema = z.object({
 
   description: z.string().optional(),
 
-  statusId: z.string({ error: 'Необходимо указать статус' }),
+  statusId: z.string().min(1, { error: 'Необходимо указать статус' }),
 
   executorId: z.string().optional(),
+
+  labels: z.array(
+    z.string().min(1, "id лейбла не может быть пустым"))
+    .default([]).optional()
 });
 
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;

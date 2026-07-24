@@ -1,5 +1,5 @@
 import { Form } from "react-bootstrap";
-import { useFormState, FieldError, useFormContext } from "react-hook-form";
+import { FieldError, useFormContext } from "react-hook-form";
 
 interface SelectOption {
   id: string | number;
@@ -55,7 +55,7 @@ export const SelectInput = ({
         >
           {!multiple && <option value="">{placeholder}</option>}
           {options.map((opt) => (
-            <option key={opt.id} id={String(opt.id)} value={opt.id}>
+            <option key={opt.id} value={String(opt.id)}>
               {opt.label}
             </option>
           ))}

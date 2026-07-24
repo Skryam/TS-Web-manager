@@ -15,7 +15,7 @@ export default `#graphql
     status: Status!
     executor: User
     creator: User!
-    labels: [Label!]!
+    labels: [Label!]
     createdAt: String!
   }
 

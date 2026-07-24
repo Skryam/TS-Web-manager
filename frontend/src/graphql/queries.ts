@@ -62,6 +62,10 @@ export interface TaskFilterInput {
   creatorId?: string | number;
 }
 
+interface GetTaskData {
+  getTask: Task;
+};   
+
 interface GetTasksData {
   getTasks: Task[];
 }
@@ -176,6 +180,39 @@ export const GET_TASKS: TypedDocumentNode<GetTasksData, { filter?: TaskFilterInp
     createdAt
    }
   }
+`;
+
+export const GET_TASK_BY_ID: TypedDocumentNode<GetTaskData> = gql`
+  query GetTaskById($id: ID!) {
+    getTask(id: $id) {
+    id
+    name
+    description
+
+    status {
+      id
+      name
+    }
+
+    executor {
+      id
+      firstName
+      lastName
+    }
+
+    creator {
+      id
+      firstName
+      lastName
+    }
+
+    labels {
+      name
+    }
+
+    createdAt
+    }
+  }
 `
 
 export const DELETE_USER = gql`
@@ -236,4 +273,10 @@ export const CREATE_TASK = gql`
   mutation CreateTask($data: CreateTaskInput!) {
     createTask(data: $data) { id name }
   }
-`
+`;
+
+export const UPDATE_TASK = gql`
+  mutation UpdateTask($id: ID!, $data: UpdateTaskInput!) {
+    updateTask(id: $id, data: $data) { id name }
+  }
+`;

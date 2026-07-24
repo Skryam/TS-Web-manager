@@ -14,6 +14,8 @@ import NewLabel from "./pages/label/NewLabel.tsx";
 import EditLabel from "./pages/label/EditLabel.tsx";
 import TasksList from "./pages/task/TasksList.tsx";
 import NewTask from "./pages/task/NewTask.tsx";
+import ViewTask from "./pages/task/ViewTask.tsx";
+import EditTask from "./pages/task/EditTask.tsx";
 
 export const AppRoutes = () => (
   <Routes>
@@ -31,6 +33,8 @@ export const AppRoutes = () => (
       <Route path='/editLabel/:id' element={<EditLabel />} />
       <Route path='/tasks' element={<TasksList />} />
       <Route path='/newTask' element={<NewTask />} />
+      <Route path='/viewTask/:id' element={<ViewTask />} />
+      <Route path='/editTask/:id' element={<EditTask />} />
     </Route>
   </Routes>
 )

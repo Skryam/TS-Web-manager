@@ -1,24 +1,14 @@
-import { useQuery, useMutation } from "@apollo/client/react";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form"
-import { Alert, Spinner, Form } from "react-bootstrap";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider } from "react-hook-form";
+import { useQuery } from "@apollo/client/react";
+import { Link, useParams } from "react-router-dom";
+import { Alert, Spinner, Badge } from "react-bootstrap";
 
-import { GET_STATUS_BY_ID, UPDATE_STATUS } from "../../../graphql/queries";
-import { updateStatusSchema, UpdateStatusInput } from "../../../zodSchemas/status";
-import { TextInput } from "../../components/TextInput";
-import { SubmitButton } from "../../components/SubmitButton";
-import { FormLayout } from "../../components/FormLayout";
+import { GET_TASK_BY_ID } from "../../../graphql/queries";
+import { formatDate } from "../../../utils/formatDate";
 
 export default function ViewTask() {
   const { id } = useParams();
-  const navigate = useNavigate();
 
-  const [submitErrors, setSubmitErrors] = useState<string | null>(null)
-
-  const { error, data, loading } = useQuery(GET_STATUS_BY_ID, {
+  const { error, data, loading } = useQuery(GET_TASK_BY_ID, {
     variables: { id },
     skip: !id,
   });
@@ -29,10 +19,61 @@ export default function ViewTask() {
   if (error) {
     return <Alert variant="danger">Ошибка: {error.message}</Alert>;
   }
-  if (!data?.getStatus) {
+  if (!data?.getTask) {
     return <div>Задача не найдена</div>;
   }
 
+  const task = data.getTask;
+
   return (
-  )
-};
+    <>
+      <h2 className="display-4 fw-bold mt-4">{task.name}</h2>
+      
+      <div className="row mt-5 p-5 shadow bg-white">
+
+        <div className="col-12 col-md-8 order-2 order-md-1">
+          <p className="lead fw-normal mb-4">{task.description}</p>
+        </div>
+
+        <div className="col-12 col-md-4 border-start px-3 order-1 order-md-2 mb-3 mb-md-0">
+          
+          <div className="mb-2">
+            <Badge bg="danger" className="me-1 text-white">
+              {task.status.name}
+            </Badge>
+            
+            {task.labels?.map((label) => (
+              <Badge key={label.name} bg="info" className="me-1 text-white">
+                {label.name}
+              </Badge>
+            ))}
+          </div>
+
+          <div className="d-flex flex-wrap mb-3">
+            <span className="text-muted me-2">Создатель:</span>
+            <span>{`${task.creator.firstName} ${task.creator.lastName}`}</span>
+          </div>
+
+          <div className="d-flex flex-wrap mb-3">
+            <span className="text-muted me-2">Исполнитель:</span>
+            <span>{task.executor?.firstName ? `${task.executor.firstName} ${task.executor.lastName}` : '—'}</span>
+          </div>
+
+          <div className="d-flex flex-wrap mb-3">
+            <span className="text-muted me-2">Дата создания</span>
+            <span>{formatDate(task.createdAt)}</span>
+          </div>
+
+          <div className="d-flex flex-wrap">
+            <Link 
+              to={`/editTask/${task.id}`} 
+              className="btn btn-primary me-1"
+            >
+              Редактировать
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

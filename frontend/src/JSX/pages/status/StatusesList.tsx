@@ -26,11 +26,7 @@ export default function StatusesList() {
   }
 
   const handleDelete = async (id: string) => {
-    try {
-      await deleteStatus({ variables: { id: id }});
-    } catch (err) {
-      console.log(err)
-    }
+    await deleteStatus({ variables: { id: id }});
   };
 
   const addButton = {

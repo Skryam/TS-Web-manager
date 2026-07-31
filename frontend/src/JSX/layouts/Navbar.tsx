@@ -1,53 +1,46 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
+import { Navbar, Nav, Container } from "react-bootstrap"; // Импортируем компоненты
 
 import { GET_ME } from "../../graphql/queries";
 import LogoutButton from "../pages/LogoutButton";
 
-
-
-export default function Navbar () {
-
+export default function AppNavbar() {
   const { data } = useQuery(GET_ME);
   const isAuthenticated = !!data?.me;
 
   return (
-    <nav className='navbar navbar-expand-lg navbar-light mb-3 bg-secondary bg-opacity-25 container-fluid'>
-      <Link to="/" className='navbar-brand'>Рут</Link>
+    <Navbar expand="lg" className="mb-3 bg-secondary bg-opacity-25">
+      <Container fluid>
+        <Navbar.Brand as={Link} to="/">Рут</Navbar.Brand>
+        
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link as={Link} to="/users">Пользователи</Nav.Link>
+          </Nav>
 
-      <button
-      className='navbar-toggler'
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarToggleExternalContent"
-      >
-        <span className='navbar-toggler-icon' />
-      </button>
+          <Nav>
+            {isAuthenticated ? (
+              <>
+                <Nav.Link as={Link} to="/statuses">Статусы</Nav.Link>
+                <Nav.Link as={Link} to="/labels">Лейблы</Nav.Link>
+                <Nav.Link as={Link} to="/tasks">Задачи</Nav.Link>
 
-      <div className="collapse navbar-collapse" id="navbarToggleExternalContent">
-        <ul className='navbar-nav me-auto'>
-          <li className='nav-item'>
-            <Link to="/users" className='navbar-brand'>Пользователи</Link>
-          </li>
-        </ul>
-
-        <ul className='navbar-nav'>
-          {isAuthenticated ? (
-            <>
-              <li className='nav-item'><Link to='/statuses' className='nav-link'>Статусы</Link></li>
-              <li className='nav-item'><Link to='/labels' className="nav-link">Лейблы</Link></li>
-              <li className='nav-item'><Link to='/tasks' className="nav-link">Задачи</Link></li>
-              <li className='nav-item'>
-                <LogoutButton />
-              </li>
-            </>
-          ) : (
-            <>
-              <li className='nav-item'><Link to='/newUser' className='nav-link'>Регистрация</Link></li>
-              <li className='nav-item'><Link to='/login' className='nav-link'>Вход</Link></li>
-            </>
-          )}
-        </ul>
-      </div>
-    </nav>
-  )
+                <Nav.Item className="ms-5">
+                  <LogoutButton />
+                </Nav.Item>
+              </>
+            ) : (
+              <>
+                <Nav.Link as={Link} to="/newUser">Регистрация</Nav.Link>
+                <Nav.Link as={Link} to="/login">Вход</Nav.Link>
+              </>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
 }

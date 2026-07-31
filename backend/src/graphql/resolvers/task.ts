@@ -63,7 +63,9 @@ export const taskResolver: Resolvers = {
       if (!user) {
  throw new Error('Unauthorized');
 }
+        console.log(data)
         const validated = createTaskSchema.parse(data);
+        console.log(validated)
 
         return prisma.task.create({
           data: { ...validated, creatorId: user.id },

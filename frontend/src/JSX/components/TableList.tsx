@@ -1,5 +1,6 @@
-import { Container, Table, Button } from "react-bootstrap";
+import { Container, Table, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 import { formatDate } from "../../utils/formatDate";
 
@@ -28,7 +29,7 @@ export interface TableConfig<T extends Data> {
 
   actionButtons: {
     editPageName: string;
-    deleteAction: (id: string) => void;
+    deleteAction: (id: string) => Promise<void> | void;
   }
 }
 
@@ -37,8 +38,33 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
    const { editPageName, deleteAction } = actionButtons;
    const navigate = useNavigate();
 
+   const [error, setError] = useState<string | null>(null);
+
+  const handleDelete = async (id: string) => {
+    setError(null);
+    try {
+      await deleteAction(id);
+    } catch (err: any) {
+      let userMessage = "Ошибка удаления";
+
+      if (err?.message?.includes("RESTRICT")) {
+        userMessage = "Невозможно удалить, эта запись связана с задачей.";
+      } else {
+        userMessage = userMessage || err.message || userMessage;
+      }
+
+      setError(userMessage);
+    }
+  };
+
   return (
     <Container fluid className="mt-4 px-4">
+      {error && (
+        <Alert variant="danger" onClose={() => setError(null)} dismissible>
+          <strong>Ошибка:</strong> {error}
+        </Alert>
+      )}
+
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="mb-0">{title}</h2>
         {addButton && (
@@ -101,7 +127,7 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
                       <Button 
                         size="sm" 
                         variant="outline-danger"
-                        onClick={() => deleteAction(entity.id)}
+                        onClick={() => handleDelete(entity.id)}
                       >
                         Удал.
                       </Button>

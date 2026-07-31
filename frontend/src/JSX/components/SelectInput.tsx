@@ -22,8 +22,8 @@ export const SelectInput = ({
   multiple = false,
 }: SelectInputProps) => {
   const { register, formState: { errors }, setValue, watch } = useFormContext();
-
   const { onChange: rhOnChange, ...rhfRest } = register(fieldName);
+  
   const fieldErrors = errors[fieldName] as FieldError;
 
   const currentValue = watch(fieldName);

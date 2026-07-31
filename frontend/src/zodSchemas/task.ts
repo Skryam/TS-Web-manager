@@ -10,7 +10,9 @@ export const createTaskSchema = z.object({
 
   statusId: z.string().min(1, { error: 'Необходимо указать статус' }),
 
-  executorId: z.string().optional(),
+  executorId: z.string()
+  .transform((val) => val === "" ? undefined : val)
+  .optional(),
 
   labels: z.array(
     z.string().min(1, "id лейбла не может быть пустым"))

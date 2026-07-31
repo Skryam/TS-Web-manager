@@ -3,7 +3,7 @@ import { Spinner, Alert, Form } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { GET_TASKS, Task, TaskFilterInput } from '../../../graphql/queries';
+import { DELETE_TASK, GET_TASKS, Task, TaskFilterInput } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
 
 export default function TasksList() {
@@ -14,6 +14,12 @@ export default function TasksList() {
     fetchPolicy: 'network-only',
   });
 
+  const [deleteTask] = useMutation(DELETE_TASK, {
+    refetchQueries: [
+      { query: GET_TASKS }
+    ],
+  });
+  
   if (loading) {
     return <Spinner animation="border" role="status" />;
   }
@@ -23,6 +29,14 @@ export default function TasksList() {
   if (!data) {
     return null;
   }
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteTask({ variables: { id: id }});
+    } catch (err) {
+      console.log(err)
+    }
+  };
 
   const addButton = {
     page: 'newTask',
@@ -35,7 +49,7 @@ export default function TasksList() {
         name,
         description,
         status: status.name,
-        executor: `${executor.firstName} ${executor.lastName}`,
+        executor: executor ? `${executor.firstName} ${executor.lastName}` : null,
         creator: `${creator.firstName} ${creator.lastName}`,
         labels,
         createdAt
@@ -67,7 +81,7 @@ export default function TasksList() {
 
   const actionButtons = {
     editPageName: 'editTask',
-    deleteAction: console.log
+    deleteAction: handleDelete
   };
 
   return (

@@ -28,9 +28,21 @@ export const SelectInput = ({
 
   const currentValue = watch(fieldName);
 
+  const check = (v) => {
+    //console.log('сущность:', v)
+    return v.map(i => {
+      //console.log('айтем сущности:', i)
+      return String(i.id)
+    })
+  }
+
   const normalizedValue = multiple
-    ? (Array.isArray(currentValue) ? currentValue.map(String) : [])
+    ? (Array.isArray(currentValue) ? check(currentValue) : [])
     : String(currentValue ?? "");
+
+    if (label === 'Лейблы') {
+     // console.log("normalizedValue:", normalizedValue, '\n', 'options:', options)
+    }
 
   return (
     <div className="mb-3">

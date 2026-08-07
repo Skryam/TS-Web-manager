@@ -20,7 +20,7 @@ export interface TableConfig<T extends Data> {
   columns: Array<{
     name: string;
     label: string;
-    render?: (id :string, label: string) => React.ReactNode
+    render?: (...options) => React.ReactNode
   }>;
 
   data: Array<T>;
@@ -103,7 +103,7 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
                     return (
                       <td key={i} className="text-truncate" style={{ maxWidth: '200px' }}>
                         {render
-                          ? render(entity.id, String(value))
+                          ? render(entity.id, value)
                           : (value ? String(value) : '—')
                         }
                       </td>

@@ -24,7 +24,6 @@ export default function EditTask() {
     skip: !id,
   });
   const task = data?.getTask;
-  console.log(task)
 
   const { data: statusesData } = useQuery(GET_STATUSES);
   const statuses = statusesData?.getStatuses?.map((s) => ({
@@ -60,7 +59,7 @@ export default function EditTask() {
       description: task.description ?? '',
       statusId: String(task.status?.id ?? ''),
       executorId: String(task.executor?.id ?? ''),
-      labels: task.labels?.map(l => String(l.id)) ?? [],
+      labels: task.labels?.map(label => String(label.id)) ?? [],
     });
   }
 }, [task, reset]);

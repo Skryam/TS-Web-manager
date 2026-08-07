@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { Spinner, Alert, Form } from 'react-bootstrap';
+import { Spinner, Alert, Form, Badge } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -59,7 +59,7 @@ export default function TasksList() {
     {
       name: 'name',
       label: 'Название',
-      render: (id, label) => <Link to={`/viewTask/${id}`} className='link'>{label}</Link>
+      render: (id, value) => <Link to={`/viewTask/${id}`} className='link'>{String(value)}</Link>
     },
     {
       name: 'description',
@@ -76,8 +76,13 @@ export default function TasksList() {
     {
       name: 'labels',
       label: 'Лейблы',
-    }
-];
+      render: (id, value) => value.map((label) => (
+          <Badge key={label.name} bg="info" className="me-1 text-white">
+            {label.name}
+          </Badge>
+        ))
+      }
+  ];
 
   const actionButtons = {
     editPageName: 'editTask',

@@ -53,7 +53,8 @@ export const taskResolver: Resolvers = {
         include: {
           status: true,
           creator: true,
-          executor: true
+          executor: true,
+          labels: true
         }
       })
     },
@@ -63,14 +64,21 @@ export const taskResolver: Resolvers = {
       if (!user) {
  throw new Error('Unauthorized');
 }
-        console.log(data)
         const validated = createTaskSchema.parse(data);
-        console.log(validated)
+
+        const { labels, ...taskFields } = validated;
 
         return prisma.task.create({
-          data: { ...validated, creatorId: user.id },
-          include: { status: true, creator: true, executor: true, labels: true }
-        });
+          data: {
+            ...taskFields,
+            creatorId: user.id,
+            ...(labels?.length && {
+              labels: {
+                connect: labels.map(id => ({ id: Number(id) }))
+              }
+            })
+          }
+        })
     },
     updateTask: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
@@ -79,9 +87,19 @@ export const taskResolver: Resolvers = {
 
       const validated = updateTaskSchema.parse(data);
 
+      const { labels, ...taskFields } = validated;
+
       return prisma.task.update({
         where: { id: Number(id) },
-        data: validated,
+        data: {
+            ...taskFields,
+            creatorId: user.id,
+            ...(labels?.length && {
+              labels: {
+                connect: labels.map(id => ({ id: Number(id) }))
+              }
+            })
+          },
       });
     },
     deleteTask: async (_, { id }, { prisma, user }) => {

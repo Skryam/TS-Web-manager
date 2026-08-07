@@ -15,7 +15,7 @@ export const createTaskSchema = z.object({
     .optional()
     .transform((val) => (val === undefined || "" ? null : Number(val))),
 
-  labels: z.array(z.string()).optional()
+  labels: z.array(z.string() || z.number()).optional()
 });
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 

@@ -2,8 +2,9 @@ import { useQuery } from "@apollo/client/react";
 import { Link, useParams } from "react-router-dom";
 import { Alert, Spinner, Badge } from "react-bootstrap";
 
-import { GET_TASK_BY_ID } from "../../../graphql/queries";
+
 import { formatDate } from "../../../utils/formatDate";
+import { GET_TASK_BY_ID } from "../../../graphql/queries";
 
 export default function ViewTask() {
   const { id } = useParams();
@@ -24,6 +25,7 @@ export default function ViewTask() {
   }
 
   const task = data.getTask;
+  console.log(task)
 
   return (
     <>

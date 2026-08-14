@@ -18,36 +18,32 @@ export const SelectInput = ({
   fieldName,
   label,
   options,
-  placeholder = "Выберите значение...",
+  placeholder = "",
   multiple = false,
 }: SelectInputProps) => {
   const { register, formState: { errors }, setValue, watch } = useFormContext();
   const { onChange: rhOnChange, ...rhfRest } = register(fieldName);
   
   const fieldErrors = errors[fieldName] as FieldError;
-
   const currentValue = watch(fieldName);
 
-  const check = (v) => {
-    //console.log('сущность:', v)
-    return v.map(i => {
-      //console.log('айтем сущности:', i)
-      return String(i.id)
-    })
-  }
+  const normalizeArray = (val: any) => {
+    if (!Array.isArray(val)) return [];
+    return val.map(item => {
+      return typeof item === 'object' && item !== null ? String(item.id) : String(item);
+    });
+  };
 
   const normalizedValue = multiple
-    ? (Array.isArray(currentValue) ? check(currentValue) : [])
+    ? normalizeArray(currentValue)
     : String(currentValue ?? "");
-
-    if (label === 'Лейблы') {
-     // console.log("normalizedValue:", normalizedValue, '\n', 'options:', options)
-    }
 
   return (
     <div className="mb-3">
       <Form.Label htmlFor={fieldName} className="form-label">{label}</Form.Label>
+      
       <Form.Select
+        key={JSON.stringify(normalizedValue)} 
         id={fieldName}
         multiple={multiple}
         value={normalizedValue}
@@ -72,9 +68,10 @@ export const SelectInput = ({
             </option>
           ))}
         </Form.Select>
-        {fieldErrors && (
-          <div className="invalid-feedback">{fieldErrors.message}</div>
-        )}
+        
+      {fieldErrors && (
+        <div className="invalid-feedback">{fieldErrors.message}</div>
+      )}
     </div>
   )
 }

@@ -59,7 +59,7 @@ export interface TaskFilterInput {
   statusId?: string | number;
   executorId?: string | number;
   labelId?: (string | number)[]; // Массив ID лейблов
-  creatorId?: string | number;
+  isCreatorOnly?: boolean;
 }
 
 interface GetTaskData {
@@ -207,6 +207,7 @@ export const GET_TASK_BY_ID: TypedDocumentNode<GetTaskData> = gql`
     }
 
     labels {
+      id
       name
     }
 

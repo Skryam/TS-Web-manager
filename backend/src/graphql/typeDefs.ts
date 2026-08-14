@@ -83,7 +83,7 @@ export default `#graphql
     statusId: ID
     executorId: ID
     labelId: [ID]
-    creatorId: ID
+    isCreatorUser: Boolean
   }
 
   type Mutation {

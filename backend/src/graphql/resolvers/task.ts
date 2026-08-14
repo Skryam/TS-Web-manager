@@ -93,10 +93,9 @@ export const taskResolver: Resolvers = {
         where: { id: Number(id) },
         data: {
             ...taskFields,
-            creatorId: user.id,
-            ...(labels?.length && {
+            ...(labels !== undefined && {
               labels: {
-                connect: labels.map(id => ({ id: Number(id) }))
+                set: labels.map(id => ({ id: Number(id) }))
               }
             })
           },

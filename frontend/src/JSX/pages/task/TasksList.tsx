@@ -3,16 +3,48 @@ import { Spinner, Alert, Form, Badge } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { DELETE_TASK, GET_TASKS, Task, TaskFilterInput } from '../../../graphql/queries';
+import { DELETE_TASK, GET_LABELS, GET_STATUSES, GET_TASKS, GET_USERS, Task, TaskFilterInput } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
+import { SelectInput } from '../../components/SelectInput';
 
 export default function TasksList() {
 
-  const [filter, setFilter] = useState<TaskFilterInput>({});
+  const [filters, setFilters] = useState<TaskFilterInput>({
+    statusId: '',
+    executorId: '',
+    labelId: [],
+    isCreatorOnly: false,
+  });
 
   const { loading, error, data } = useQuery(GET_TASKS, {
     fetchPolicy: 'network-only',
+    variables: {
+      filter: {
+        statusId: filters.statusId || undefined,
+        executorId: filters.statusId || undefined,
+        labelId: filters.labelId || undefined,
+        isCreatorOnly: filters.isCreatorOnly ? true : undefined
+      }
+    },
   });
+
+  const { data: statusesData } = useQuery(GET_STATUSES);
+  const statuses = statusesData?.getStatuses?.map((s) => ({
+    id: s.id,
+    label: s.name
+  })) ?? [];
+  
+    const { data: usersData } = useQuery(GET_USERS);
+    const users = usersData?.getUsers?.map((u) => ({
+      id: u.id,
+      label: `${u.firstName} ${u.lastName}`
+    })) ?? [];
+  
+    const { data: labelsData } = useQuery(GET_LABELS);
+    const labels = labelsData?.getLabels.map((l) => ({
+      id: l.id,
+      label: l.name 
+    })) ?? [];
 
   const [deleteTask] = useMutation(DELETE_TASK, {
     refetchQueries: [
@@ -89,14 +121,45 @@ export default function TasksList() {
     deleteAction: handleDelete
   };
 
+  const handleFilterChange = (field: string, value: any) => {
+    setFilters(prev => ({ ...prev, [field]: value }));
+  }
+
   return (
     <div>
-      <Form.Select aria-label='Фильтры'>
-        <option>Select</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-      </Form.Select>
+      <div className='row mb-4'>
+        <div className='col-md-3'>
+          <Form.Select
+          id='filter-status'
+          className='form-select'
+          value={filters.statusId}
+          onChange={(e) => handleFilterChange('statusId', e.target.value)}
+          >
+          <option value=""></option>
+          {statuses.map((opt) => (
+            <option key={opt.id} value={String(opt.id)}>
+              {opt.label}
+            </option>
+          ))}
+          </Form.Select>
+        </div>
+
+        <div className='col-md-3'>
+          <Form.Select
+          id='filter-status'
+          className='form-select'
+          value={filters.statusId}
+          onChange={(e) => handleFilterChange('statusId', e.target.value)}
+          >
+          <option value=""></option>
+          {statuses.map((opt) => (
+            <option key={opt.id} value={String(opt.id)}>
+              {opt.label}
+            </option>
+          ))}
+          </Form.Select>
+        </div>
+      </div>
 
       <TableList
         title='Задачи'

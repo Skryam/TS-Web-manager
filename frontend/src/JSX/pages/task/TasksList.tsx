@@ -1,31 +1,30 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { Spinner, Alert, Form, Badge } from 'react-bootstrap';
+import { Spinner, Alert, Form, Badge, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DELETE_TASK, GET_LABELS, GET_STATUSES, GET_TASKS, GET_USERS, Task, TaskFilterInput } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
-import { SelectInput } from '../../components/SelectInput';
 
 export default function TasksList() {
 
-  const [filters, setFilters] = useState<TaskFilterInput>({
+  const [inputFilters, setInputFilters] = useState<TaskFilterInput>({
     statusId: '',
     executorId: '',
     labelId: [],
     isCreatorOnly: false,
   });
 
-  const { loading, error, data } = useQuery(GET_TASKS, {
+  const [activeFilters, setActiveFilters] = useState<TaskFilterInput>({
+    statusId: undefined,
+    executorId: undefined,
+    labelId: undefined,
+    isCreatorOnly: undefined,
+  });
+
+  const { data, loading, error } = useQuery(GET_TASKS, {
     fetchPolicy: 'network-only',
-    variables: {
-      filter: {
-        statusId: filters.statusId || undefined,
-        executorId: filters.statusId || undefined,
-        labelId: filters.labelId || undefined,
-        isCreatorOnly: filters.isCreatorOnly ? true : undefined
-      }
-    },
+    variables: { filter: activeFilters },
   });
 
   const { data: statusesData } = useQuery(GET_STATUSES);
@@ -121,43 +120,119 @@ export default function TasksList() {
     deleteAction: handleDelete
   };
 
-  const handleFilterChange = (field: string, value: any) => {
-    setFilters(prev => ({ ...prev, [field]: value }));
-  }
+  const handleInputChange = (field: string, value: any) => {
+    setInputFilters(prev => ({ ...prev, [field]: value }));
+  };
+
+  const applyFilters = () => {
+    setActiveFilters({
+      statusId: inputFilters.statusId || undefined,
+      executorId: inputFilters.executorId || undefined,
+      labelId: inputFilters.labelId && inputFilters.labelId?.length > 0 ? inputFilters.labelId : undefined,
+      isCreatorOnly: inputFilters.isCreatorOnly || undefined,
+    });
+  };
 
   return (
     <div>
-      <div className='row mb-4'>
-        <div className='col-md-3'>
-          <Form.Select
-          id='filter-status'
-          className='form-select'
-          value={filters.statusId}
-          onChange={(e) => handleFilterChange('statusId', e.target.value)}
-          >
-          <option value=""></option>
-          {statuses.map((opt) => (
-            <option key={opt.id} value={String(opt.id)}>
-              {opt.label}
-            </option>
-          ))}
-          </Form.Select>
-        </div>
+      <div className="card shadow-sm mb-4 border-0">
+        <div className="card-body p-4 bg-light rounded">
+          <h5 className="mb-3 text-secondary">Фильтры</h5>
+          
+          <div className="row g-3 align-items-end">
 
-        <div className='col-md-3'>
-          <Form.Select
-          id='filter-status'
-          className='form-select'
-          value={filters.statusId}
-          onChange={(e) => handleFilterChange('statusId', e.target.value)}
-          >
-          <option value=""></option>
-          {statuses.map((opt) => (
-            <option key={opt.id} value={String(opt.id)}>
-              {opt.label}
-            </option>
-          ))}
-          </Form.Select>
+            <div className="col-12 col-md-3">
+              <Form.Label htmlFor="filter-status" className="fw-bold small text-muted">Статус задачи</Form.Label>
+              <Form.Select
+                id="filter-status"
+                value={inputFilters.statusId}
+                onChange={(e) => handleInputChange('statusId', e.target.value)}
+              >
+                <option value="">Все статусы</option>
+                {statuses.map((opt) => (
+                  <option key={opt.id} value={String(opt.id)}>
+                    {opt.label}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
+
+            <div className="col-12 col-md-3">
+              <Form.Label htmlFor="filter-executor" className="fw-bold small text-muted">Исполнитель</Form.Label>
+              <Form.Select
+                id="filter-executor"
+                value={inputFilters.executorId}
+                onChange={(e) => handleInputChange('executorId', e.target.value)}
+              >
+                <option value="">Все исполнители</option>
+                {users.map((opt) => (
+                  <option key={opt.id} value={String(opt.id)}>
+                    {opt.label}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
+
+            <div className="col-12 col-md-3">
+  <Form.Label className="fw-bold small text-muted mb-2">Лейблы</Form.Label>
+  
+            <div 
+              className="border rounded bg-white p-2" 
+              style={{ maxHeight: '150px', overflowY: 'auto' }}
+            >
+              {labels.length > 0 ? (
+                labels.map((opt) => (
+                  <Form.Check
+                    key={opt.id}
+                    type="checkbox"
+                    id={`label-${opt.id}`}
+                    label={opt.label}
+                    value={String(opt.id)}
+                    checked={inputFilters.labelId.includes(String(opt.id))} // Проверяем, есть ли ID в массиве
+                    onChange={(e) => {
+                      const id = String(opt.id);
+                      setInputFilters(prev => {
+                        const currentLabels = prev.labelId || [];
+                        if (e.target.checked) {
+                          // Добавляем ID, если галочку поставили
+                          return { ...prev, labelId: [...currentLabels, id] };
+                        } else {
+                          // Убираем ID, если галочку сняли
+                          return { ...prev, labelId: currentLabels.filter(item => item !== id) };
+                        }
+                      });
+                    }}
+                    className="mb-1"
+                  />
+                ))
+              ) : (
+                <div className="text-muted small fst-italic">Нет доступных лейблов</div>
+              )}
+            </div>
+          </div>
+
+            <div className="col-12 col-md-3 d-flex flex-column justify-content-center h-100 pb-2">
+              <Form.Check 
+                type="switch"
+                id="filter-my-tasks"
+                label="Показывать только мои задачи"
+                checked={inputFilters.isCreatorOnly}
+                onChange={(e) => handleInputChange('isCreatorOnly', e.target.checked)}
+                className="fs-6"
+              />
+            </div>
+
+            {/* Кнопка применения */}
+            <div className="col-12 col-md-3">
+              <Button 
+                variant="primary" 
+                className="w-100 py-2 fw-semibold"
+                onClick={applyFilters}
+              >
+                Применить фильтры
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 

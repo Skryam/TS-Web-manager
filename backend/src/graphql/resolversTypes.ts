@@ -11,9 +11,14 @@ interface WithId {
 
 type Args<T = any> = {
   data: T;
+  filter?: T;
 };
 
 export type ArgsWithId<T = any> = WithId & Args<T>;
+
+export type FilterArgs<T = any> = {
+  filter?: T;
+};
 
 export type DefaultArgs<T = any> = ArgsWithId<T>;
 

@@ -1,0 +1,12 @@
+{
+  "common": {
+    "show": "Show",
+    "addTask": "Add Task"
+  },
+  "filters": {
+    "status": "Status",
+    "executor": "Executor",
+    "labels": "Labels",
+    "myTasks": "My tasks only"
+  }
+}

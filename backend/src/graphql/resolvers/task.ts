@@ -1,34 +1,27 @@
 import { createTaskSchema, updateTaskSchema } from './schemas/task';
-import { ArgsWithId, Resolvers } from '../resolversTypes';
-
-interface Filter {
-  statusId?: string;
-  executorId?: string;
-  creatorId?: string;
-  labelId?: string[];
-}
+import { Resolvers } from '../resolversTypes';
 
 export const taskResolver: Resolvers = {
   Query: {
-    getTasks: async (_, { data }: ArgsWithId<Filter>, { prisma, user }) => {
+    getTasks: async (_, { filter }, { prisma, user }) => {
       if (!user) {
  throw new Error('Unauthorized');
 }
 
       const where: any = {};
 
-      if (data?.statusId) {
-        where.statusId = Number(data.statusId);
+      if (filter?.statusId) {
+        where.statusId = Number(filter.statusId);
       }
-      if (data?.executorId) {
-        where.executorId = Number(data.executorId);
+      if (filter?.executorId) {
+        where.executorId = Number(filter.executorId);
       }
-      if (data?.creatorId) {
-        where.creatorId = Number(data.creatorId);
+      if (filter?.isCreatorOnly) {
+        where.creatorId = Number(user.id);
       }
-      if (data?.labelId) {
+      if (filter?.labelId) {
         where.labels = { some: { id: {
-          in: data.labelId.map(Number)
+          in: filter.labelId.map(Number)
         }
       }};
       };

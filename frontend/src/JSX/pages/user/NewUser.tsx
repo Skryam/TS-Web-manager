@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "react-bootstrap";
 import { FormProvider } from "react-hook-form";
+import { useTranslation } from "react-i18next"
 
 import { getApi } from "../../../api/client";
 import { GET_ME } from "../../../graphql/queries";
@@ -13,6 +14,7 @@ import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
 
 export default function NewUser() {
+  const { t } = useTranslation();
   const api = getApi();
   const navigate = useNavigate();
   const client = useApolloClient();
@@ -33,28 +35,28 @@ export default function NewUser() {
   };
 
   return (
-    <FormLayout title='Регистрация'>
+    <FormLayout title={t('views.users.new.signUp')}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
         
           <TextInput 
             fieldName='firstName'
-            label='Имя'
+            label={t('views.users.firstName')}
           />
 
           <TextInput 
             fieldName='lastName'
-            label='Фамилия'
+            label={t('views.users.lastName')}
           />
           
           <TextInput 
             fieldName='email'
-            label='email'
+            label={t('views.users.email')}
           />
 
           <TextInput 
             fieldName='password'
-            label='Пароль'
+            label={t('views.users.password')}
           />
 
           <SubmitButton />

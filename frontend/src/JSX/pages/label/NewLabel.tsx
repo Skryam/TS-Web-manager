@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "react-bootstrap";
 import { FormProvider } from "react-hook-form";
+import { useTranslation } from "react-i18next"
 
 import { CREATE_LABEL, GET_LABELS } from "../../../graphql/queries";
 import { createLabelSchema, CreateLabelInput } from "../../../zodSchemas/label";
@@ -12,6 +13,7 @@ import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
 
 export default function NewLabel() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const client = useApolloClient();
   const [CreateLabel] = useMutation(CREATE_LABEL);
@@ -34,13 +36,13 @@ export default function NewLabel() {
   };
 
   return (
-    <FormLayout title='Добавление лейбла'>
+    <FormLayout title={t('views.labels.new.create')}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
         
           <TextInput 
             fieldName='name'
-            label='Название'
+            label={t('views.labels.new.name')}
           />
 
           <SubmitButton />

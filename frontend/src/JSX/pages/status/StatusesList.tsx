@@ -1,10 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { Spinner, Alert } from 'react-bootstrap';
+import { useTranslation } from "react-i18next"
 
 import { DELETE_STATUS, GET_STATUSES, Status } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
 
 export default function StatusesList() {
+  const { t } = useTranslation();
   const { loading, error, data } = useQuery(GET_STATUSES, {
     fetchPolicy: 'network-only',
   });
@@ -31,14 +33,14 @@ export default function StatusesList() {
 
   const addButton = {
     page: 'newStatus',
-    label: 'Добавить статус'
+    label: t('views.statuses.create')
   }
 
   const statuses = data?.getStatuses || [];
 
   const columns: TableConfig<Status>['columns'] = [{
     name: 'name',
-    label: 'Название',
+    label: t('views.statuses.name')
   }];
 
   const actionButtons = {
@@ -48,7 +50,7 @@ export default function StatusesList() {
 
   return (
   <TableList
-    title='Статусы'
+    title={t('views.statuses.status')}
     addButton={addButton}
     columns={columns}
     data={statuses}

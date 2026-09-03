@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { Alert, Spinner, Form } from "react-bootstrap";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider } from "react-hook-form";
+import { useTranslation } from "react-i18next"
 
 import { GET_USER_BY_ID, UPDATE_USER } from "../../../graphql/queries";
 import { updateUserSchema, UpdateUserInput } from '../../../zodSchemas/user';
@@ -13,6 +14,7 @@ import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
 
 export default function EditUser() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -82,7 +84,7 @@ export default function EditUser() {
 
   return (
     <FormLayout
-      title='Редактирование пользователя'
+      title={t('views.users.edit.cardName')}
       error={submitErrors}
     >
       <FormProvider {...methods}>
@@ -90,22 +92,22 @@ export default function EditUser() {
         
           <TextInput 
             fieldName='firstName'
-            label='Имя'
+            label={t('views.users.firstName')}
           />
 
           <TextInput 
             fieldName='lastName'
-            label='Фамилия'
+            label={t('views.users.lastName')}
           />
           
           <TextInput 
             fieldName='email'
-            label='email'
+            label={t('views.users.email')}
           />
 
           <TextInput 
             fieldName='password'
-            label='Пароль'
+            label={t('views.users.password')}
           />
 
           <SubmitButton />

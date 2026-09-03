@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { Alert, Spinner, Form } from "react-bootstrap";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { GET_LABELS, GET_STATUSES, GET_TASK_BY_ID, GET_USERS, UPDATE_TASK } from "../../../graphql/queries";
 import { TextInput } from "../../components/TextInput";
@@ -14,6 +15,7 @@ import { UpdateTaskInput, updateTaskSchema } from "../../../zodSchemas/task";
 import { SelectInput } from "../../components/SelectInput";
 
 export default function EditTask() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -90,7 +92,7 @@ export default function EditTask() {
 
   return (
     <FormLayout
-      title='Редактирование задачи'
+      title={t('views.tasks.edit.title')}
       error={submitErrors}
     >
       <FormProvider {...methods}>
@@ -98,31 +100,31 @@ export default function EditTask() {
         
           <TextInput 
             fieldName='name'
-            label='Название'
+            label={t('views.tasks.edit.name')}
           />
 
           <TextInput 
             fieldName='description'
-            label='Описание'
+            label={t('views.tasks.edit.description')}
             as='textarea'
             rows={5}
           />
 
           <SelectInput
             fieldName="statusId"
-            label="Статус"
+            label={t('views.tasks.edit.status')}
             options={statuses}
           />
 
           <SelectInput
             fieldName="executorId"
-            label="Исполнитель"
+            label={t('views.tasks.edit.executor')}
             options={users}
           />
 
           <SelectInput
             fieldName="labels"
-            label="Лейблы"
+            label={t('views.tasks.edit.labels')}
             options={labels}
             multiple
           />

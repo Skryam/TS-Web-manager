@@ -1,12 +1,14 @@
 import { useQuery } from "@apollo/client/react";
 import { Link, useParams } from "react-router-dom";
 import { Alert, Spinner, Badge } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 
 import { formatDate } from "../../../utils/formatDate";
 import { GET_TASK_BY_ID } from "../../../graphql/queries";
 
 export default function ViewTask() {
+  const { t } = useTranslation();
   const { id } = useParams();
 
   const { error, data, loading } = useQuery(GET_TASK_BY_ID, {
@@ -52,17 +54,17 @@ export default function ViewTask() {
           </div>
 
           <div className="d-flex flex-wrap mb-3">
-            <span className="text-muted me-2">Создатель:</span>
+            <span className="text-muted me-2">{t('views.tasks.view.creator')}:</span>
             <span>{`${task.creator.firstName} ${task.creator.lastName}`}</span>
           </div>
 
           <div className="d-flex flex-wrap mb-3">
-            <span className="text-muted me-2">Исполнитель:</span>
+            <span className="text-muted me-2">{t('views.tasks.view.executor')}:</span>
             <span>{task.executor?.firstName ? `${task.executor.firstName} ${task.executor.lastName}` : '—'}</span>
           </div>
 
           <div className="d-flex flex-wrap mb-3">
-            <span className="text-muted me-2">Дата создания</span>
+            <span className="text-muted me-2">{t('views.tasks.view.date')}:</span>
             <span>{formatDate(task.createdAt)}</span>
           </div>
 
@@ -71,7 +73,7 @@ export default function ViewTask() {
               to={`/editTask/${task.id}`} 
               className="btn btn-primary me-1"
             >
-              Редактировать
+              {t('views.tasks.view.edit')}
             </Link>
           </div>
         </div>

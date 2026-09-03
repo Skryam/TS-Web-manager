@@ -1,10 +1,12 @@
 import { useQuery, useMutation } from '@apollo/client/react';
 import { Spinner, Alert } from 'react-bootstrap';
+import { useTranslation } from "react-i18next"
 
 import { User, GET_ME, GET_USERS, DELETE_USER } from '../../../graphql/queries';
 import { TableList, TableConfig } from '../../components/TableList';
 
 export default function UsersList() {
+  const { t } = useTranslation();
   const { data: meData } = useQuery(GET_ME);
 
   const { loading, error, data } = useQuery(GET_USERS, { fetchPolicy: 'network-only' });
@@ -40,15 +42,15 @@ export default function UsersList() {
   const columns: TableConfig<User>['columns'] = [
     {
       name: 'firstName',
-      label: 'Имя',
+      label: t('views.users.firstName'),
     },
     {
       name: 'lastName',
-      label: 'Фамилия',
+      label: t('views.users.lastName'),
     },
     {
       name: 'email',
-      label: 'email',
+      label: t('views.users.email'),
     } ,
   ];
 
@@ -59,7 +61,7 @@ export default function UsersList() {
 
   return (
     <TableList
-      title='Пользователи'
+      title={t('views.users.title')}
       columns={columns}
       data={users}
       showActionsIf={(user) => meData?.me?.id === user.id}

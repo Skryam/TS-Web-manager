@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { Alert, Spinner, Form } from "react-bootstrap";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider } from "react-hook-form";
+import { useTranslation } from "react-i18next"
 
 import { GET_LABEL_BY_ID, UPDATE_LABEL } from "../../../graphql/queries";
 import { updateLabelSchema, UpdateLabelInput } from "../../../zodSchemas/label";
@@ -13,6 +14,7 @@ import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
 
 export default function EditLabel() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -72,7 +74,7 @@ export default function EditLabel() {
 
   return (
     <FormLayout
-      title='Редактирование Лейбла'
+      title={t('views.labels.edit.change')}
       error={submitErrors}
     >
       <FormProvider {...methods}>
@@ -80,7 +82,7 @@ export default function EditLabel() {
         
           <TextInput 
             fieldName='name'
-            label='Название'
+            label={t('views.labels.new.name')}
           />
 
           <SubmitButton />

@@ -1,10 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { Spinner, Alert } from 'react-bootstrap';
+import { useTranslation } from "react-i18next"
 
 import { GET_LABELS, DELETE_LABEL, Label } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
 
 export default function LabelsList() {
+  const { t } = useTranslation();
   const { loading, error, data } = useQuery(GET_LABELS, {
     fetchPolicy: 'network-only',
   });
@@ -35,14 +37,14 @@ export default function LabelsList() {
 
   const addButton = {
     page: 'newLabel',
-    label: 'Добавить лейбл'
+    label: t('views.labels.create')
   }
 
   const labels = data?.getLabels || [];
 
   const columns: TableConfig<Label>['columns'] = [{
     name: 'name',
-    label: 'Название',
+    label: t('views.labels.name'),
   }];
 
   const actionButtons = {
@@ -52,7 +54,7 @@ export default function LabelsList() {
 
   return (
   <TableList
-    title='Лейблы'
+    title={t('views.labels.title')}
     addButton={addButton}
     columns={columns}
     data={labels}

@@ -2,11 +2,13 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import { Spinner, Alert, Form, Badge, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 
 import { DELETE_TASK, GET_LABELS, GET_STATUSES, GET_TASKS, GET_USERS, Task, TaskFilterInput } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
 
 export default function TasksList() {
+  const { t } = useTranslation();
 
   const [inputFilters, setInputFilters] = useState<TaskFilterInput>({
     statusId: '',
@@ -71,7 +73,7 @@ export default function TasksList() {
 
   const addButton = {
     page: 'newTask',
-    label: 'Добавить задачу'
+    label: t('views.tasks.create')
   }
 
   const tasks = data?.getTasks
@@ -89,24 +91,24 @@ export default function TasksList() {
   const columns: TableConfig<Task>['columns'] = [
     {
       name: 'name',
-      label: 'Название',
+      label: t('views.tasks.name'),
       render: (id, value) => <Link to={`/viewTask/${id}`} className='link'>{String(value)}</Link>
     },
     {
       name: 'description',
-      label: 'Описание',
+      label: t('views.tasks.description'),
     },
     {
       name: 'status',
-      label: 'Статус',
+      label: t('views.tasks.status'),
     },
     {
       name: 'executor',
-      label: 'Исполнитель',
+      label: t('views.tasks.executor'),
     },
     {
       name: 'labels',
-      label: 'Лейблы',
+      label: t('views.tasks.labels'),
       render: (id, value) => value.map((label) => (
           <Badge key={label.name} bg="info" className="me-1 text-white">
             {label.name}
@@ -137,18 +139,18 @@ export default function TasksList() {
     <div>
       <div className="card shadow-sm mb-4 border-0">
         <div className="card-body p-4 bg-light rounded">
-          <h5 className="mb-3 text-secondary">Фильтры</h5>
+          <h5 className="mb-3 text-secondary">{t('views.tasks.filter.title')}</h5>
           
           <div className="row g-3 align-items-end">
 
             <div className="col-12 col-md-3">
-              <Form.Label htmlFor="filter-status" className="fw-bold small text-muted">Статус задачи</Form.Label>
+              <Form.Label htmlFor="filter-status" className="fw-bold small text-muted">{t('views.tasks.filter.status')}</Form.Label>
               <Form.Select
                 id="filter-status"
                 value={inputFilters.statusId}
                 onChange={(e) => handleInputChange('statusId', e.target.value)}
               >
-                <option value="">Все статусы</option>
+                <option value="">{t('views.tasks.filter.statusHolder')}</option>
                 {statuses.map((opt) => (
                   <option key={opt.id} value={String(opt.id)}>
                     {opt.label}
@@ -158,13 +160,13 @@ export default function TasksList() {
             </div>
 
             <div className="col-12 col-md-3">
-              <Form.Label htmlFor="filter-executor" className="fw-bold small text-muted">Исполнитель</Form.Label>
+              <Form.Label htmlFor="filter-executor" className="fw-bold small text-muted">{t('views.tasks.filter.executor')}</Form.Label>
               <Form.Select
                 id="filter-executor"
                 value={inputFilters.executorId}
                 onChange={(e) => handleInputChange('executorId', e.target.value)}
               >
-                <option value="">Все исполнители</option>
+                <option value="">{t('views.tasks.filter.executorHolder')}</option>
                 {users.map((opt) => (
                   <option key={opt.id} value={String(opt.id)}>
                     {opt.label}
@@ -174,7 +176,7 @@ export default function TasksList() {
             </div>
 
             <div className="col-12 col-md-3">
-  <Form.Label className="fw-bold small text-muted mb-2">Лейблы</Form.Label>
+            <Form.Label className="fw-bold small text-muted mb-2">{t('views.tasks.filter.labels')}</Form.Label>
   
             <div 
               className="border rounded bg-white p-2" 
@@ -206,7 +208,7 @@ export default function TasksList() {
                   />
                 ))
               ) : (
-                <div className="text-muted small fst-italic">Нет доступных лейблов</div>
+                <div className="text-muted small fst-italic">{t('views.tasks.filter.noLabels')}</div>
               )}
             </div>
           </div>
@@ -215,7 +217,7 @@ export default function TasksList() {
               <Form.Check 
                 type="switch"
                 id="filter-my-tasks"
-                label="Показывать только мои задачи"
+                label={t('views.tasks.filter.showMyTasks')}
                 checked={inputFilters.isCreatorOnly}
                 onChange={(e) => handleInputChange('isCreatorOnly', e.target.checked)}
                 className="fs-6"
@@ -229,7 +231,7 @@ export default function TasksList() {
                 className="w-100 py-2 fw-semibold"
                 onClick={applyFilters}
               >
-                Применить фильтры
+                {t('views.tasks.filter.applyFilters')}
               </Button>
             </div>
           </div>
@@ -237,7 +239,7 @@ export default function TasksList() {
       </div>
 
       <TableList
-        title='Задачи'
+        title={t('views.tasks.title')}
         addButton={addButton}
         columns={columns}
         data={tasks}

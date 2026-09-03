@@ -1,6 +1,7 @@
 import { Container, Table, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next"
 
 import { formatDate } from "../../utils/formatDate";
 
@@ -35,6 +36,7 @@ export interface TableConfig<T extends Data> {
 
 export function TableList<T extends Data>({ title, addButton, columns, data, showActionsIf, actionButtons }: TableConfig<T>) {
 
+   const { t } = useTranslation();
    const { editPageName, deleteAction } = actionButtons;
    const navigate = useNavigate();
 
@@ -45,10 +47,10 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
     try {
       await deleteAction(id);
     } catch (err: any) {
-      let userMessage = "Ошибка удаления";
+      let userMessage = t('components.tableList.deleteError');
 
       if (err?.message?.includes("RESTRICT")) {
-        userMessage = "Невозможно удалить, эта запись связана с задачей.";
+        userMessage = t('components.tableList.restrictError');
       } else {
         userMessage = userMessage || err.message || userMessage;
       }
@@ -85,8 +87,8 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
               {columns.map(({ label }, i) => (
                 <th key={i}>{label}</th>
               ))}
-              <th style={{ width: '150px' }}>Создан</th>
-              <th style={{ width: '200px' }} className="text-end">Действия</th>
+              <th style={{ width: '150px' }}>{t('components.tableList.created')}</th>
+              <th style={{ width: '200px' }} className="text-end">{t('components.tableList.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -122,14 +124,14 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
                         className="me-2"
                         onClick={() => navigate(`/${editPageName}/${entity.id}`)}
                       >
-                        Изм.
+                        {t('components.tableList.edit')}
                       </Button>
                       <Button 
                         size="sm" 
                         variant="outline-danger"
                         onClick={() => handleDelete(entity.id)}
                       >
-                        Удал.
+                        {t('components.tableList.delete')}
                       </Button>
                     </td>
                   ) : (

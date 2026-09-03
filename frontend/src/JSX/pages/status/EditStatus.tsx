@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { Alert, Spinner, Form } from "react-bootstrap";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider } from "react-hook-form";
+import { useTranslation } from "react-i18next"
 
 import { GET_STATUS_BY_ID, UPDATE_STATUS } from "../../../graphql/queries";
 import { updateStatusSchema, UpdateStatusInput } from "../../../zodSchemas/status";
@@ -13,6 +14,7 @@ import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
 
 export default function EditStatus() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -71,7 +73,7 @@ export default function EditStatus() {
 
   return (
     <FormLayout
-      title='Редактирование статуса'
+      title={t('views.statuses.edit.change')}
       error={submitErrors}
     >
       <FormProvider {...methods}>
@@ -79,7 +81,7 @@ export default function EditStatus() {
         
           <TextInput 
             fieldName='name'
-            label='Название'
+            label={t('views.statuses.new.name')}
           />
 
           <SubmitButton />

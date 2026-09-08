@@ -4,8 +4,10 @@ import { useTranslation } from "react-i18next"
 
 import { DELETE_STATUS, GET_STATUSES, Status } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
+import { useFlash } from '../../components/FlashProvider';
 
 export default function StatusesList() {
+  const flash = useFlash();
   const { t } = useTranslation();
   const { loading, error, data } = useQuery(GET_STATUSES, {
     fetchPolicy: 'network-only',
@@ -28,7 +30,12 @@ export default function StatusesList() {
   }
 
   const handleDelete = async (id: string) => {
-    await deleteStatus({ variables: { id: id }});
+    try {
+      await deleteStatus({ variables: { id: id }});
+      flash(t('flash.statuses.delete.success'), 'success');
+    } catch {
+      flash(t('flash.statuses.delete.error'), 'danger');
+    }
   };
 
   const addButton = {

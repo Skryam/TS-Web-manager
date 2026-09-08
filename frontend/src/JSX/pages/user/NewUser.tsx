@@ -12,8 +12,10 @@ import { createUserSchema, CreateUserInput } from '../../../zodSchemas/user';
 import { TextInput } from "../../components/TextInput";
 import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
+import { useFlash } from "../../components/FlashProvider";
 
 export default function NewUser() {
+  const flash = useFlash();
   const { t } = useTranslation();
   const api = getApi();
   const navigate = useNavigate();
@@ -28,9 +30,10 @@ export default function NewUser() {
     try {
       await api.post('/auth/signup', data);
       await client.refetchQueries({ include: [GET_ME]});
+      flash(t('flash.users.create.success'));
       navigate("/");
     } catch (err: unknown) {
-      console.log(err)
+      flash(t('flash.users.create.error'));
     }
   };
 

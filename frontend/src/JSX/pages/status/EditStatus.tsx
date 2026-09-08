@@ -12,8 +12,10 @@ import { updateStatusSchema, UpdateStatusInput } from "../../../zodSchemas/statu
 import { TextInput } from "../../components/TextInput";
 import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
+import { useFlash } from "../../components/FlashProvider";
 
 export default function EditStatus() {
+  const flash = useFlash();
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -54,9 +56,10 @@ export default function EditStatus() {
         },
       }
     });
+    flash(t('flash.statuses.patch.success'), 'success');
     navigate('/statuses')
     } catch (err: any) {
-      console.log(err);
+      flash(t('flash.statuses.patch.error'), 'success');
       setSubmitErrors(err.response?.data?.message || err.message)
     }
   };

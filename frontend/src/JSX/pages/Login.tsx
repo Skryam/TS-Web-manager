@@ -12,8 +12,10 @@ import { getClient } from "../../apollo/client";
 import { TextInput } from "../components/TextInput";
 import { SubmitButton } from "../components/SubmitButton";
 import { FormLayout } from "../components/FormLayout";
+import { useFlash } from "../components/FlashProvider";
 
 export default function Login() {
+  const flash = useFlash();
   const { t } = useTranslation();
   const client = getClient();
   const api = getApi();
@@ -29,8 +31,10 @@ export default function Login() {
     try {
       await api.post('/auth/login', data);
       await client.resetStore();
+      flash(t('flash.session.create.success'));
       navigate("/");
     } catch (err: any) {
+      flash(t('flash.session.create.error'), 'danger');
       setSubmitErrors(err.response?.data?.message || err.message);
     }
   };

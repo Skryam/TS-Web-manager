@@ -13,8 +13,10 @@ import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
 import { UpdateTaskInput, updateTaskSchema } from "../../../zodSchemas/task";
 import { SelectInput } from "../../components/SelectInput";
+import { useFlash } from "../../components/FlashProvider";
 
 export default function EditTask() {
+  const flash = useFlash();
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -73,9 +75,10 @@ export default function EditTask() {
         data
       }
     });
+    flash(t('flash.tasks.patch.success'));
     navigate('/tasks')
     } catch (err: any) {
-      console.log(err);
+      flash(t('flash.tasks.patch.error'));
       setSubmitErrors(err.response?.data?.message || err.message)
     }
   };

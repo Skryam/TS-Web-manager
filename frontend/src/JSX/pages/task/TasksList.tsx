@@ -6,8 +6,10 @@ import { useTranslation } from "react-i18next";
 
 import { DELETE_TASK, GET_LABELS, GET_STATUSES, GET_TASKS, GET_USERS, Task, TaskFilterInput } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
+import { useFlash } from '../../components/FlashProvider';
 
 export default function TasksList() {
+  const flash = useFlash();
   const { t } = useTranslation();
 
   const [inputFilters, setInputFilters] = useState<TaskFilterInput>({
@@ -66,8 +68,9 @@ export default function TasksList() {
   const handleDelete = async (id: string) => {
     try {
       await deleteTask({ variables: { id: id }});
+      flash(t('flash.tasks.delete.success'));
     } catch (err) {
-      console.log(err)
+      flash(t('flash.tasks.delete.error'));
     }
   };
 

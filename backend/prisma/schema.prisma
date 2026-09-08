@@ -32,7 +32,7 @@ model Task {
   executor    User?    @relation("TaskExecutor", fields: [executorId], references: [id])
   creatorId   Int      @map("creator_id")
   creator     User     @relation("TaskCreator", fields: [creatorId], references: [id], onDelete: Restrict)
-  labels      Label[]  @relation("TaskLabels")
+  labels      TaskLabel[]  @relation("TaskLabels")
   createdAt   DateTime @default(now()) @map("created_at")
 
   @@map("tasks")
@@ -53,7 +53,18 @@ model Label {
   name        String   @unique
   createdAt   DateTime @default(now()) @map("created_at")
 
-  tasksWithLabels Task[] @relation("TaskLabels")
+  tasks TaskLabel[] @relation("TaskLabels")
 
   @@map("labels")
+}
+
+model TaskLabel {
+  id      Int @default(autoincrement())
+  taskId  Int @map("task_id")
+  labelId Int @map("label_id")
+  task    Task @relation("TaskLabels", fields: [taskId], references: [id], onDelete: Cascade)
+  label   Label @relation("TaskLabels", fields: [labelId], references: [id], onDelete: Restrict)
+
+  @@unique([taskId, labelId])
+  @@map("task_labels")
 }

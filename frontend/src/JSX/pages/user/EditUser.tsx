@@ -12,8 +12,10 @@ import { updateUserSchema, UpdateUserInput } from '../../../zodSchemas/user';
 import { TextInput } from "../../components/TextInput";
 import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
+import { useFlash } from "../../components/FlashProvider";
 
 export default function EditUser() {
+  const flash = useFlash();
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -65,9 +67,10 @@ export default function EditUser() {
         },
       }
     });
+    flash(t('flash.users.patch.success'));
     navigate('/users')
     } catch (err: any) {
-      console.log(err)
+      flash(t('flash.users.patch.error'));
       setSubmitErrors(err.response?.data?.message || err.message)
     }
   };

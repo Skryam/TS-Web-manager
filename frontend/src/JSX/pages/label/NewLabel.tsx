@@ -11,8 +11,10 @@ import { createLabelSchema, CreateLabelInput } from "../../../zodSchemas/label";
 import { TextInput } from "../../components/TextInput";
 import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
+import { useFlash } from "../../components/FlashProvider";
 
 export default function NewLabel() {
+  const flash = useFlash();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const client = useApolloClient();
@@ -29,9 +31,10 @@ export default function NewLabel() {
         data: data
       }});
       await client.refetchQueries({ include: [GET_LABELS]});
+      flash(t('flash.labels.create.success'));
       navigate('/labels');
     } catch (err: any) {
-      console.log(err)
+      flash(t('flash.labels.create.error'));
     }
   };
 

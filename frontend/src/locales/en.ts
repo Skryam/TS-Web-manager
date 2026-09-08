@@ -130,6 +130,14 @@ export default {
           hello: 'Web Manager',
           description: 'Online web manager',
           more: 'Learn more',
+          features: {
+            tasks: 'Tasks',
+            tasksText: 'Create tasks, assign executors and track progress.',
+            labels: 'Labels',
+            labelsText: 'Mark tasks with labels and filter the list quickly.',
+            statuses: 'Statuses',
+            statusesText: 'Configure workflow stages for your team.',
+          }
         },
       },
       statuses: {

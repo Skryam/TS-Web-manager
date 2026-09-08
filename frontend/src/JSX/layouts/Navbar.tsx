@@ -14,23 +14,8 @@ export default function AppNavbar() {
 
   return (
     <Navbar expand="lg" className="mb-3 bg-secondary bg-opacity-25">
-      <Container fluid>
+      <Container>
         <Navbar.Brand as={Link} to="/">{t('appName')}</Navbar.Brand>
-
-        <ButtonGroup size="sm">
-          <Button 
-            variant={i18n.language === 'ru' ? 'primary' : 'outline-primary'}
-            onClick={() => i18n.changeLanguage('ru')}
-          >
-            RU
-          </Button>
-          <Button 
-            variant={i18n.language === 'en' ? 'primary' : 'outline-primary'}
-            onClick={() => i18n.changeLanguage('en')}
-          >
-            EN
-          </Button>
-        </ButtonGroup>
         
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         
@@ -52,12 +37,31 @@ export default function AppNavbar() {
               </>
             ) : (
               <>
-                <Nav.Link as={Link} to="/newUser">{t('layouts.application.signUp')}</Nav.Link>
                 <Nav.Link as={Link} to="/login">{t('layouts.application.signIn')}</Nav.Link>
+                <Nav.Link as={Link} to="/newUser">{t('layouts.application.signUp')}</Nav.Link>
               </>
             )}
           </Nav>
         </Navbar.Collapse>
+
+        <div className="ms-4 d-flex align-items-center">
+          <div className="vr me-3 opacity-25"></div>  {/* вертикальная линия-разделитель */}
+          <ButtonGroup size="sm">
+            <Button 
+              variant={i18n.language === 'ru' ? 'primary' : 'outline-primary'}
+              onClick={() => i18n.changeLanguage('ru')}
+            >
+              RU
+            </Button>
+            <Button 
+              variant={i18n.language === 'en' ? 'primary' : 'outline-primary'}
+              onClick={() => i18n.changeLanguage('en')}
+            >
+              EN
+            </Button>
+          </ButtonGroup>
+        </div>
+
       </Container>
     </Navbar>
   );

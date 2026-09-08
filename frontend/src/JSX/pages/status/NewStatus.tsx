@@ -11,8 +11,10 @@ import { CreateStatusInput, createStatusSchema } from "../../../zodSchemas/statu
 import { TextInput } from "../../components/TextInput";
 import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
+import { useFlash } from "../../components/FlashProvider";
 
 export default function NewStatus() {
+  const flash = useFlash();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const client = useApolloClient();
@@ -30,8 +32,10 @@ export default function NewStatus() {
         data: data
       }});
       await client.refetchQueries({ include: [GET_STATUSES]});
+      flash(t('flash.statuses.create.success'), 'success');
       navigate('/statuses');
     } catch (err: any) {
+      flash(t('flash.statuses.create.error'), 'danger');
       console.log(err)
     }
   };

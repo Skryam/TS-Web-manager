@@ -1,4 +1,5 @@
 import Navbar from './layouts/Navbar.tsx';
+import Footer from './layouts/Footer.tsx'
 import { AppRoutes } from './AppRoutes.tsx';
 
 export const App = () => (
@@ -7,5 +8,6 @@ export const App = () => (
     <div className='container flex-grow-1'>
       <AppRoutes />
     </div>
+    <Footer />
   </div>
 )

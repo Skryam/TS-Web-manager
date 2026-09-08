@@ -19,15 +19,14 @@ export const labelResolver: Resolvers = {
   Mutation: {
     createLabel: async (_, { data }: DefaultArgs<CreateLabelInput>, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Error('Unauthorized');
+      }
 
       try {
         const validated = createLabelSchema.parse(data);
 
         return prisma.label.create({
           data: validated,
-          include: { tasksWithLabels: true }
         });
      } catch (e) {
         console.log(e)

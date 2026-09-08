@@ -4,8 +4,10 @@ import { useTranslation } from "react-i18next"
 
 import { User, GET_ME, GET_USERS, DELETE_USER } from '../../../graphql/queries';
 import { TableList, TableConfig } from '../../components/TableList';
+import { useFlash } from '../../components/FlashProvider';
 
 export default function UsersList() {
+  const flash = useFlash();
   const { t } = useTranslation();
   const { data: meData } = useQuery(GET_ME);
 
@@ -21,8 +23,9 @@ export default function UsersList() {
   const handleDelete = async (id: string) => {
     try {
       await deleteUser({ variables: { id: id }});
+      flash(t('flash.users.delete.success'));
     } catch (err) {
-      console.log(err)
+      flash(t('flash.users.delete.error'));
     }
   };
 

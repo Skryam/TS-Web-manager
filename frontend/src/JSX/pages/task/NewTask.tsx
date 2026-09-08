@@ -11,8 +11,10 @@ import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
 import { SelectInput } from "../../components/SelectInput";
 import { CreateTaskInput, createTaskSchema } from "../../../zodSchemas/task";
+import { useFlash } from "../../components/FlashProvider";
 
 export default function NewTask() {
+  const flash = useFlash();
   const navigate = useNavigate();
   const client = useApolloClient();
   const [CreateTask] = useMutation(CREATE_TASK);
@@ -46,9 +48,10 @@ export default function NewTask() {
         data: data
       }});
       await client.refetchQueries({ include: [GET_TASKS]});
+      flash(t('flash.tasks.create.success'));
       navigate('/tasks');
     } catch (err: any) {
-      console.log(err)
+      flash(t('flash.tasks.create.error'));
     }
   };
 

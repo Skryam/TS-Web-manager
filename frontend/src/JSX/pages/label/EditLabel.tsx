@@ -12,8 +12,10 @@ import { updateLabelSchema, UpdateLabelInput } from "../../../zodSchemas/label";
 import { TextInput } from "../../components/TextInput";
 import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
+import { useFlash } from "../../components/FlashProvider";
 
 export default function EditLabel() {
+  const flash = useFlash();
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -54,9 +56,10 @@ export default function EditLabel() {
           },
         }
       });
+      flash(t('flash.labels.patch.success'));
       navigate('/labels')
     } catch (err: any) {
-      console.log(err);
+      flash(t('flash.labels.patch.error'));
       setSubmitErrors(err.response?.data?.message || err.message)
     }
   };

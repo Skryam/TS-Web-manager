@@ -26,15 +26,20 @@ export const taskResolver: Resolvers = {
       }};
       };
 
-      return prisma.task.findMany({
+      const tasks = await prisma.task.findMany({
         where,
         include: {
           status: true,
           creator: true,
           executor: true,
-          labels: true
-        }
-      }); 
+          labels: { include: { label: true } },
+        },
+      });
+
+      return tasks.map((task) => ({
+        ...task,
+        labels: task.labels.map((tl) => tl.label)
+      }))
     },
     getTask: (_, { id }, { prisma, user }) => {
       if (!user) {
@@ -67,7 +72,7 @@ export const taskResolver: Resolvers = {
             creatorId: user.id,
             ...(labels?.length && {
               labels: {
-                connect: labels.map(id => ({ id: Number(id) }))
+                create: labels.map(id => ({ labelId: Number(id) }))
               }
             })
           }
@@ -75,8 +80,8 @@ export const taskResolver: Resolvers = {
     },
     updateTask: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Error('Unauthorized');
+      }
 
       const validated = updateTaskSchema.parse(data);
 
@@ -88,7 +93,7 @@ export const taskResolver: Resolvers = {
             ...taskFields,
             ...(labels !== undefined && {
               labels: {
-                set: labels.map(id => ({ id: Number(id) }))
+                create: labels.map(id => ({ labelId: Number(id) }))
               }
             })
           },

@@ -7,7 +7,10 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 
 export const getPrisma = () => {
   if (!prisma) {
-    prisma = new PrismaClient({ adapter });
+    prisma = new PrismaClient({
+      adapter,
+      log: ['query']
+    });
   }
   return prisma
 }

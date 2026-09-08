@@ -4,8 +4,10 @@ import { useTranslation } from "react-i18next"
 
 import { GET_LABELS, DELETE_LABEL, Label } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
+import { useFlash } from '../../components/FlashProvider';
 
 export default function LabelsList() {
+  const flash = useFlash();
   const { t } = useTranslation();
   const { loading, error, data } = useQuery(GET_LABELS, {
     fetchPolicy: 'network-only',
@@ -30,8 +32,9 @@ export default function LabelsList() {
   const handleDelete = async (id: string) => {
     try {
       await deleteLabel({ variables: { id: id }});
+      flash(t('flash.labels.delete.success'));
     } catch (err) {
-      console.log(err)
+      flash(t('flash.labels.delete.error'));
     }
   };
 

@@ -193,7 +193,7 @@ export default function TasksList() {
                     id={`label-${opt.id}`}
                     label={opt.label}
                     value={String(opt.id)}
-                    checked={inputFilters.labelId.includes(String(opt.id))} // Проверяем, есть ли ID в массиве
+                    checked={inputFilters?.labelId && inputFilters?.labelId.includes(String(opt.id))} // Проверяем, есть ли ID в массиве
                     onChange={(e) => {
                       const id = String(opt.id);
                       setInputFilters(prev => {

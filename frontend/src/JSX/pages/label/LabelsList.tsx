@@ -34,7 +34,7 @@ export default function LabelsList() {
       await deleteLabel({ variables: { id: id }});
       flash(t('flash.labels.delete.success'));
     } catch (err) {
-      flash(t('flash.labels.delete.error'));
+      flash(t('flash.labels.delete.error'), 'danger');
     }
   };
 

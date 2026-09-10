@@ -20,10 +20,11 @@ export const taskResolver: Resolvers = {
         where.creatorId = Number(user.id);
       }
       if (filter?.labelId) {
-        where.labels = { some: { id: {
-          in: filter.labelId.map(Number)
-        }
-      }};
+        where.labels = { some: { label: { id: {
+            in: filter.labelId.map(Number)
+            }
+          }
+        }};
       };
 
       const tasks = await prisma.task.findMany({
@@ -41,20 +42,31 @@ export const taskResolver: Resolvers = {
         labels: task.labels.map((tl) => tl.label)
       }))
     },
-    getTask: (_, { id }, { prisma, user }) => {
+    getTask: async (_, { id }, { prisma, user }) => {
       if (!user) {
  throw new Error('Unauthorized');
 }
 
-      return prisma.task.findUnique({
+      const task = await prisma.task.findUnique({
         where: { id: Number(id) },
         include: {
           status: true,
           creator: true,
           executor: true,
-          labels: true
+          labels: { include: { label: true } }
         }
+      });
+
+      if (!task) {
+        return null
+      }
+
+      return ({
+        ...task,
+        labels: task.labels.map((tl) => tl.label)
       })
+
+      
     },
   },
   Mutation: {

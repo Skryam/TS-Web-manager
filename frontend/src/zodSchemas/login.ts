@@ -1,15 +1,15 @@
 import { z } from 'zod';
 
 export const createLoginSchema = z.object({
-  email: z.email({ message: 'Некорректный формат email' })
-    .max(255, { message: 'Email слишком длинный' })
+  email: z.email()
+    .max(255)
     .toLowerCase(),
 
   password: z.string()
-    .min(8, { message: 'Пароль должен содержать минимум 8 символов' })
-    .max(100, { message: 'Пароль слишком длинный' })
-    .regex(/[A-Z]/, { message: 'Пароль должен содержать хотя бы одну заглавную букву' })
-    .regex(/[a-z]/, { message: 'Пароль должен содержать хотя бы одну строчную букву' })
-    .regex(/[0-9]/, { message: 'Пароль должен содержать хотя бы одну цифру' }),
+    .min(8)
+    .max(100)
+    .regex(/[A-Z]/)
+    .regex(/[a-z]/)
+    .regex(/[0-9]/)
 });
 export type CreateLoginInput = z.infer<typeof createLoginSchema>;

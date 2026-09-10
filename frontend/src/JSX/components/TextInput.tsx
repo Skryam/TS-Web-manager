@@ -1,5 +1,6 @@
 import { Form } from "react-bootstrap";
 import { useFormContext, FieldError } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 interface TextInputProps {
   fieldName: string;
@@ -14,12 +15,21 @@ export const TextInput = ({
   as = 'input',
   rows = 3
 }: TextInputProps) => {
+  const { t } = useTranslation();
   const {
     register,
     formState: { errors },
   } = useFormContext();
 
   const fieldErrors = errors[fieldName] as FieldError;
+
+  const rawErrorMessage = fieldErrors?.message || '';
+
+  console.log(t(rawErrorMessage.replace('custom', '')))
+
+  const message = rawErrorMessage.startsWith('custom:')
+    ? t(rawErrorMessage.replace('custom', ''))
+    : rawErrorMessage;
 
   return (
   <div className="mb-3">
@@ -41,7 +51,7 @@ export const TextInput = ({
       />
     )}
     {fieldErrors && (
-      <div className="invalid-feedback">{fieldErrors.message}</div>
+      <div className="invalid-feedback">{message}</div>
     )}
   </div>
   )

@@ -123,6 +123,9 @@ export default {
         },
         edit: {
           cardName: 'Edit User',
+          password: {
+            error: 'The password must contain at least 8 characters, an uppercase letter, a lowercase letter, and a digit',
+          }
         },
       },
       welcome: {

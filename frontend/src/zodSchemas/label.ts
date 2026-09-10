@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { useTranslation } from 'react-i18next';
 
 export const createLabelSchema = z.object({
   name: z.string()

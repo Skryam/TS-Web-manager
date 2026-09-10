@@ -1,26 +1,29 @@
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
+
+const { t } = useTranslation()
 
 export const createUserSchema = z.object({
   firstName: z.string()
-    .min(2, { error: 'Имя должно содержать минимум 2 символа' })
-    .max(50, { error: 'Имя не должно превышать 50 символов' })
-    .regex(/^[a-zA-Zа-яА-ЯёЁ\-'\s]+$/, { error: 'Недопустимые символы в имени' }),
+    .min(2)
+    .max(50)
+    .regex(/^[a-zA-Zа-яА-ЯёЁ\-'\s]+$/),
 
   lastName: z.string()
-    .min(2, { error: 'Фамилия должна содержать минимум 2 символа' })
-    .max(50, { error: 'Фамилия не должна превышать 50 символов' })
-    .regex(/^[a-zA-Zа-яА-ЯёЁ\-'\s]+$/, { error: 'Недопустимые символы в фамилии' }),
+    .min(2)
+    .max(50)
+    .regex(/^[a-zA-Zа-яА-ЯёЁ\-'\s]+$/),
 
-  email: z.email({ error: 'Некорректный формат email' })
-    .max(255, { error: 'Email слишком длинный' })
+  email: z.email()
+    .max(255)
     .toLowerCase(),
 
   password: z.string()
-    .min(8, { error: 'Пароль должен содержать минимум 8 символов' })
-    .max(100, { error: 'Пароль слишком длинный' })
-    .regex(/[A-Z]/, { error: 'Пароль должен содержать хотя бы одну заглавную букву' })
-    .regex(/[a-z]/, { error: 'Пароль должен содержать хотя бы одну строчную букву' })
-    .regex(/[0-9]/, { error: 'Пароль должен содержать хотя бы одну цифру' }),
+    .min(8)
+    .max(100)
+    .regex(/[A-Z]/)
+    .regex(/[a-z]/)
+    .regex(/[0-9]/),
 });
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 
@@ -32,7 +35,7 @@ export const updateUserSchema = createUserSchema.omit({ password: true })
       return true;
     }
   }, {
-    error: 'Пароль должен содержать минимум 8 символов, заглавную и строчную буквы, а также цифру',
+    error: t('custom:views.users.edit.password.error'),
     path: ['password'],
   });
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;

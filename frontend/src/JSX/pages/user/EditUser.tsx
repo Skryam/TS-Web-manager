@@ -88,7 +88,7 @@ export default function EditUser() {
   return (
     <FormLayout
       title={t('views.users.edit.cardName')}
-      error={submitErrors}
+      error={submitErrors} 
     >
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>

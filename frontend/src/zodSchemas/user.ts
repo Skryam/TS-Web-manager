@@ -1,7 +1,4 @@
-import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-
-const { t } = useTranslation()
 
 export const createUserSchema = z.object({
   firstName: z.string()
@@ -27,18 +24,22 @@ export const createUserSchema = z.object({
 });
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 
+type Translate = (key: string) => string;
 
-export const updateUserSchema = createUserSchema.omit({ password: true })
-  .extend({ password: z.string().optional() })
-  .refine((data) => {
-    if (!data.password || data.password.length === 0) {
-      return true;
-    }
-  }, {
-    error: t('custom:views.users.edit.password.error'),
-    path: ['password'],
-  });
-export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+export const createUpdateUserSchema = (t: Translate) => {
+  return createUserSchema.omit({ password: true })
+    .extend({ password: z.string().optional() })
+    .refine((data) => {
+      if (!data.password || data.password.length === 0) {
+        return true;
+      }
+      return data.password.length >= 8;
+    }, {
+      error: t('views.users.edit.password.error'),
+      path: ['password'],
+    });
+}
+export type UpdateUserInput = z.infer<typeof createUpdateUserSchema>;
 
 
 export const userResponseSchema = z.object({

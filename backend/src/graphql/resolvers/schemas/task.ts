@@ -2,11 +2,11 @@ import { z } from 'zod';
 
 export const createTaskSchema = z.object({
   name: z.string()
-    .min(2, { message: 'Название должно содержать минимум 2 символа' })
-    .max(100, { message: 'Максимум 100 символов' }),
+    .min(2)
+    .max(100),
 
   description: z.string()
-    .max(500, { message: 'Описание не должно превышать 500 символов' })
+    .max(500)
     .optional(),
 
   statusId: z.string().transform((val) => Number(val)),

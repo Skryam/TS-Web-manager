@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 export const createUserSchema = z.object({
@@ -24,9 +25,8 @@ export const createUserSchema = z.object({
 });
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 
-type Translate = (key: string) => string;
-
-export const createUpdateUserSchema = (t: Translate) => {
+export const createUpdateUserSchema = () => {
+  const { t } = useTranslation();
   return createUserSchema.omit({ password: true })
     .extend({ password: z.string().optional() })
     .refine((data) => {

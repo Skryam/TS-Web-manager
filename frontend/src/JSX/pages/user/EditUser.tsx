@@ -8,7 +8,7 @@ import { FormProvider } from "react-hook-form";
 import { useTranslation } from "react-i18next"
 
 import { GET_USER_BY_ID, UPDATE_USER } from "../../../graphql/queries";
-import { updateUserSchema, UpdateUserInput } from '../../../zodSchemas/user';
+import { createUpdateUserSchema, UpdateUserInput } from '../../../zodSchemas/user';
 import { TextInput } from "../../components/TextInput";
 import { SubmitButton } from "../../components/SubmitButton";
 import { FormLayout } from "../../components/FormLayout";
@@ -32,7 +32,7 @@ export default function EditUser() {
   const [updateUser] = useMutation(UPDATE_USER);
 
   const methods = useForm<UpdateUserInput>({
-    resolver: zodResolver(updateUserSchema),
+    resolver: zodResolver(createUpdateUserSchema()),
     mode: 'onBlur',
     defaultValues: {
       firstName: user?.firstName || '',

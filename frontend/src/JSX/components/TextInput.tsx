@@ -34,10 +34,20 @@ export const TextInput = ({
   return (
   <div className="mb-3">
     <Form.Label htmlFor={fieldName} className="form-label">{label}</Form.Label>
-    {as === 'textarea' ? (
+    {if (as === 'textarea') {
+      (
+        <Form.Control
+          as="textarea"
+          rows={rows}
+          id={fieldName}
+          className={`form-control ${fieldErrors ? 'is-invalid' : ''}`}
+          {...register(fieldName)}
+        />
+      )
+    } :  as === 'password' ? 
+      (
       <Form.Control
-        as="textarea"
-        rows={rows}
+        as="input"
         id={fieldName}
         className={`form-control ${fieldErrors ? 'is-invalid' : ''}`}
         {...register(fieldName)}

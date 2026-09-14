@@ -20,7 +20,7 @@ export const createUserSchema = z.object({
     .max(100)
     .regex(/[A-Z]/)
     .regex(/[a-z]/)
-    .regex(/[0-9]/,
+    .regex(/[0-9]/),
 });
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 

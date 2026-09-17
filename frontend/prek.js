@@ -1,9 +1,3 @@
-const chel = 3
+const chel = 'PASSWORDCER';
 
-const re = chel === 4
-  ? 'norm'
-  : chel === 3
-  ? 'tri'
-  : "ne"
-
-console.log(re)
+console.log(chel.toLowerCase().includes('password'));

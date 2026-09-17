@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from '@apollo/client/react';
 import { Spinner, Alert } from 'react-bootstrap';
-import { useTranslation } from "react-i18next"
+import { useTranslation } from 'react-i18next';
 
 import { User, GET_ME, GET_USERS, DELETE_USER } from '../../../graphql/queries';
 import { TableList, TableConfig } from '../../components/TableList';
@@ -14,15 +14,12 @@ export default function UsersList() {
   const { loading, error, data } = useQuery(GET_USERS, { fetchPolicy: 'network-only' });
 
   const [deleteUser] = useMutation(DELETE_USER, {
-    refetchQueries: [
-      { query: GET_USERS },
-      { query: GET_ME }
-    ],
+    refetchQueries: [{ query: GET_USERS }, { query: GET_ME }],
   });
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteUser({ variables: { id: id }});
+      await deleteUser({ variables: { id: id } });
       flash(t('flash.users.delete.success'));
     } catch (err) {
       flash(t('flash.users.delete.error'));
@@ -39,27 +36,28 @@ export default function UsersList() {
     return null;
   }
 
-  const users = data?.getUsers || [];
-  console.log(users)
+  const users = data?.getUsers
+    ? data.getUsers.map((u) => ({
+        ...u,
+        fullName: `${u.firstName} ${u.lastName}`,
+      }))
+    : [];
+  console.log(users);
 
   const columns: TableConfig<User>['columns'] = [
     {
-      name: 'firstName',
-      label: t('views.users.firstName'),
-    },
-    {
-      name: 'lastName',
-      label: t('views.users.lastName'),
+      name: 'fullName',
+      label: t('views.users.fullName'),
     },
     {
       name: 'email',
       label: t('views.users.email'),
-    } ,
+    },
   ];
 
   const actionButtons = {
     editPageName: 'editUser',
-    deleteAction: handleDelete
+    deleteAction: handleDelete,
   };
 
   return (
@@ -69,7 +67,6 @@ export default function UsersList() {
       data={users}
       showActionsIf={(user) => meData?.me?.id === user.id}
       actionButtons={actionButtons}
-      >
-    </TableList>
+    ></TableList>
   );
 }

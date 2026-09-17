@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { Spinner, Alert } from 'react-bootstrap';
-import { useTranslation } from "react-i18next"
+import { useTranslation } from 'react-i18next';
 
 import { DELETE_STATUS, GET_STATUSES, Status } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
@@ -14,9 +14,7 @@ export default function StatusesList() {
   });
 
   const [deleteStatus] = useMutation(DELETE_STATUS, {
-    refetchQueries: [
-      { query: GET_STATUSES }
-    ],
+    refetchQueries: [{ query: GET_STATUSES }],
   });
 
   if (loading) {
@@ -31,7 +29,7 @@ export default function StatusesList() {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteStatus({ variables: { id: id }});
+      await deleteStatus({ variables: { id: id } });
       flash(t('flash.statuses.delete.success'), 'success');
     } catch {
       flash(t('flash.statuses.delete.error'), 'danger');
@@ -40,29 +38,30 @@ export default function StatusesList() {
 
   const addButton = {
     page: 'newStatus',
-    label: t('views.statuses.create')
-  }
+    label: t('views.statuses.create'),
+  };
 
   const statuses = data?.getStatuses || [];
 
-  const columns: TableConfig<Status>['columns'] = [{
-    name: 'name',
-    label: t('views.statuses.name')
-  }];
+  const columns: TableConfig<Status>['columns'] = [
+    {
+      name: 'name',
+      label: t('views.statuses.name'),
+    },
+  ];
 
   const actionButtons = {
     editPageName: 'editStatus',
-    deleteAction: handleDelete
+    deleteAction: handleDelete,
   };
 
   return (
-  <TableList
-    title={t('views.statuses.status')}
-    addButton={addButton}
-    columns={columns}
-    data={statuses}
-    actionButtons={actionButtons}
-    >
-  </TableList>
+    <TableList
+      title={t('views.statuses.status')}
+      addButton={addButton}
+      columns={columns}
+      data={statuses}
+      actionButtons={actionButtons}
+    ></TableList>
   );
 }

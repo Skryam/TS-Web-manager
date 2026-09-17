@@ -1,10 +1,10 @@
-import { useApolloClient } from "@apollo/client/react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
+import { useApolloClient } from '@apollo/client/react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
-import { getApi } from "../../api/client";
-import { useFlash } from "../components/FlashProvider";
+import { getApi } from '../../api/client';
+import { useFlash } from '../components/FlashProvider';
 
 export default function LogoutButton() {
   const flash = useFlash();
@@ -25,6 +25,8 @@ export default function LogoutButton() {
   };
 
   return (
-    <Button className="btn btn-danger nav-link link-danger" onClick={handleLogout}>{t('layouts.application.signOut')}</Button>
-  )
+    <Button className="btn btn-danger nav-link link-danger" onClick={handleLogout}>
+      {t('layouts.application.signOut')}
+    </Button>
+  );
 }

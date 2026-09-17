@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
-import { useQuery } from "@apollo/client/react";
-import { Navbar, Nav, Container, ButtonGroup, Button } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
+import { Link } from 'react-router-dom';
+import { useQuery } from '@apollo/client/react';
+import { Navbar, Nav, Container, ButtonGroup, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
-import { GET_ME } from "../../graphql/queries";
-import LogoutButton from "../pages/LogoutButton";
+import { GET_ME } from '../../graphql/queries';
+import LogoutButton from '../pages/LogoutButton';
 
 export default function AppNavbar() {
   const { i18n } = useTranslation();
@@ -15,21 +15,31 @@ export default function AppNavbar() {
   return (
     <Navbar expand="lg" className="mb-3 bg-secondary bg-opacity-25">
       <Container>
-        <Navbar.Brand as={Link} to="/">{t('appName')}</Navbar.Brand>
-        
+        <Navbar.Brand as={Link} to="/">
+          {t('appName')}
+        </Navbar.Brand>
+
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        
+
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/users">{t('layouts.application.users')}</Nav.Link>
+            <Nav.Link as={Link} to="/users">
+              {t('layouts.application.users')}
+            </Nav.Link>
           </Nav>
 
           <Nav>
             {isAuthenticated ? (
               <>
-                <Nav.Link as={Link} to="/statuses">{t('layouts.application.statuses')}</Nav.Link>
-                <Nav.Link as={Link} to="/labels">{t('layouts.application.labels')}</Nav.Link>
-                <Nav.Link as={Link} to="/tasks">{t('layouts.application.tasks')}</Nav.Link>
+                <Nav.Link as={Link} to="/statuses">
+                  {t('layouts.application.statuses')}
+                </Nav.Link>
+                <Nav.Link as={Link} to="/labels">
+                  {t('layouts.application.labels')}
+                </Nav.Link>
+                <Nav.Link as={Link} to="/tasks">
+                  {t('layouts.application.tasks')}
+                </Nav.Link>
 
                 <Nav.Item className="ms-5">
                   <LogoutButton />
@@ -37,23 +47,27 @@ export default function AppNavbar() {
               </>
             ) : (
               <>
-                <Nav.Link as={Link} to="/login">{t('layouts.application.signIn')}</Nav.Link>
-                <Nav.Link as={Link} to="/newUser">{t('layouts.application.signUp')}</Nav.Link>
+                <Nav.Link as={Link} to="/login">
+                  {t('layouts.application.signIn')}
+                </Nav.Link>
+                <Nav.Link as={Link} to="/newUser">
+                  {t('layouts.application.signUp')}
+                </Nav.Link>
               </>
             )}
           </Nav>
         </Navbar.Collapse>
 
         <div className="ms-4 d-flex align-items-center">
-          <div className="vr me-3 opacity-25"></div>  {/* вертикальная линия-разделитель */}
+          <div className="vr me-3 opacity-25"></div> {/* вертикальная линия-разделитель */}
           <ButtonGroup size="sm">
-            <Button 
+            <Button
               variant={i18n.language === 'ru' ? 'primary' : 'outline-primary'}
               onClick={() => i18n.changeLanguage('ru')}
             >
               RU
             </Button>
-            <Button 
+            <Button
               variant={i18n.language === 'en' ? 'primary' : 'outline-primary'}
               onClick={() => i18n.changeLanguage('en')}
             >
@@ -61,7 +75,6 @@ export default function AppNavbar() {
             </Button>
           </ButtonGroup>
         </div>
-
       </Container>
     </Navbar>
   );

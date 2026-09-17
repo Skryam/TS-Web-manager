@@ -1,19 +1,21 @@
-import { Form } from "react-bootstrap";
-import { useFormContext, FieldError } from "react-hook-form";
-import { useTranslation } from "react-i18next";
+import { Form } from 'react-bootstrap';
+import { useFormContext, FieldError } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 interface TextInputProps {
   fieldName: string;
   label: string;
   as?: 'input' | 'textarea';
   rows?: number;
+  type?: string;
 }
 
 export const TextInput = ({
   fieldName,
   label,
   as = 'input',
-  rows = 3
+  rows = 3,
+  type = 'text',
 }: TextInputProps) => {
   const { t } = useTranslation();
   const {
@@ -25,17 +27,18 @@ export const TextInput = ({
 
   const rawErrorMessage = fieldErrors?.message || '';
 
-  console.log(t(rawErrorMessage.replace('custom', '')))
+  console.log(t(rawErrorMessage.replace('custom', '')));
 
   const message = rawErrorMessage.startsWith('custom:')
     ? t(rawErrorMessage.replace('custom', ''))
     : rawErrorMessage;
 
   return (
-  <div className="mb-3">
-    <Form.Label htmlFor={fieldName} className="form-label">{label}</Form.Label>
-    {if (as === 'textarea') {
-      (
+    <div className="mb-3">
+      <Form.Label htmlFor={fieldName} className="form-label">
+        {label}
+      </Form.Label>
+      {as === 'textarea' ? (
         <Form.Control
           as="textarea"
           rows={rows}
@@ -43,26 +46,15 @@ export const TextInput = ({
           className={`form-control ${fieldErrors ? 'is-invalid' : ''}`}
           {...register(fieldName)}
         />
-      )
-    } :  as === 'password' ? 
-      (
-      <Form.Control
-        as="input"
-        id={fieldName}
-        className={`form-control ${fieldErrors ? 'is-invalid' : ''}`}
-        {...register(fieldName)}
-      />
-    ) : (
-      <Form.Control
-        as="input"
-        id={fieldName}
-        className={`form-control ${fieldErrors ? 'is-invalid' : ''}`}
-        {...register(fieldName)}
-      />
-    )}
-    {fieldErrors && (
-      <div className="invalid-feedback">{message}</div>
-    )}
-  </div>
-  )
-}
+      ) : (
+        <Form.Control
+          id={fieldName}
+          type={type}
+          className={`form-control ${fieldErrors ? 'is-invalid' : ''}`}
+          {...register(fieldName)}
+        />
+      )}
+      {fieldErrors && <div className="invalid-feedback">{message}</div>}
+    </div>
+  );
+};

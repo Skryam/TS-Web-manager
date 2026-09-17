@@ -1,18 +1,18 @@
-import { useQuery, useMutation } from "@apollo/client/react";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form"
-import { Alert, Spinner, Form } from "react-bootstrap";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider } from "react-hook-form";
-import { useTranslation } from "react-i18next"
+import { useQuery, useMutation } from '@apollo/client/react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { Alert, Spinner, Form } from 'react-bootstrap';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
-import { GET_STATUS_BY_ID, UPDATE_STATUS } from "../../../graphql/queries";
-import { updateStatusSchema, UpdateStatusInput } from "../../../zodSchemas/status";
-import { TextInput } from "../../components/TextInput";
-import { SubmitButton } from "../../components/SubmitButton";
-import { FormLayout } from "../../components/FormLayout";
-import { useFlash } from "../../components/FlashProvider";
+import { GET_STATUS_BY_ID, UPDATE_STATUS } from '../../../graphql/queries';
+import { updateStatusSchema, UpdateStatusInput } from '../../../zodSchemas/status';
+import { TextInput } from '../../components/TextInput';
+import { SubmitButton } from '../../components/SubmitButton';
+import { FormLayout } from '../../components/FormLayout';
+import { useFlash } from '../../components/FlashProvider';
 
 export default function EditStatus() {
   const flash = useFlash();
@@ -20,7 +20,7 @@ export default function EditStatus() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [submitErrors, setSubmitErrors] = useState<string | null>(null)
+  const [submitErrors, setSubmitErrors] = useState<string | null>(null);
 
   const { error, data, loading } = useQuery(GET_STATUS_BY_ID, {
     variables: { id },
@@ -45,22 +45,23 @@ export default function EditStatus() {
         name: data.getStatus.name,
       });
     }
-  }, [data, reset])
+  }, [data, reset]);
 
   const onSubmit = async (data: UpdateStatusInput) => {
     try {
-      await updateStatus({ variables: {
-        id: id,
-        data: {
-        name: data.name,
+      await updateStatus({
+        variables: {
+          id: id,
+          data: {
+            name: data.name,
+          },
         },
-      }
-    });
-    flash(t('flash.statuses.patch.success'), 'success');
-    navigate('/statuses')
+      });
+      flash(t('flash.statuses.patch.success'), 'success');
+      navigate('/statuses');
     } catch (err: any) {
       flash(t('flash.statuses.patch.error'), 'success');
-      setSubmitErrors(err.response?.data?.message || err.message)
+      setSubmitErrors(err.response?.data?.message || err.message);
     }
   };
 
@@ -75,22 +76,14 @@ export default function EditStatus() {
   }
 
   return (
-    <FormLayout
-      title={t('views.statuses.edit.change')}
-      error={submitErrors}
-    >
+    <FormLayout title={t('views.statuses.edit.change')} error={submitErrors}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
-        
-          <TextInput 
-            fieldName='name'
-            label={t('views.statuses.new.name')}
-          />
+          <TextInput fieldName="name" label={t('views.statuses.new.name')} />
 
           <SubmitButton />
-
         </Form>
       </FormProvider>
     </FormLayout>
   );
-};
+}

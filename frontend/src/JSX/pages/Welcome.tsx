@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
-import { useQuery } from "@apollo/client/react";
-import { Button, Container, Row, Col, Card } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
+import { Link } from 'react-router-dom';
+import { useQuery } from '@apollo/client/react';
+import { Button, Container, Row, Col, Card } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
-import { GET_ME } from "../../graphql/queries";
+import { GET_ME } from '../../graphql/queries';
 
 export default () => {
   const { t } = useTranslation();
@@ -26,12 +26,12 @@ export default () => {
               </Link>
             ) : (
               <>
-              <Link to="/login" className="btn btn-primary btn-lg px-4">
-                {t('layouts.application.signIn')} →
-              </Link>
-              <Link to="/newUser" className="btn btn-outline-primary btn-lg px-4">
-                {t('layouts.application.signUp')}
-              </Link>
+                <Link to="/login" className="btn btn-primary btn-lg px-4">
+                  {t('layouts.application.signIn')} →
+                </Link>
+                <Link to="/newUser" className="btn btn-outline-primary btn-lg px-4">
+                  {t('layouts.application.signUp')}
+                </Link>
               </>
             )}
           </div>

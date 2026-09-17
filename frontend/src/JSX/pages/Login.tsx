@@ -1,18 +1,18 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "react-bootstrap";
-import { FormProvider } from "react-hook-form";
-import { useTranslation } from "react-i18next"
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form } from 'react-bootstrap';
+import { FormProvider } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
-import { getApi } from "../../api/client";
-import { createLoginSchema, CreateLoginInput } from "../../zodSchemas/login";
-import { getClient } from "../../apollo/client";
-import { TextInput } from "../components/TextInput";
-import { SubmitButton } from "../components/SubmitButton";
-import { FormLayout } from "../components/FormLayout";
-import { useFlash } from "../components/FlashProvider";
+import { getApi } from '../../api/client';
+import { createLoginSchema, CreateLoginInput } from '../../zodSchemas/login';
+import { getClient } from '../../apollo/client';
+import { TextInput } from '../components/TextInput';
+import { SubmitButton } from '../components/SubmitButton';
+import { FormLayout } from '../components/FormLayout';
+import { useFlash } from '../components/FlashProvider';
 
 export default function Login() {
   const flash = useFlash();
@@ -20,7 +20,7 @@ export default function Login() {
   const client = getClient();
   const api = getApi();
   const navigate = useNavigate();
-  const [submitErrors, setSubmitErrors] = useState<string | null>(null)
+  const [submitErrors, setSubmitErrors] = useState<string | null>(null);
 
   const methods = useForm<CreateLoginInput>({
     resolver: zodResolver(createLoginSchema),
@@ -32,7 +32,7 @@ export default function Login() {
       await api.post('/auth/login', data);
       await client.resetStore();
       flash(t('flash.session.create.success'));
-      navigate("/");
+      navigate('/');
     } catch (err: any) {
       flash(t('flash.session.create.error'), 'danger');
       setSubmitErrors(err.response?.data?.message || err.message);
@@ -40,24 +40,19 @@ export default function Login() {
   };
 
   return (
-    <FormLayout title={t('views.session.new.signIn')} error={submitErrors ? t('views.session.new.error') : null}>
+    <FormLayout
+      title={t('views.session.new.signIn')}
+      error={submitErrors ? t('views.session.new.error') : null}
+    >
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
-        
-          <TextInput 
-            fieldName='email'
-            label={t('views.session.new.email')}
-          />
+          <TextInput fieldName="email" type="email" label={t('views.session.new.email')} />
 
-          <TextInput 
-            fieldName='password'
-            label={t('views.session.new.password')}
-          />
+          <TextInput fieldName="password" type="password" label={t('views.session.new.password')} />
 
           <SubmitButton />
-
         </Form>
       </FormProvider>
     </FormLayout>
   );
-};
+}

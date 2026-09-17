@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { Spinner, Alert } from 'react-bootstrap';
-import { useTranslation } from "react-i18next"
+import { useTranslation } from 'react-i18next';
 
 import { GET_LABELS, DELETE_LABEL, Label } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
@@ -14,9 +14,7 @@ export default function LabelsList() {
   });
 
   const [deleteLabel] = useMutation(DELETE_LABEL, {
-    refetchQueries: [
-      { query: GET_LABELS }
-    ],
+    refetchQueries: [{ query: GET_LABELS }],
   });
 
   if (loading) {
@@ -31,7 +29,7 @@ export default function LabelsList() {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteLabel({ variables: { id: id }});
+      await deleteLabel({ variables: { id: id } });
       flash(t('flash.labels.delete.success'));
     } catch (err) {
       flash(t('flash.labels.delete.error'), 'danger');
@@ -40,29 +38,30 @@ export default function LabelsList() {
 
   const addButton = {
     page: 'newLabel',
-    label: t('views.labels.create')
-  }
+    label: t('views.labels.create'),
+  };
 
   const labels = data?.getLabels || [];
 
-  const columns: TableConfig<Label>['columns'] = [{
-    name: 'name',
-    label: t('views.labels.name'),
-  }];
+  const columns: TableConfig<Label>['columns'] = [
+    {
+      name: 'name',
+      label: t('views.labels.name'),
+    },
+  ];
 
   const actionButtons = {
     editPageName: 'editLabel',
-    deleteAction: handleDelete
+    deleteAction: handleDelete,
   };
 
   return (
-  <TableList
-    title={t('views.labels.title')}
-    addButton={addButton}
-    columns={columns}
-    data={labels}
-    actionButtons={actionButtons}
-    >
-  </TableList>
+    <TableList
+      title={t('views.labels.title')}
+      addButton={addButton}
+      columns={columns}
+      data={labels}
+      actionButtons={actionButtons}
+    ></TableList>
   );
 }

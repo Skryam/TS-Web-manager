@@ -1,17 +1,17 @@
-import { useApolloClient, useMutation } from "@apollo/client/react";
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "react-bootstrap";
-import { FormProvider } from "react-hook-form";
-import { useTranslation } from "react-i18next"
+import { useApolloClient, useMutation } from '@apollo/client/react';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form } from 'react-bootstrap';
+import { FormProvider } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
-import { CREATE_LABEL, GET_LABELS } from "../../../graphql/queries";
-import { createLabelSchema, CreateLabelInput } from "../../../zodSchemas/label";
-import { TextInput } from "../../components/TextInput";
-import { SubmitButton } from "../../components/SubmitButton";
-import { FormLayout } from "../../components/FormLayout";
-import { useFlash } from "../../components/FlashProvider";
+import { CREATE_LABEL, GET_LABELS } from '../../../graphql/queries';
+import { createLabelSchema, CreateLabelInput } from '../../../zodSchemas/label';
+import { TextInput } from '../../components/TextInput';
+import { SubmitButton } from '../../components/SubmitButton';
+import { FormLayout } from '../../components/FormLayout';
+import { useFlash } from '../../components/FlashProvider';
 
 export default function NewLabel() {
   const flash = useFlash();
@@ -27,10 +27,12 @@ export default function NewLabel() {
 
   const onSubmit = async (data: CreateLabelInput) => {
     try {
-      await CreateLabel({ variables: {
-        data: data
-      }});
-      await client.refetchQueries({ include: [GET_LABELS]});
+      await CreateLabel({
+        variables: {
+          data: data,
+        },
+      });
+      await client.refetchQueries({ include: [GET_LABELS] });
       flash(t('flash.labels.create.success'));
       navigate('/labels');
     } catch (err: any) {
@@ -42,16 +44,11 @@ export default function NewLabel() {
     <FormLayout title={t('views.labels.new.create')}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
-        
-          <TextInput 
-            fieldName='name'
-            label={t('views.labels.new.name')}
-          />
+          <TextInput fieldName="name" label={t('views.labels.new.name')} />
 
           <SubmitButton />
-
         </Form>
       </FormProvider>
     </FormLayout>
   );
-};
+}

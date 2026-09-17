@@ -81,7 +81,15 @@ export default {
       submitButton: {
         download: 'Загрузка',
         submit: 'Подтвердить',
-      }
+      },
+      tableList: {
+        deleteError: 'Ошибка удаления',
+        restrictError: 'Невозможно удалить, связано с задей',
+        actions: 'Действия',
+        created: 'Созданл',
+        edit: 'Редактировать',
+        delete: 'Удалить',
+      },
     },
     layouts: {
       application: {
@@ -110,6 +118,7 @@ export default {
         id: 'ID',
         firstName: 'Имя',
         lastName: 'Фамилия',
+        fullName: 'Полное имя',
         email: 'Email',
         createdAt: 'Дата создания',
         actions: 'Действия',
@@ -121,8 +130,18 @@ export default {
         },
         edit: {
           cardName: 'Изменение пользователя',
-          password: {
-            error: 'Пароль должен содержать минимум 8 символов, заглавную и строчную буквы, а также цифру',
+          passwordSection: 'Пароль',
+          passwordSectionHint: 'Если хотите сменить пароль, перейдите к форме смены пароля',
+          changePassword: 'Изменить пароль',
+          editPassword: {
+            cardName: 'Изменение пароля',
+            password: 'Текущий пароль',
+            newPassword: 'Новый пароль',
+            submitPassword: 'Подтверждение пароля',
+            errors: {
+              incorrectNew: 'Пароль должен содержать минимум 8 символов, заглавную и строчную буквы, а также цифру',
+              mismatch: 'Новый пароль и подтверждение пароля не соответствуют'
+            },
           }
         },
       },
@@ -139,7 +158,7 @@ export default {
             labelsText: 'Размечайте задачи метками и быстро фильтруйте список.',
             statuses: 'Статусы',
             statusesText: 'Настраивайте этапы работы под процесс вашей команды.',
-          }
+          },
         },
       },
 
@@ -183,7 +202,7 @@ export default {
           labels: 'Метки',
           showMyTasks: 'Показывать только мои задачи',
           noLabels: 'Нет доступных лейблов',
-          applyFilters: 'Применить фильтры'
+          applyFilters: 'Применить фильтры',
         },
         new: {
           title: 'Создание задачи',

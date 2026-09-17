@@ -1,18 +1,18 @@
-import { useQuery, useMutation } from "@apollo/client/react";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form"
-import { Alert, Spinner, Form } from "react-bootstrap";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider } from "react-hook-form";
-import { useTranslation } from "react-i18next"
+import { useQuery, useMutation } from '@apollo/client/react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { Alert, Spinner, Form } from 'react-bootstrap';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
-import { GET_LABEL_BY_ID, UPDATE_LABEL } from "../../../graphql/queries";
-import { updateLabelSchema, UpdateLabelInput } from "../../../zodSchemas/label";
-import { TextInput } from "../../components/TextInput";
-import { SubmitButton } from "../../components/SubmitButton";
-import { FormLayout } from "../../components/FormLayout";
-import { useFlash } from "../../components/FlashProvider";
+import { GET_LABEL_BY_ID, UPDATE_LABEL } from '../../../graphql/queries';
+import { updateLabelSchema, UpdateLabelInput } from '../../../zodSchemas/label';
+import { TextInput } from '../../components/TextInput';
+import { SubmitButton } from '../../components/SubmitButton';
+import { FormLayout } from '../../components/FormLayout';
+import { useFlash } from '../../components/FlashProvider';
 
 export default function EditLabel() {
   const flash = useFlash();
@@ -20,7 +20,7 @@ export default function EditLabel() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [submitErrors, setSubmitErrors] = useState<string | null>(null)
+  const [submitErrors, setSubmitErrors] = useState<string | null>(null);
 
   const { error, data, loading } = useQuery(GET_LABEL_BY_ID, {
     variables: { id },
@@ -45,22 +45,23 @@ export default function EditLabel() {
         name: data.getLabel.name,
       });
     }
-  }, [data, reset])
+  }, [data, reset]);
 
   const onSubmit = async (data: UpdateLabelInput) => {
     try {
-      await updateLabel({ variables: {
+      await updateLabel({
+        variables: {
           id: id,
           data: {
-          name: data.name,
+            name: data.name,
           },
-        }
+        },
       });
       flash(t('flash.labels.patch.success'));
-      navigate('/labels')
+      navigate('/labels');
     } catch (err: any) {
       flash(t('flash.labels.patch.error'));
-      setSubmitErrors(err.response?.data?.message || err.message)
+      setSubmitErrors(err.response?.data?.message || err.message);
     }
   };
 
@@ -71,27 +72,19 @@ export default function EditLabel() {
     return <Alert variant="danger">Ошибка: {error.message}</Alert>;
   }
   if (!data?.getLabel) {
-    console.log(data)
+    console.log(data);
     return <div>Лейбл не найден</div>;
   }
 
   return (
-    <FormLayout
-      title={t('views.labels.edit.change')}
-      error={submitErrors}
-    >
+    <FormLayout title={t('views.labels.edit.change')} error={submitErrors}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
-        
-          <TextInput 
-            fieldName='name'
-            label={t('views.labels.new.name')}
-          />
+          <TextInput fieldName="name" label={t('views.labels.new.name')} />
 
           <SubmitButton />
-
         </Form>
       </FormProvider>
     </FormLayout>
   );
-};
+}

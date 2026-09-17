@@ -1,6 +1,6 @@
-import { useFormContext } from "react-hook-form";
-import { Button } from "react-bootstrap";
-import { useTranslation } from "react-i18next"
+import { useFormContext } from 'react-hook-form';
+import { Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 export const SubmitButton = () => {
   const { t } = useTranslation();
@@ -8,11 +8,9 @@ export const SubmitButton = () => {
     formState: { isSubmitting },
   } = useFormContext();
 
-  return <Button
-    type="submit"
-    className="btn btn-primary"
-    disabled={isSubmitting}
-    >
+  return (
+    <Button type="submit" className="btn btn-primary" disabled={isSubmitting}>
       {isSubmitting ? t('components.submitButton.download') : t('components.submitButton.submit')}
-  </Button>
-}
+    </Button>
+  );
+};

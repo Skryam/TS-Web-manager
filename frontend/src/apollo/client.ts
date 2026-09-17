@@ -9,7 +9,7 @@ export const getClient = () => {
         uri: 'http://localhost:4000/graphql',
         credentials: 'include',
       }),
-      cache: new InMemoryCache()
+      cache: new InMemoryCache(),
     });
   }
   return client;

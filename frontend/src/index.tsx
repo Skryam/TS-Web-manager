@@ -20,5 +20,5 @@ root.render(
         <App />
       </ApolloProvider>
     </BrowserRouter>
-  </FlashProvider>
+  </FlashProvider>,
 );

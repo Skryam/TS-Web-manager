@@ -1,13 +1,13 @@
 import Navbar from './layouts/Navbar.tsx';
-import Footer from './layouts/Footer.tsx'
+import Footer from './layouts/Footer.tsx';
 import { AppRoutes } from './AppRoutes.tsx';
 
 export const App = () => (
-  <div className='d-flex flex-column min-vh-100 bg-light'>
+  <div className="d-flex flex-column min-vh-100 bg-light">
     <Navbar />
-    <div className='container flex-grow-1'>
+    <div className="container flex-grow-1">
       <AppRoutes />
     </div>
     <Footer />
   </div>
-)
+);

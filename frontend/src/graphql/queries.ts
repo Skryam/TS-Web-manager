@@ -6,15 +6,15 @@ export interface User {
   lastName: string;
   email: string;
   createdAt: string;
-};
+}
 
 interface GetUserById {
   getUser: User;
-};
+}
 
 interface GetUsersData {
   getUsers: User[];
-};
+}
 
 export interface Status {
   id: string;
@@ -24,11 +24,11 @@ export interface Status {
 
 interface GetStatusData {
   getStatus: Status;
-};                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+}
 
 interface GetStatusesData {
   getStatuses: Status[];
-};
+}
 
 export interface Label {
   id: string;
@@ -38,7 +38,7 @@ export interface Label {
 
 interface GetLabelData {
   getLabel: Label;
-};           
+}
 
 interface GetLabelsData {
   getLabels: Label[];
@@ -51,9 +51,9 @@ export interface Task {
   status: Status;
   executor: User;
   creator: User;
-  labels: Label[]
+  labels: Label[];
   createdAt: string;
-};
+}
 
 export interface TaskFilterInput {
   statusId?: string | number;
@@ -64,7 +64,7 @@ export interface TaskFilterInput {
 
 interface GetTaskData {
   getTask: Task;
-};   
+}
 
 interface GetTasksData {
   getTasks: Task[];
@@ -76,7 +76,7 @@ interface MeData {
     email: string;
     firstName: string;
   } | null;
-};
+}
 
 export const GET_USERS: TypedDocumentNode<GetUsersData> = gql`
   query GetUsers {
@@ -154,67 +154,67 @@ export const GET_LABEL_BY_ID: TypedDocumentNode<GetLabelData> = gql`
 
 export const GET_TASKS: TypedDocumentNode<GetTasksData, { filter?: TaskFilterInput }> = gql`
   query GetTasks($filter: TaskFilterInput) {
-   getTasks(filter: $filter) {
-    id
-    name
-    description
-
-    status {
+    getTasks(filter: $filter) {
+      id
       name
-    }
+      description
 
-    executor {
-      firstName
-      lastName
-    }
+      status {
+        name
+      }
 
-    creator {
-      firstName
-      lastName
-    }
+      executor {
+        firstName
+        lastName
+      }
 
-    labels {
-      name
-    }
+      creator {
+        firstName
+        lastName
+      }
 
-    createdAt
-   }
+      labels {
+        name
+      }
+
+      createdAt
+    }
   }
 `;
 
 export const GET_TASK_BY_ID: TypedDocumentNode<GetTaskData> = gql`
   query GetTaskById($id: ID!) {
     getTask(id: $id) {
-    id
-    name
-    description
-
-    status {
       id
       name
-    }
+      description
 
-    executor {
-      id
-      firstName
-      lastName
-    }
+      status {
+        id
+        name
+      }
 
-    creator {
-      id
-      firstName
-      lastName
-    }
+      executor {
+        id
+        firstName
+        lastName
+      }
 
-    labels {
-      id
-      name
-    }
+      creator {
+        id
+        firstName
+        lastName
+      }
 
-    createdAt
+      labels {
+        id
+        name
+      }
+
+      createdAt
     }
   }
-`
+`;
 
 export const DELETE_USER = gql`
   mutation DeleteUser($id: ID!) {
@@ -226,19 +226,30 @@ export const DELETE_USER = gql`
 
 export const UPDATE_USER = gql`
   mutation UpdateUser($id: ID!, $data: UpdateUserInput!) {
-    updateUser(id: $id, data: $data) { id firstName lastName email }
+    updateUser(id: $id, data: $data) {
+      id
+      firstName
+      lastName
+      email
+    }
   }
 `;
 
 export const CREATE_STATUS = gql`
   mutation CreateStatus($data: CreateStatusInput!) {
-    createStatus(data: $data) { id name }
+    createStatus(data: $data) {
+      id
+      name
+    }
   }
 `;
 
 export const UPDATE_STATUS = gql`
   mutation UpdateStatus($id: ID!, $data: UpdateStatusInput!) {
-    updateStatus(id: $id, data: $data) { id name }
+    updateStatus(id: $id, data: $data) {
+      id
+      name
+    }
   }
 `;
 
@@ -252,13 +263,19 @@ export const DELETE_STATUS = gql`
 
 export const CREATE_LABEL = gql`
   mutation CreateLabel($data: CreateLabelInput!) {
-    createLabel(data: $data) { id name }
+    createLabel(data: $data) {
+      id
+      name
+    }
   }
 `;
 
 export const UPDATE_LABEL = gql`
   mutation UpdateLabel($id: ID!, $data: UpdateLabelInput!) {
-    updateLabel(id: $id, data: $data) { id name }
+    updateLabel(id: $id, data: $data) {
+      id
+      name
+    }
   }
 `;
 
@@ -272,13 +289,19 @@ export const DELETE_LABEL = gql`
 
 export const CREATE_TASK = gql`
   mutation CreateTask($data: CreateTaskInput!) {
-    createTask(data: $data) { id name }
+    createTask(data: $data) {
+      id
+      name
+    }
   }
 `;
 
 export const UPDATE_TASK = gql`
   mutation UpdateTask($id: ID!, $data: UpdateTaskInput!) {
-    updateTask(id: $id, data: $data) { id name }
+    updateTask(id: $id, data: $data) {
+      id
+      name
+    }
   }
 `;
 

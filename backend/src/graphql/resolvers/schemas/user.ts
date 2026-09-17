@@ -24,15 +24,16 @@ export const createUserSchema = z.object({
 });
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 
-
-export const updateUserSchema = createUserSchema.omit({ password: true })
-  .extend({ password: z.string().optional() })
-  .refine((data) => {
-    if (!data.password || data.password.length === 0) {
-      return true;
-    }
-  }, {
-    error: 'Пароль должен содержать минимум 8 символов, заглавную и строчную буквы, а также цифру',
-    path: ['password'],
-  });
+export const updateUserSchema = createUserSchema.omit({ password: true });
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+
+export const createUpdateUserPasswordSchema = () => {
+  return z.object({
+    password: z.string().min(8).max(100).regex(/[A-Z]/).regex(/[a-z]/).regex(/[0-9]/),
+    newPassword: z.string().min(8).max(100).regex(/[A-Z]/).regex(/[a-z]/).regex(/[0-9]/),
+    confirmPassword: z.string()
+  }).refine((data) => data.newPassword === data.confirmPassword, {
+    path: ['confirmPassword'],
+  })
+};
+export type UpdateUserPasswordInput = z.infer<ReturnType<typeof createUpdateUserPasswordSchema>>;

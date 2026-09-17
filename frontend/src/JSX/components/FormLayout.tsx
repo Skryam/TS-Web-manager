@@ -1,5 +1,5 @@
-import React from "react";
-import { Alert } from "react-bootstrap";
+import React from 'react';
+import { Alert } from 'react-bootstrap';
 
 interface FormLayoutProps {
   title: string;
@@ -17,7 +17,7 @@ export const FormLayout = ({ title, children, error }: FormLayoutProps) => {
           {error}
         </Alert>
       )}
-      
+
       {children}
     </div>
   );

@@ -83,12 +83,12 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
         <Table hover striped className="mb-0 align-middle">
           <thead className="table-light">
             <tr>
-              <th style={{ width: '60px' }} className="text-center">#</th>
+              <th style={{ width: '60px' }} className="text-center">ID</th>
               {columns.map(({ label }, i) => (
                 <th key={i}>{label}</th>
               ))}
               <th style={{ width: '150px' }}>{t('components.tableList.created')}</th>
-              <th style={{ width: '200px' }} className="text-end">{t('components.tableList.actions')}</th>
+              <th style={{ width: '240px' }} className="text-end">{t('components.tableList.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -117,23 +117,24 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
                   </td>
 
                   {showActions ? (
-                    <td className="text-end">
-                      <Button 
+                    <td className="text-end text-nowrap">
+                      <div className="d-inline-flex gap-2">
+                        <Button 
                         size="sm" 
-                        variant="outline-primary" 
-                        className="me-2"
+                        variant="outline-primary"
                         onClick={() => navigate(`/${editPageName}/${entity.id}`)}
-                      >
-                        {t('components.tableList.edit')}
-                      </Button>
-                      <Button 
+                        >
+                          {t('components.tableList.edit')}
+                        </Button>
+                        <Button 
                         size="sm" 
                         variant="outline-danger"
                         onClick={() => handleDelete(entity.id)}
-                      >
-                        {t('components.tableList.delete')}
-                      </Button>
-                    </td>
+                        >
+                          {t('components.tableList.delete')}
+                          </Button>
+                          </div>
+                          </td>
                   ) : (
                     <td></td>
                   )}

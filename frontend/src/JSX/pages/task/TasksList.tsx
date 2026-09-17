@@ -2,9 +2,17 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import { Spinner, Alert, Form, Badge, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
-import { DELETE_TASK, GET_LABELS, GET_STATUSES, GET_TASKS, GET_USERS, Task, TaskFilterInput } from '../../../graphql/queries';
+import {
+  DELETE_TASK,
+  GET_LABELS,
+  GET_STATUSES,
+  GET_TASKS,
+  GET_USERS,
+  Task,
+  TaskFilterInput,
+} from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
 import { useFlash } from '../../components/FlashProvider';
 
@@ -32,29 +40,30 @@ export default function TasksList() {
   });
 
   const { data: statusesData } = useQuery(GET_STATUSES);
-  const statuses = statusesData?.getStatuses?.map((s) => ({
-    id: s.id,
-    label: s.name
-  })) ?? [];
-  
-    const { data: usersData } = useQuery(GET_USERS);
-    const users = usersData?.getUsers?.map((u) => ({
-      id: u.id,
-      label: `${u.firstName} ${u.lastName}`
+  const statuses =
+    statusesData?.getStatuses?.map((s) => ({
+      id: s.id,
+      label: s.name,
     })) ?? [];
-  
-    const { data: labelsData } = useQuery(GET_LABELS);
-    const labels = labelsData?.getLabels.map((l) => ({
+
+  const { data: usersData } = useQuery(GET_USERS);
+  const users =
+    usersData?.getUsers?.map((u) => ({
+      id: u.id,
+      label: `${u.firstName} ${u.lastName}`,
+    })) ?? [];
+
+  const { data: labelsData } = useQuery(GET_LABELS);
+  const labels =
+    labelsData?.getLabels.map((l) => ({
       id: l.id,
-      label: l.name 
+      label: l.name,
     })) ?? [];
 
   const [deleteTask] = useMutation(DELETE_TASK, {
-    refetchQueries: [
-      { query: GET_TASKS }
-    ],
+    refetchQueries: [{ query: GET_TASKS }],
   });
-  
+
   if (loading) {
     return <Spinner animation="border" role="status" />;
   }
@@ -67,7 +76,7 @@ export default function TasksList() {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteTask({ variables: { id: id }});
+      await deleteTask({ variables: { id: id } });
       flash(t('flash.tasks.delete.success'));
     } catch (err) {
       flash(t('flash.tasks.delete.error'));
@@ -76,26 +85,33 @@ export default function TasksList() {
 
   const addButton = {
     page: 'newTask',
-    label: t('views.tasks.create')
-  }
+    label: t('views.tasks.create'),
+  };
 
   const tasks = data?.getTasks
-    ? data.getTasks.map(({ id, name, description, status, executor, creator, labels, createdAt }) => ({
-        id,
-        name,
-        description,
-        status: status.name,
-        executor: executor ? `${executor.firstName} ${executor.lastName}` : null,
-        creator: `${creator.firstName} ${creator.lastName}`,
-        labels,
-        createdAt
-      })) : []
+    ? data.getTasks.map(
+        ({ id, name, description, status, executor, creator, labels, createdAt }) => ({
+          id,
+          name,
+          description,
+          status: status.name,
+          executor: executor ? `${executor.firstName} ${executor.lastName}` : null,
+          creator: `${creator.firstName} ${creator.lastName}`,
+          labels,
+          createdAt,
+        }),
+      )
+    : [];
 
   const columns: TableConfig<Task>['columns'] = [
     {
       name: 'name',
       label: t('views.tasks.name'),
-      render: (id, value) => <Link to={`/viewTask/${id}`} className='link'>{String(value)}</Link>
+      render: (id, value) => (
+        <Link to={`/viewTask/${id}`} className="link">
+          {String(value)}
+        </Link>
+      ),
     },
     {
       name: 'description',
@@ -112,28 +128,30 @@ export default function TasksList() {
     {
       name: 'labels',
       label: t('views.tasks.labels'),
-      render: (id, value) => value.map((label) => (
+      render: (id, value) =>
+        value.map((label) => (
           <Badge key={label.name} bg="info" className="me-1 text-white">
             {label.name}
           </Badge>
-        ))
-      }
+        )),
+    },
   ];
 
   const actionButtons = {
     editPageName: 'editTask',
-    deleteAction: handleDelete
+    deleteAction: handleDelete,
   };
 
   const handleInputChange = (field: string, value: any) => {
-    setInputFilters(prev => ({ ...prev, [field]: value }));
+    setInputFilters((prev) => ({ ...prev, [field]: value }));
   };
 
   const applyFilters = () => {
     setActiveFilters({
       statusId: inputFilters.statusId || undefined,
       executorId: inputFilters.executorId || undefined,
-      labelId: inputFilters.labelId && inputFilters.labelId?.length > 0 ? inputFilters.labelId : undefined,
+      labelId:
+        inputFilters.labelId && inputFilters.labelId?.length > 0 ? inputFilters.labelId : undefined,
       isCreatorOnly: inputFilters.isCreatorOnly || undefined,
     });
   };
@@ -143,11 +161,12 @@ export default function TasksList() {
       <div className="card shadow-sm mb-4 border-0">
         <div className="card-body p-4 bg-light rounded">
           <h5 className="mb-3 text-secondary">{t('views.tasks.filter.title')}</h5>
-          
-          <div className="row g-3 align-items-end">
 
+          <div className="row g-3 align-items-end">
             <div className="col-12 col-md-3">
-              <Form.Label htmlFor="filter-status" className="fw-bold small text-muted">{t('views.tasks.filter.status')}</Form.Label>
+              <Form.Label htmlFor="filter-status" className="fw-bold small text-muted">
+                {t('views.tasks.filter.status')}
+              </Form.Label>
               <Form.Select
                 id="filter-status"
                 value={inputFilters.statusId}
@@ -163,7 +182,9 @@ export default function TasksList() {
             </div>
 
             <div className="col-12 col-md-3">
-              <Form.Label htmlFor="filter-executor" className="fw-bold small text-muted">{t('views.tasks.filter.executor')}</Form.Label>
+              <Form.Label htmlFor="filter-executor" className="fw-bold small text-muted">
+                {t('views.tasks.filter.executor')}
+              </Form.Label>
               <Form.Select
                 id="filter-executor"
                 value={inputFilters.executorId}
@@ -179,45 +200,54 @@ export default function TasksList() {
             </div>
 
             <div className="col-12 col-md-3">
-            <Form.Label className="fw-bold small text-muted mb-2">{t('views.tasks.filter.labels')}</Form.Label>
-  
-            <div 
-              className="border rounded bg-white p-2" 
-              style={{ maxHeight: '150px', overflowY: 'auto' }}
-            >
-              {labels.length > 0 ? (
-                labels.map((opt) => (
-                  <Form.Check
-                    key={opt.id}
-                    type="checkbox"
-                    id={`label-${opt.id}`}
-                    label={opt.label}
-                    value={String(opt.id)}
-                    checked={inputFilters?.labelId && inputFilters?.labelId.includes(String(opt.id))} // Проверяем, есть ли ID в массиве
-                    onChange={(e) => {
-                      const id = String(opt.id);
-                      setInputFilters(prev => {
-                        const currentLabels = prev.labelId || [];
-                        if (e.target.checked) {
-                          // Добавляем ID, если галочку поставили
-                          return { ...prev, labelId: [...currentLabels, id] };
-                        } else {
-                          // Убираем ID, если галочку сняли
-                          return { ...prev, labelId: currentLabels.filter(item => item !== id) };
-                        }
-                      });
-                    }}
-                    className="mb-1"
-                  />
-                ))
-              ) : (
-                <div className="text-muted small fst-italic">{t('views.tasks.filter.noLabels')}</div>
-              )}
+              <Form.Label className="fw-bold small text-muted mb-2">
+                {t('views.tasks.filter.labels')}
+              </Form.Label>
+
+              <div
+                className="border rounded bg-white p-2"
+                style={{ maxHeight: '150px', overflowY: 'auto' }}
+              >
+                {labels.length > 0 ? (
+                  labels.map((opt) => (
+                    <Form.Check
+                      key={opt.id}
+                      type="checkbox"
+                      id={`label-${opt.id}`}
+                      label={opt.label}
+                      value={String(opt.id)}
+                      checked={
+                        inputFilters?.labelId && inputFilters?.labelId.includes(String(opt.id))
+                      } // Проверяем, есть ли ID в массиве
+                      onChange={(e) => {
+                        const id = String(opt.id);
+                        setInputFilters((prev) => {
+                          const currentLabels = prev.labelId || [];
+                          if (e.target.checked) {
+                            // Добавляем ID, если галочку поставили
+                            return { ...prev, labelId: [...currentLabels, id] };
+                          } else {
+                            // Убираем ID, если галочку сняли
+                            return {
+                              ...prev,
+                              labelId: currentLabels.filter((item) => item !== id),
+                            };
+                          }
+                        });
+                      }}
+                      className="mb-1"
+                    />
+                  ))
+                ) : (
+                  <div className="text-muted small fst-italic">
+                    {t('views.tasks.filter.noLabels')}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
 
             <div className="col-12 col-md-3 d-flex flex-column justify-content-center h-100 pb-2">
-              <Form.Check 
+              <Form.Check
                 type="switch"
                 id="filter-my-tasks"
                 label={t('views.tasks.filter.showMyTasks')}
@@ -229,11 +259,7 @@ export default function TasksList() {
 
             {/* Кнопка применения */}
             <div className="col-12 col-md-3">
-              <Button 
-                variant="primary" 
-                className="w-100 py-2 fw-semibold"
-                onClick={applyFilters}
-              >
+              <Button variant="primary" className="w-100 py-2 fw-semibold" onClick={applyFilters}>
                 {t('views.tasks.filter.applyFilters')}
               </Button>
             </div>
@@ -247,8 +273,7 @@ export default function TasksList() {
         columns={columns}
         data={tasks}
         actionButtons={actionButtons}
-        >
-      </TableList>
+      ></TableList>
     </div>
   );
 }

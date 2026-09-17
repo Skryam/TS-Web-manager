@@ -15,16 +15,14 @@ export const userResolver: Resolvers = {
   Mutation: {
     updateUser: async (_, { id, data }: ArgsWithId<UpdateUserInput>, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Error('Unauthorized');
+      }
 
       const validated = updateUserSchema.parse(data);
-      const { password, ...rest } = validated;
-      const dataForPrisma = { ...rest, ...(password && { passwordDigest: encrypt(password) }) };
 
       return prisma.user.update({
         where: { id: Number(id) },
-        data: dataForPrisma,
+        data: validated,
       });
     },
     deleteUser: async (_, { id }, { prisma, user }) => {

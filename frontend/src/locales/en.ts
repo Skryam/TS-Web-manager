@@ -82,8 +82,8 @@ export default {
         actions: 'Actions',
         created: 'Created',
         edit: 'Edit',
-        delete: 'Delete'
-      }
+        delete: 'Delete',
+      },
     },
 
     layouts: {
@@ -112,6 +112,7 @@ export default {
         id: 'ID',
         firstName: 'First Name',
         lastName: 'Last name',
+        fullName: 'Full name',
         email: 'Email',
         password: 'Password',
         createdAt: 'Created at',
@@ -119,13 +120,17 @@ export default {
         editbtn: 'Edit',
         delete: 'Delete',
         new: {
-          signUp: 'Register',
+          signUp: 'Registration',
         },
         edit: {
           cardName: 'Edit User',
+          passwordSection: 'Password',
+          passwordSectionHint: 'If you want to change your password, go to the password change form',
+          changePassword: 'Change password',
           password: {
-            error: 'The password must contain at least 8 characters, an uppercase letter, a lowercase letter, and a digit',
-          }
+            error:
+              'The password must contain at least 8 characters, an uppercase letter, a lowercase letter, and a digit',
+          },
         },
       },
       welcome: {
@@ -140,7 +145,7 @@ export default {
             labelsText: 'Mark tasks with labels and filter the list quickly.',
             statuses: 'Statuses',
             statusesText: 'Configure workflow stages for your team.',
-          }
+          },
         },
       },
       statuses: {
@@ -182,7 +187,7 @@ export default {
           labels: 'Labels',
           showMyTasks: 'Show only my tasks',
           noLabels: 'Нет доступных лейблов',
-          applyFilters: 'Apply filters'
+          applyFilters: 'Apply filters',
         },
         new: {
           title: 'Task creation',

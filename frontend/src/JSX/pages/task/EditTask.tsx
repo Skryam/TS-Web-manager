@@ -1,19 +1,25 @@
-import { useQuery, useMutation } from "@apollo/client/react";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form"
-import { Alert, Spinner, Form } from "react-bootstrap";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider } from "react-hook-form";
-import { useTranslation } from "react-i18next";
+import { useQuery, useMutation } from '@apollo/client/react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { Alert, Spinner, Form } from 'react-bootstrap';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
-import { GET_LABELS, GET_STATUSES, GET_TASK_BY_ID, GET_USERS, UPDATE_TASK } from "../../../graphql/queries";
-import { TextInput } from "../../components/TextInput";
-import { SubmitButton } from "../../components/SubmitButton";
-import { FormLayout } from "../../components/FormLayout";
-import { UpdateTaskInput, updateTaskSchema } from "../../../zodSchemas/task";
-import { SelectInput } from "../../components/SelectInput";
-import { useFlash } from "../../components/FlashProvider";
+import {
+  GET_LABELS,
+  GET_STATUSES,
+  GET_TASK_BY_ID,
+  GET_USERS,
+  UPDATE_TASK,
+} from '../../../graphql/queries';
+import { TextInput } from '../../components/TextInput';
+import { SubmitButton } from '../../components/SubmitButton';
+import { FormLayout } from '../../components/FormLayout';
+import { UpdateTaskInput, updateTaskSchema } from '../../../zodSchemas/task';
+import { SelectInput } from '../../components/SelectInput';
+import { useFlash } from '../../components/FlashProvider';
 
 export default function EditTask() {
   const flash = useFlash();
@@ -21,7 +27,7 @@ export default function EditTask() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [submitErrors, setSubmitErrors] = useState<string | null>(null)
+  const [submitErrors, setSubmitErrors] = useState<string | null>(null);
 
   const { error, data, loading } = useQuery(GET_TASK_BY_ID, {
     variables: { id },
@@ -30,56 +36,60 @@ export default function EditTask() {
   const task = data?.getTask;
 
   const { data: statusesData } = useQuery(GET_STATUSES);
-  const statuses = statusesData?.getStatuses?.map((s) => ({
-    id: s.id,
-    label: s.name
-  })) ?? [];
+  const statuses =
+    statusesData?.getStatuses?.map((s) => ({
+      id: s.id,
+      label: s.name,
+    })) ?? [];
 
   const { data: usersData } = useQuery(GET_USERS);
-  const users = usersData?.getUsers?.map((u) => ({
-    id: u.id,
-    label: `${u.firstName} ${u.lastName}`
-  })) ?? [];
+  const users =
+    usersData?.getUsers?.map((u) => ({
+      id: u.id,
+      label: `${u.firstName} ${u.lastName}`,
+    })) ?? [];
 
   const { data: labelsData } = useQuery(GET_LABELS);
-  const labels = labelsData?.getLabels.map((l) => ({
-    id: l.id,
-    label: l.name 
-  })) ?? [];
+  const labels =
+    labelsData?.getLabels.map((l) => ({
+      id: l.id,
+      label: l.name,
+    })) ?? [];
 
   const [updateTask] = useMutation(UPDATE_TASK);
 
   const methods = useForm<UpdateTaskInput>({
     resolver: zodResolver(updateTaskSchema),
-    mode: 'onBlur'
+    mode: 'onBlur',
   });
 
   const { reset } = methods;
 
   useEffect(() => {
-  if (task) {
-    reset({
-      name: task.name ?? '',
-      description: task.description ?? '',
-      statusId: String(task.status?.id ?? ''),
-      executorId: String(task.executor?.id ?? ''),
-      labels: task.labels?.map(label => String(label.id)) ?? [],
-    });
-  }
-}, [task, reset]);
+    if (task) {
+      reset({
+        name: task.name ?? '',
+        description: task.description ?? '',
+        statusId: String(task.status?.id ?? ''),
+        executorId: String(task.executor?.id ?? ''),
+        labels: task.labels?.map((label) => String(label.id)) ?? [],
+      });
+    }
+  }, [task, reset]);
 
   const onSubmit = async (data: UpdateTaskInput) => {
     try {
-      await updateTask({ variables: {
-        id: id,
-        data
-      }
-    });
-    flash(t('flash.tasks.patch.success'));
-    navigate('/tasks')
+      await updateTask({
+        variables: {
+          id: id,
+          data,
+        },
+      });
+      flash(t('flash.tasks.patch.success'));
+      navigate('/tasks');
     } catch (err: any) {
       flash(t('flash.tasks.patch.error'));
-      setSubmitErrors(err.response?.data?.message || err.message)
+      setSubmitErrors(err.response?.data?.message || err.message);
     }
   };
 
@@ -94,22 +104,15 @@ export default function EditTask() {
   }
 
   return (
-    <FormLayout
-      title={t('views.tasks.edit.title')}
-      error={submitErrors}
-    >
+    <FormLayout title={t('views.tasks.edit.title')} error={submitErrors}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
-        
-          <TextInput 
-            fieldName='name'
-            label={t('views.tasks.edit.name')}
-          />
+          <TextInput fieldName="name" label={t('views.tasks.edit.name')} />
 
-          <TextInput 
-            fieldName='description'
+          <TextInput
+            fieldName="description"
             label={t('views.tasks.edit.description')}
-            as='textarea'
+            as="textarea"
             rows={5}
           />
 
@@ -133,9 +136,8 @@ export default function EditTask() {
           />
 
           <SubmitButton />
-
         </Form>
       </FormProvider>
     </FormLayout>
   );
-};
+}

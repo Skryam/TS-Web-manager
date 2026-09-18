@@ -105,6 +105,7 @@ export default {
           password: 'Password',
           signIn: 'Login',
           submit: 'Login',
+          error: 'Invalid username or password',
         },
       },
       users: {
@@ -121,16 +122,30 @@ export default {
         delete: 'Delete',
         new: {
           signUp: 'Registration',
+          errors: {
+            userAlreadyExists: 'The user already exists.',
+            loginFailed: 'Login error',
+          }
         },
         edit: {
           cardName: 'Edit User',
           passwordSection: 'Password',
           passwordSectionHint: 'If you want to change your password, go to the password change form',
           changePassword: 'Change password',
-          password: {
-            error:
-              'The password must contain at least 8 characters, an uppercase letter, a lowercase letter, and a digit',
-          },
+          editPassword: {
+            cardName: 'Change password',
+            password: 'Current Password',
+            newPassword: 'New Password',
+            submitPassword: 'Confirm password',
+            errors: {
+              incorrectNew: 'The password must contain at least 8 characters, an uppercase letter, a lowercase letter, and a digit',
+              mismatch: 'The new password and password confirmation do not match.',
+              userNotFound: 'User not found',
+              invalidCurrentPassword: 'Incorrect current password',
+              validationError: 'Server validation error',
+              internalError: 'Server error'
+            },
+          }
         },
       },
       welcome: {

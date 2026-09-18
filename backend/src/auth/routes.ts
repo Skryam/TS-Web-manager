@@ -1,4 +1,4 @@
-import express, { Router, Request, Response } from 'express';
+import express, { Router } from 'express';
 import { getPrisma } from '../../lib/prisma';
 import passport from './passport';
 import encrypt from '../../lib/secure';
@@ -26,13 +26,12 @@ router.post('/signup', async (req, res) => {
 
     req.login(user, (err) => {
       if (err) {
-        return res.status(500).json({ error: 'Login failed' });
+        return res.status(500).json({ error: 'LOGIN_FAILED' });
       }
       return res.status(201).json({ id: user.id, email: user.email });
     });
   } catch (e) {
-      console.log(e)
-      return res.status(400).json({ error: 'User already exists' });
+      return res.status(400).json({ error: 'USER_ALREADY_EXISTS' });
   }
     });
 
@@ -49,8 +48,10 @@ router.post('/logout',(req, res) => {
 
 router.patch('/users/:id/password', async (req, res) => {
   const currentUser = req.user as { id: number };
+  console.log(currentUser)
 
   if (!req.isAuthenticated() || currentUser.id !== Number(req.params.id)) {
+    console.log('403')
     return res.status(403);
   }
 
@@ -58,18 +59,17 @@ router.patch('/users/:id/password', async (req, res) => {
     const validated = createUpdateUserPasswordSchema().parse(req.body);
 
     const user = await prisma.user.findUnique({
-      where: { id: req.user.id },
+      where: { id: currentUser.id },
     });
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      console.log('404')
+      return res.status(404).json({ error: 'USER_NOT_FOUND' });
     }
 
     if (encrypt(validated.password) !== user.passwordDigest) {
-      return res.status(422).json({
-        code: 'INVALID_CURRENT_PASSWORD',
-        message: 'Текущий пароль неверен',
-      });
+      console.log('422')
+      return res.status(422).json({ error: 'INVALID_CURRENT_PASSWORD' });
     }
 
     const passwordDigest = encrypt(validated.newPassword);
@@ -81,18 +81,13 @@ router.patch('/users/:id/password', async (req, res) => {
     return res.json({ ok: true });
   } catch (e: any) {
     if (e.name === 'ZodError') {
+      console.log('400')
       return res.status(400).json({
-        code: 'VALIDATION_ERROR',
-        issues: e.issues.map((i) => ({
-          code: i.code,
-          path: i.path,
-          message: i.message,
-        }))
+        error: 'VALIDATION_ERROR',
       });
     }
-
-    console.log(e);
-    return res.status(500).json({ error: 'Internal error '});
+    console.log('500')
+    return res.status(500).json({ error: 'INTERNAL_ERROR '});
   }
 });
 

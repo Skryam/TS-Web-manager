@@ -1,4 +1,4 @@
-import { Container, Table, Button, Alert } from "react-bootstrap";
+import { Container, Table, Button, Alert, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useTranslation } from "react-i18next"
@@ -42,21 +42,40 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
 
    const [error, setError] = useState<string | null>(null);
 
-  const handleDelete = async (id: string) => {
+   const handleDelete = async (id: string) => {
     setError(null);
-    try {
-      await deleteAction(id);
-    } catch (err: any) {
-      let userMessage = t('components.tableList.deleteError');
+      try {
+        await deleteAction(id);
+      } catch (err: any) {
+        let userMessage = t('components.tableList.deleteError');
 
-      if (err?.message?.includes("RESTRICT")) {
-        userMessage = t('components.tableList.restrictError');
-      } else {
-        userMessage = userMessage || err.message || userMessage;
+        if (err?.message?.includes("RESTRICT")) {
+          userMessage = t('components.tableList.restrictError');
+        } else {
+          userMessage = userMessage || err.message || userMessage;
+        }
+        setError(userMessage);
       }
+  }
 
-      setError(userMessage);
-    }
+  const [showDelete, setShowDelete] = useState(false);
+
+  const DeleteModal = (id: string) => {
+    return (
+      <Modal show={showDelete}>
+        <Modal.Body>
+          {t('Вы уверены что хотите удалить запись?')}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant='secondary' onClick={() => setShowDelete(false)}>
+            {t('Отмена')}
+          </Button>
+          <Button variant='primary' onClick={() => setShowDelete(false)}>
+            {t('Удалить')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    )
   };
 
   return (
@@ -129,10 +148,12 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
                         <Button 
                         size="sm" 
                         variant="outline-danger"
-                        onClick={() => handleDelete(entity.id)}
+                        onClick={() => {
+                          setShowDelete(true)
+                        }}
                         >
                           {t('components.tableList.delete')}
-                          </Button>
+                        </Button>
                           </div>
                           </td>
                   ) : (
@@ -144,6 +165,19 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
           </tbody>
         </Table>
       </div>
+      <Modal show={showDelete}>
+        <Modal.Body>
+          {t('Вы уверены что хотите удалить запись?')}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant='secondary' onClick={() => setShowDelete(false)}>
+            {t('Отмена')}
+          </Button>
+          <Button variant='primary' onClick={() => setShowDelete(false)}>
+            {t('Удалить')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 }

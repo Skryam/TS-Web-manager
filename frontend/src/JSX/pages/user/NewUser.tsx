@@ -13,6 +13,12 @@ import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
+import { useState } from 'react';
+
+const ERROR_KEYS: Record<string, string> = {
+  USER_ALREADY_EXISTS: 'errors.userAlreadyExists',
+  LOGIN_FAILED: 'errors.loginFailed'
+}
 
 export default function NewUser() {
   const flash = useFlash();
@@ -20,6 +26,8 @@ export default function NewUser() {
   const api = getApi();
   const navigate = useNavigate();
   const client = useApolloClient();
+
+  const [submitErrors, setSubmitErrors] = useState<string | null>(null);
 
   const methods = useForm<CreateUserInput>({
     resolver: zodResolver(createUserSchema),
@@ -32,13 +40,15 @@ export default function NewUser() {
       await client.refetchQueries({ include: [GET_ME] });
       flash(t('flash.users.create.success'));
       navigate('/');
-    } catch (err: unknown) {
-      flash(t('flash.users.create.error'));
+    } catch (err: any) {
+      flash(t('flash.users.create.error'), 'danger');
+      const error = err.response?.data?.error;
+      setSubmitErrors(t('views.users.new.' + ERROR_KEYS[error]) ?? 'errors.uknown');
     }
   };
 
   return (
-    <FormLayout title={t('views.users.new.signUp')}>
+    <FormLayout title={t('views.users.new.signUp')} error={submitErrors}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
           <TextInput fieldName="firstName" label={t('views.users.firstName')} />

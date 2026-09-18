@@ -13,6 +13,13 @@ import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
 import { getApi } from '../../../api/client';
 
+const ERROR_KEYS: Record<string, string> = {
+  USER_NOT_FOUND: 'userNotFound',
+  INVALID_CURRENT_PASSWORD: 'invalidCurrentPassword',
+  VALIDATION_ERROR: 'validationError',
+  INTERNAL_ERROR: 'internalError'
+}
+
 export default function EditPassword() {
   const flash = useFlash();
   const { t } = useTranslation();
@@ -29,12 +36,13 @@ export default function EditPassword() {
 
   const onSubmit = async (data: UpdateUserPasswordInput) => {
     try {
-      await api.patch(`users/${id}/password`, data)
+      await api.patch(`/auth/users/${id}/password`, data)
       flash(t('flash.users.patch.success'));
       navigate('/users');
     } catch (err: any) {
       flash(t('flash.users.patch.error'), 'danger');
-      setSubmitErrors(err.response?.data?.message || err.message);
+      const error = err.response?.data?.error;
+      setSubmitErrors(t('views.users.edit.editPassword.errors.' + ERROR_KEYS[error]) ?? 'errors.uknown');
     }
   };
 

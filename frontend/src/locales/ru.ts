@@ -127,6 +127,10 @@ export default {
         password: 'Пароль',
         new: {
           signUp: 'Регистрация',
+          errors: {
+            userAlreadyExists: 'Пользователь уже существует',
+            loginFailed: 'Ошибка входа',
+          }
         },
         edit: {
           cardName: 'Изменение пользователя',
@@ -140,7 +144,11 @@ export default {
             submitPassword: 'Подтверждение пароля',
             errors: {
               incorrectNew: 'Пароль должен содержать минимум 8 символов, заглавную и строчную буквы, а также цифру',
-              mismatch: 'Новый пароль и подтверждение пароля не соответствуют'
+              mismatch: 'Новый пароль и подтверждение пароля не соответствуют',
+              userNotFound: 'Пользователь не найден',
+              invalidCurrentPassword: 'Неверный текущий пароль',
+              validationError: 'Ошибка валидации сервера',
+              internalError: 'Ошибка сервера'
             },
           }
         },

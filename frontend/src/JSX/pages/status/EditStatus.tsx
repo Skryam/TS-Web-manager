@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@apollo/client/react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Alert, Spinner, Form } from 'react-bootstrap';
@@ -13,14 +13,14 @@ import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
+import { usePageErrorContext } from '../../context/PageErrorContext';
 
 export default function EditStatus() {
   const flash = useFlash();
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const [submitErrors, setSubmitErrors] = useState<string | null>(null);
+  const {getError, setError} = usePageErrorContext();
 
   const { error, data, loading } = useQuery(GET_STATUS_BY_ID, {
     variables: { id },
@@ -61,7 +61,7 @@ export default function EditStatus() {
       navigate('/statuses');
     } catch (err: any) {
       flash(t('flash.statuses.patch.error'), 'success');
-      setSubmitErrors(err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || err.message);
     }
   };
 
@@ -76,7 +76,7 @@ export default function EditStatus() {
   }
 
   return (
-    <FormLayout title={t('views.statuses.edit.change')} error={submitErrors}>
+    <FormLayout title={t('views.statuses.edit.change')} error={getError()}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
           <TextInput fieldName="name" label={t('views.statuses.new.name')} />

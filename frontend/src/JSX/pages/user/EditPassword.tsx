@@ -42,7 +42,7 @@ export default function EditPassword() {
     } catch (err: any) {
       flash(t('flash.users.patch.error'), 'danger');
       const error = err.response?.data?.error;
-      setSubmitErrors(t('views.users.edit.editPassword.errors.' + ERROR_KEYS[error]) ?? 'errors.uknown');
+      setSubmitErrors(t('views.users.edit.editPassword.errors.' + ERROR_KEYS[error]) ?? 'errors.unknown');
     }
   };
 

@@ -1,4 +1,5 @@
 import { createStatusSchema, updateStatusSchema } from './schemas/status';
+import { handlePrismaError } from './schemas/prismaErrorCodes';
 
 export const statusResolver = {
   Query: {
@@ -18,15 +19,20 @@ export const statusResolver = {
   Mutation: {
     createStatus: async (_, { data }, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Error('Unauthorized');
+      }
 
         const validated = createStatusSchema.parse(data);
 
-        return prisma.status.create({
-          data: validated,
-          include: { tasksWithStatus: true }
-        });
+        try {
+          return await prisma.status.create({
+            data: validated,
+            include: { tasksWithStatus: true }
+          });
+        } catch (err: any) {
+            console.log(err)
+            handlePrismaError(err)
+        }
     },
     updateStatus: async (_, { id, data }, { prisma, user }) => {
       if (!user) {

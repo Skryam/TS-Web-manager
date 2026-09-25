@@ -84,11 +84,16 @@ export default {
       },
       tableList: {
         deleteError: 'Ошибка удаления',
-        restrictError: 'Невозможно удалить, связано с задей',
+        restrictError: 'Невозможно удалить, связано с задачей',
         actions: 'Действия',
-        created: 'Созданл',
+        created: 'Создано',
         edit: 'Редактировать',
         delete: 'Удалить',
+        deleteModal: {
+          body: 'Вы уверены что хотите удалить запись?',
+          cancel: 'Отмена',
+          delete: 'Удалить'
+        },
       },
     },
     layouts: {

@@ -12,6 +12,7 @@ import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
+import { usePageErrorContext } from '../../context/PageErrorContext';
 
 export default function NewStatus() {
   const flash = useFlash();
@@ -20,13 +21,14 @@ export default function NewStatus() {
   const client = useApolloClient();
   const [CreateStatus] = useMutation(CREATE_STATUS);
 
+  const {setError, getError} = usePageErrorContext();
+
   const methods = useForm<CreateStatusInput>({
     resolver: zodResolver(createStatusSchema),
     mode: 'onBlur',
   });
 
   const onSubmit = async (data: CreateStatusInput) => {
-    console.log(data);
     try {
       await CreateStatus({
         variables: {
@@ -38,12 +40,13 @@ export default function NewStatus() {
       navigate('/statuses');
     } catch (err: any) {
       flash(t('flash.statuses.create.error'), 'danger');
-      console.log(err);
+      setError(err);
+      console.log(err.errors[0].code);
     }
   };
 
   return (
-    <FormLayout title={t('views.statuses.new.create')}>
+    <FormLayout title={t('views.statuses.new.create')} error={getError()}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
           <TextInput fieldName="name" label={t('views.statuses.new.name')} />

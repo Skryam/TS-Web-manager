@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { usePageErrorContext } from '../context/PageErrorContext';
 
 interface FormLayoutProps {
   title: string;
@@ -9,6 +10,7 @@ interface FormLayoutProps {
 }
 
 export const FormLayout = ({ title, children, error }: FormLayoutProps) => {
+  const { getError } = usePageErrorContext();
   const { t } = useTranslation();
   return (
     <div className="container mt-5" style={{ maxWidth: '500px' }}>
@@ -16,7 +18,7 @@ export const FormLayout = ({ title, children, error }: FormLayoutProps) => {
 
       {error && (
         <Alert variant="danger" className="mb-3">
-          {t(error)}
+          {t(getError())}
         </Alert>
       )}
 

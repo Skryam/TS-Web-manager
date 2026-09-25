@@ -16,7 +16,18 @@ const resolvers = getResolvers();
 
 app.use(express.json());
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  includeStacktraceInErrorResponses: false,
+  formatError: (formattedError) => {
+    const code = formattedError.message;
+    return {
+      message: code,
+      code
+    }
+  }
+});
 
 const main = async () => {
   app.use(cors({

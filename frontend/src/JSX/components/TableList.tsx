@@ -59,27 +59,28 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
   }
 
   const [showDelete, setShowDelete] = useState(false);
-
-  const DeleteModal = (id: string) => {
-    return (
-      <Modal show={showDelete}>
-        <Modal.Body>
-          {t('Вы уверены что хотите удалить запись?')}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={() => setShowDelete(false)}>
-            {t('Отмена')}
-          </Button>
-          <Button variant='primary' onClick={() => setShowDelete(false)}>
-            {t('Удалить')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    )
-  };
+  const [deleteId, setDeleteId] = useState('');
 
   return (
     <Container fluid className="mt-4 px-4">
+
+      <Modal show={showDelete}>
+        <Modal.Body>
+          {t('components.tableList.deleteModal.body')}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant='secondary' onClick={() => setShowDelete(false)}>
+            {t('components.tableList.deleteModal.cancel')}
+          </Button>
+          <Button variant='primary' onClick={() => {
+              handleDelete(deleteId);
+              setShowDelete(false);
+            }}>
+            {t('components.tableList.deleteModal.delete')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       {error && (
         <Alert variant="danger" onClose={() => setError(null)} dismissible>
           <strong>Ошибка:</strong> {error}
@@ -149,6 +150,7 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
                         size="sm" 
                         variant="outline-danger"
                         onClick={() => {
+                          setDeleteId(entity.id)
                           setShowDelete(true)
                         }}
                         >
@@ -165,19 +167,6 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
           </tbody>
         </Table>
       </div>
-      <Modal show={showDelete}>
-        <Modal.Body>
-          {t('Вы уверены что хотите удалить запись?')}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={() => setShowDelete(false)}>
-            {t('Отмена')}
-          </Button>
-          <Button variant='primary' onClick={() => setShowDelete(false)}>
-            {t('Удалить')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </Container>
   );
 }

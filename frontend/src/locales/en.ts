@@ -83,6 +83,11 @@ export default {
         created: 'Created',
         edit: 'Edit',
         delete: 'Delete',
+        deleteModal: {
+          body: 'Are you sure you want to delete the record?',
+          cancel: 'Cancel',
+          delete: 'Delete'
+        },
       },
     },
 

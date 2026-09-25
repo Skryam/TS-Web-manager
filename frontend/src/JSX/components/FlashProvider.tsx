@@ -36,12 +36,11 @@ export default function FlashProvider({ children }: { children: React.ReactNode 
   return (
     <FlashContext.Provider value={showFlash}>
       {children}
-
-      {/* Контейнер тостов в правом верхнем углу */}
-      <div className="toast-container position-fixed top-0 end-0 p-3" style={{ zIndex: 1080 }}>
+      
+      <div className="toast-container position-fixed bottom-0 end-0" style={{ zIndex: 1080, padding: '5rem' }}>
         {messages.map((m) => (
-          <Toast key={m.id} bg={m.variant} onClose={() => remove(m.id)}>
-            <Toast.Body className={`fw-semibold ${m.variant !== 'warning' ? 'text-white' : ''}`}>
+          <Toast key={m.id} bg={m.variant} onClose={() => remove(m.id)} className="shadow">
+            <Toast.Body className={`fw-semibold fs-5 ${m.variant !== 'warning' ? 'text-white' : ''}`}>
               {m.text}
             </Toast.Body>
           </Toast>

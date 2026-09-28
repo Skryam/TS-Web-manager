@@ -12,6 +12,7 @@ import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
+import { usePageErrorContext } from '../../context/PageErrorContext';
 
 export default function NewLabel() {
   const flash = useFlash();
@@ -19,6 +20,7 @@ export default function NewLabel() {
   const navigate = useNavigate();
   const client = useApolloClient();
   const [CreateLabel] = useMutation(CREATE_LABEL);
+  const {setError} = usePageErrorContext();
 
   const methods = useForm<CreateLabelInput>({
     resolver: zodResolver(createLabelSchema),
@@ -36,7 +38,8 @@ export default function NewLabel() {
       flash(t('flash.labels.create.success'));
       navigate('/labels');
     } catch (err: any) {
-      flash(t('flash.labels.create.error'));
+      flash(t('flash.labels.create.error'), 'danger');
+      setError(err);
     }
   };
 

@@ -6,7 +6,7 @@ export const createTaskSchema = z.object({
     .max(100),
 
   description: z.string()
-    .max(500)
+    .max(1000)
     .optional(),
 
   statusId: z.string().transform((val) => Number(val)),

@@ -18,12 +18,16 @@ import { FormLayout } from '../../components/FormLayout';
 import { SelectInput } from '../../components/SelectInput';
 import { CreateTaskInput, createTaskSchema } from '../../../zodSchemas/task';
 import { useFlash } from '../../components/FlashProvider';
+import { useTranslation } from 'react-i18next';
+import { usePageErrorContext } from '../../context/PageErrorContext';
 
 export default function NewTask() {
   const flash = useFlash();
   const navigate = useNavigate();
   const client = useApolloClient();
   const [CreateTask] = useMutation(CREATE_TASK);
+  const { t } = useTranslation();
+  const {setError} = usePageErrorContext();
 
   const { data: statusesData } = useQuery(GET_STATUSES);
   const statuses =
@@ -62,7 +66,8 @@ export default function NewTask() {
       flash(t('flash.tasks.create.success'));
       navigate('/tasks');
     } catch (err: any) {
-      flash(t('flash.tasks.create.error'));
+      flash(t('flash.tasks.create.error'), 'danger');
+      setError(err);
     }
   };
 
@@ -78,7 +83,7 @@ export default function NewTask() {
 
           <SelectInput fieldName="executorId" label="Исполнитель" options={users} />
 
-          <SelectInput fieldName="labels" label="Лейблы" options={labels} multiple />
+          <SelectInput fieldName="labels" label="Метки" options={labels} multiple />
 
           <SubmitButton />
         </Form>

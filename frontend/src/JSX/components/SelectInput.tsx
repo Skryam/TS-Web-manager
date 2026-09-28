@@ -47,24 +47,21 @@ export const SelectInput = ({
         {label}
       </Form.Label>
 
-      <Form.Select
-        key={JSON.stringify(normalizedValue)}
-        id={fieldName}
-        multiple={multiple}
-        value={normalizedValue}
-        {...(multiple ? { rows: 5 } : {})}
-        className={`form-select ${fieldErrors ? 'is-invalid' : ''}`}
-        onChange={(e) => {
-          if (multiple) {
-            const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
-            setValue(fieldName, selected.length > 0 ? selected : [], { shouldValidate: true });
-          } else {
-            const val = e.target.value;
-            setValue(fieldName, val === '' ? undefined : val, { shouldValidate: true });
-          }
-          rhOnChange(e);
-        }}
-        {...rhfRest}
+    <Form.Select
+      id={fieldName}
+      multiple={multiple}
+      value={normalizedValue}
+      {...(multiple ? { rows: 5 } : {})}
+      className={`form-select ${fieldErrors ? 'is-invalid' : ''}`}
+      onChange={(e) => {
+        if (multiple) {
+          const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+          setValue(fieldName, selected.length > 0 ? selected : [], { shouldValidate: true });
+        } else {
+          const val = e.target.value;
+          setValue(fieldName, val === '' ? undefined : val, { shouldValidate: true });
+        }
+      }}
       >
         {!multiple && <option value="">{placeholder}</option>}
         {options.map((opt) => (

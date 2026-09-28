@@ -13,12 +13,14 @@ import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
+import { usePageErrorContext } from '../../context/PageErrorContext';
 
 export default function EditLabel() {
   const flash = useFlash();
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
+  const { setError } = usePageErrorContext();
 
   const [submitErrors, setSubmitErrors] = useState<string | null>(null);
 
@@ -60,8 +62,8 @@ export default function EditLabel() {
       flash(t('flash.labels.patch.success'));
       navigate('/labels');
     } catch (err: any) {
-      flash(t('flash.labels.patch.error'));
-      setSubmitErrors(err.response?.data?.message || err.message);
+      flash(t('flash.labels.patch.error'), 'danger');
+      setError(err);
     }
   };
 

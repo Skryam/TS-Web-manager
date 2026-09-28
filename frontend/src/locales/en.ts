@@ -76,6 +76,12 @@ export default {
         download: 'Loading',
         submit: 'Submit',
       },
+      formLayout: {
+        errors: {
+          alreadyExists: 'Record with this name already exists',
+          unknown: 'Server error'
+        }
+      },
       tableList: {
         deleteError: 'Error deleting',
         restrictError: 'Cannot delete, this entry is linked to a task',

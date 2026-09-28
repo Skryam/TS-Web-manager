@@ -60,8 +60,8 @@ export default function EditStatus() {
       flash(t('flash.statuses.patch.success'), 'success');
       navigate('/statuses');
     } catch (err: any) {
-      flash(t('flash.statuses.patch.error'), 'success');
-      setError(err.response?.data?.message || err.message);
+      flash(t('flash.statuses.patch.error'), 'danger');
+      setError(err);
     }
   };
 

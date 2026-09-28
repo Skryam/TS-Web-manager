@@ -36,15 +36,20 @@ export const statusResolver = {
     },
     updateStatus: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Error('Unauthorized');
+      }
 
       const validated = updateStatusSchema.parse(data);
 
-      return prisma.status.update({
-        where: { id: Number(id) },
-        data: validated,
-      });
+      try {
+        return await prisma.status.update({
+          where: { id: Number(id) },
+          data: validated,
+        });
+      } catch (err: any) {
+        console.log(err)
+        handlePrismaError(err)
+      }
     },
     deleteStatus: async (_, { id }, { prisma, user }) => {
       if (!user) {

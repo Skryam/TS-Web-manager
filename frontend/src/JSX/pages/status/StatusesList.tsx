@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { DELETE_STATUS, GET_STATUSES, Status } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
 import { useFlash } from '../../components/FlashProvider';
+import { usePageErrorContext } from '../../context/PageErrorContext';
 
 export default function StatusesList() {
   const flash = useFlash();
@@ -12,6 +13,7 @@ export default function StatusesList() {
   const { loading, error, data } = useQuery(GET_STATUSES, {
     fetchPolicy: 'network-only',
   });
+  const {setError} = usePageErrorContext();
 
   const [deleteStatus] = useMutation(DELETE_STATUS, {
     refetchQueries: [{ query: GET_STATUSES }],
@@ -31,8 +33,9 @@ export default function StatusesList() {
     try {
       await deleteStatus({ variables: { id: id } });
       flash(t('flash.statuses.delete.success'), 'success');
-    } catch {
+    } catch (err: any) {
       flash(t('flash.statuses.delete.error'), 'danger');
+      setError(err)
     }
   };
 

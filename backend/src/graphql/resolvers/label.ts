@@ -1,5 +1,6 @@
 import { createLabelSchema, CreateLabelInput, updateLabelSchema} from './schemas/label';
 import { Resolvers, DefaultArgs } from '../resolversTypes';
+import { handlePrismaError } from './schemas/prismaErrorCodes';
 
 export const labelResolver: Resolvers = {
   Query: {
@@ -24,31 +25,32 @@ export const labelResolver: Resolvers = {
 
       try {
         const validated = createLabelSchema.parse(data);
-
-        return prisma.label.create({
+        return await prisma.label.create({
           data: validated,
         });
-     } catch (e) {
-        console.log(e)
-        throw e
+     } catch (err: any) {
+        handlePrismaError(err);
       }
     },
     updateLabel: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Error('Unauthorized');
+      }
 
-      const validated = updateLabelSchema.parse(data);
-
-      return prisma.label.update({
-        where: { id: Number(id) },
-        data: validated,
+      try {
+        const validated = updateLabelSchema.parse(data);
+        return await prisma.label.update({
+          where: { id: Number(id) },
+          data: validated,
       });
+      } catch (err: any) {
+        handlePrismaError(err);
+      }
     },
     deleteLabel: async (_, { id }, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Error('Unauthorized');
+      }
 
       return prisma.label.delete({
         where: { id: Number(id) },

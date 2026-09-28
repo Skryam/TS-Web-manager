@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql';
 import {
   createContext,
   memo,
@@ -9,8 +10,9 @@ import {
 } from 'react';
 
 interface PageErrorContextData {
-  setError: (error: string) => void;
-  getError: () => string;
+  setError: (error: GraphQLError) => void;
+  getError: () => GraphQLError | undefined;
+  clearError: () => void;
 }
 
 const PageErrorContext = createContext<PageErrorContextData>(
@@ -21,14 +23,14 @@ interface PageErrorProviderProps {
   children: ReactNode | ReactNode[];
 }
 
-export const PageErrorProvider = memo((props: PageErrorProviderProps) => {
-  const [submitErrors, setSubmitErrors] = useState<string>('');
+export const PageErrorProvider = memo(function PageErrorProvider(props: PageErrorProviderProps) {
+  const [submitErrors, setSubmitErrors] = useState<GraphQLError>();
 
-  const getError = useCallback(() => submitErrors, [submitErrors]);
+  const getError = useCallback((): GraphQLError | undefined => submitErrors, [submitErrors]);
+  const setError = useCallback((error: GraphQLError) => setSubmitErrors(error), []);
+  const clearError = useCallback(() => setSubmitErrors(undefined), [])
 
-  const setError = useCallback((error: string) => setSubmitErrors(error), []);
-
-  const context = useMemo<PageErrorContextData>(() => ({setError, getError}), [setError, getError]);
+  const context = useMemo<PageErrorContextData>(() => ({setError, getError, clearError}), [setError, getError]);
 
   return <PageErrorContext.Provider {...props} value={context} />;
 });

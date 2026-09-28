@@ -4,10 +4,9 @@ export const createTaskSchema = z.object({
   name: z
     .string()
     .min(2, { error: 'Название должно содержать минимум 2 символа' })
-    .max(50, { error: 'Название не должно превышать 50 символов' })
-    .regex(/^[a-zA-Zа-яА-ЯёЁ\-'\s]+$/, { error: 'Недопустимые символы в названии' }),
+    .max(50, { error: 'Название не должно превышать 50 символов' }),
 
-  description: z.string().optional(),
+  description: z.string().max(1000).optional(),
 
   statusId: z.string().min(1, { error: 'Необходимо указать статус' }),
 

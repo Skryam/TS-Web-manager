@@ -82,6 +82,12 @@ export default {
         download: 'Загрузка',
         submit: 'Подтвердить',
       },
+      formLayout: {
+        errors: {
+          alreadyExists: 'Запись с таким названием уже существует',
+          unknown: 'Ошибка сервера'
+        }
+      },
       tableList: {
         deleteError: 'Ошибка удаления',
         restrictError: 'Невозможно удалить, связано с задачей',

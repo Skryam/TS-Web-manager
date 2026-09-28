@@ -21,7 +21,7 @@ export default function NewStatus() {
   const client = useApolloClient();
   const [CreateStatus] = useMutation(CREATE_STATUS);
 
-  const {setError, getError} = usePageErrorContext();
+  const {setError} = usePageErrorContext();
 
   const methods = useForm<CreateStatusInput>({
     resolver: zodResolver(createStatusSchema),
@@ -41,12 +41,11 @@ export default function NewStatus() {
     } catch (err: any) {
       flash(t('flash.statuses.create.error'), 'danger');
       setError(err);
-      console.log(err.errors[0].code);
     }
   };
 
   return (
-    <FormLayout title={t('views.statuses.new.create')} error={getError()}>
+    <FormLayout title={t('views.statuses.new.create')}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
           <TextInput fieldName="name" label={t('views.statuses.new.name')} />

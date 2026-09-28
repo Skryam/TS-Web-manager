@@ -20,14 +20,14 @@ import { FormLayout } from '../../components/FormLayout';
 import { UpdateTaskInput, updateTaskSchema } from '../../../zodSchemas/task';
 import { SelectInput } from '../../components/SelectInput';
 import { useFlash } from '../../components/FlashProvider';
+import { usePageErrorContext } from '../../context/PageErrorContext';
 
 export default function EditTask() {
   const flash = useFlash();
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const [submitErrors, setSubmitErrors] = useState<string | null>(null);
+  const { setError } = usePageErrorContext();
 
   const { error, data, loading } = useQuery(GET_TASK_BY_ID, {
     variables: { id },
@@ -88,8 +88,8 @@ export default function EditTask() {
       flash(t('flash.tasks.patch.success'));
       navigate('/tasks');
     } catch (err: any) {
-      flash(t('flash.tasks.patch.error'));
-      setSubmitErrors(err.response?.data?.message || err.message);
+      flash(t('flash.tasks.patch.error'), 'danger');
+      setError(err);
     }
   };
 
@@ -104,7 +104,7 @@ export default function EditTask() {
   }
 
   return (
-    <FormLayout title={t('views.tasks.edit.title')} error={submitErrors}>
+    <FormLayout title={t('views.tasks.edit.title')}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
           <TextInput fieldName="name" label={t('views.tasks.edit.name')} />

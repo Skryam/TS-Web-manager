@@ -1,5 +1,4 @@
 import { GraphQLError } from 'graphql';
-import { Response } from 'exp'
 import {
   createContext,
   memo,
@@ -9,10 +8,11 @@ import {
   useState,
   useCallback,
 } from 'react';
+import { AxiosError } from 'axios';
 
 interface PageErrorContextData {
-  setError: (error: GraphQLError) => void;
-  getError: () => GraphQLError | Response | undefined;
+  setError: (error) => void;
+  getError: () => any;
   clearError: () => void;
 }
 
@@ -25,10 +25,10 @@ interface PageErrorProviderProps {
 }
 
 export const PageErrorProvider = memo(function PageErrorProvider(props: PageErrorProviderProps) {
-  const [submitErrors, setSubmitErrors] = useState<GraphQLError>();
+  const [submitErrors, setSubmitErrors] = useState();
 
-  const getError = useCallback((): GraphQLError | undefined => submitErrors, [submitErrors]);
-  const setError = useCallback((error: GraphQLError) => setSubmitErrors(error), []);
+  const getError = useCallback(() => submitErrors, [submitErrors]);
+  const setError = useCallback((error) => setSubmitErrors(error), []);
   const clearError = useCallback(() => setSubmitErrors(undefined), [])
 
   const context = useMemo<PageErrorContextData>(() => ({setError, getError, clearError}), [setError, getError]);

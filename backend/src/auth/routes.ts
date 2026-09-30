@@ -19,7 +19,7 @@ router.post('/signup', async (req, res) => {
     })
   
     if (existing) {
-      return res.status(400).json({ error: 'USER_ALREADY_EXISTS' });
+      return res.status(400).json({ error: 'ALREADY_EXISTS' });
     }
 
   try {

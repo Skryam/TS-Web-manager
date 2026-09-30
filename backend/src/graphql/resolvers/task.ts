@@ -1,5 +1,6 @@
 import { createTaskSchema, updateTaskSchema } from './schemas/task';
 import { Resolvers } from '../resolversTypes';
+import { handlePrismaError } from './schemas/prismaErrorCodes';
 
 export const taskResolver: Resolvers = {
   Query: {
@@ -72,23 +73,26 @@ export const taskResolver: Resolvers = {
   Mutation: {
     createTask: async (_, { data }, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Error('Unauthorized');
+      }
         const validated = createTaskSchema.parse(data);
-
         const { labels, ...taskFields } = validated;
 
-        return prisma.task.create({
-          data: {
-            ...taskFields,
-            creatorId: user.id,
-            ...(labels?.length && {
-              labels: {
-                create: labels.map(id => ({ labelId: Number(id) }))
-              }
-            })
-          }
-        })
+        try {
+          return prisma.task.create({
+            data: {
+              ...taskFields,
+              creatorId: user.id,
+              ...(labels?.length && {
+                labels: {
+                  create: labels.map(id => ({ labelId: Number(id) }))
+                }
+              })
+            }
+          })
+        } catch (err: any) {
+          handlePrismaError(err)
+        }
     },
     updateTask: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
@@ -99,22 +103,26 @@ export const taskResolver: Resolvers = {
 
       const { labels, ...taskFields } = validated;
 
-      return prisma.task.update({
-        where: { id: Number(id) },
-        data: {
-            ...taskFields,
-            ...(labels !== undefined && {
-              labels: {
-                create: labels.map(id => ({ labelId: Number(id) }))
-              }
-            })
-          },
-      });
+      try {
+        return prisma.task.update({
+          where: { id: Number(id) },
+          data: {
+              ...taskFields,
+              ...(labels !== undefined && {
+                labels: {
+                  create: labels.map(id => ({ labelId: Number(id) }))
+                }
+              })
+            },
+        });
+      } catch (err: any) {
+        handlePrismaError(err)
+      }
     },
     deleteTask: async (_, { id }, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Error('Unauthorized');
+      }
 
       return prisma.task.delete({
         where: { id: Number(id) },

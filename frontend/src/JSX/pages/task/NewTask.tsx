@@ -72,18 +72,18 @@ export default function NewTask() {
   };
 
   return (
-    <FormLayout title="Добавление задачи">
+    <FormLayout title={t('views.tasks.new.title')}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
-          <TextInput fieldName="name" label="Название" />
+          <TextInput fieldName="name" label={t('views.tasks.new.name')} />
 
-          <TextInput fieldName="description" label="Описание" as="textarea" rows={5} />
+          <TextInput fieldName="description" label={t('views.tasks.new.description')} as="textarea" rows={5} />
 
-          <SelectInput fieldName="statusId" label="Статус" options={statuses} />
+          <SelectInput fieldName="statusId" label={t('views.tasks.new.status')} options={statuses} />
 
-          <SelectInput fieldName="executorId" label="Исполнитель" options={users} />
+          <SelectInput fieldName="executorId" label={t('views.tasks.new.executor')} options={users} />
 
-          <SelectInput fieldName="labels" label="Метки" options={labels} multiple />
+          <SelectInput fieldName="labels" label={t('views.tasks.new.labels')} options={labels} multiple />
 
           <SubmitButton />
         </Form>

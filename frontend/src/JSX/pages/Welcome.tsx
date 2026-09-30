@@ -11,7 +11,7 @@ export default () => {
   const isAuthenticated = !!data?.me;
 
   return (
-    <div className="bg-light" style={{ minHeight: 'calc(100vh - 76px)' }}>
+    <div className="bg-light">
       <Container className="py-5">
         <div className="text-center mb-5">
           <h1 className="display-3 fw-bold">{t('views.welcome.index.hello')}</h1>

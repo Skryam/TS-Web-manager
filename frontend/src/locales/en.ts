@@ -18,8 +18,7 @@ export default {
         },
         delete: {
           success: 'User deleted successfully',
-          errRelated: 'User is associated with an active task and cannot be deleted',
-          errNotUser: 'You do not have permission to delete this user',
+          error: 'User is associated with an active task and cannot be deleted',
         },
         patch: {
           success: 'User successfully changed',

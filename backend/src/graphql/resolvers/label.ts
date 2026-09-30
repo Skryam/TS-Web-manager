@@ -1,6 +1,6 @@
 import { createLabelSchema, CreateLabelInput, updateLabelSchema} from './schemas/label';
 import { Resolvers, DefaultArgs } from '../resolversTypes';
-import { handlePrismaError } from './schemas/prismaErrorCodes';
+import { handlePrismaError, throwAlreadyExist } from './schemas/prismaErrorCodes';
 
 export const labelResolver: Resolvers = {
   Query: {
@@ -23,12 +23,22 @@ export const labelResolver: Resolvers = {
         throw new Error('Unauthorized');
       }
 
+      const validated = createLabelSchema.parse(data);
+
+      const existing = await prisma.label.findUnique({
+        where: { name: validated.name }
+      })
+
+      if (existing) {
+        console.log('ERROR throwAlreadyExist')
+        throwAlreadyExist(); 
+      }
+
       try {
-        const validated = createLabelSchema.parse(data);
         return await prisma.label.create({
           data: validated,
         });
-     } catch (err: any) {
+      } catch (err: any) {
         handlePrismaError(err);
       }
     },

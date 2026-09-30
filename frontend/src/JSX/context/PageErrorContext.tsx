@@ -1,4 +1,5 @@
 import { GraphQLError } from 'graphql';
+import { Response } from 'exp'
 import {
   createContext,
   memo,
@@ -11,7 +12,7 @@ import {
 
 interface PageErrorContextData {
   setError: (error: GraphQLError) => void;
-  getError: () => GraphQLError | undefined;
+  getError: () => GraphQLError | Response | undefined;
   clearError: () => void;
 }
 

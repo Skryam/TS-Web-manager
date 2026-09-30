@@ -7,15 +7,16 @@ const PRISMA_ERROR_CODES: Record<string, string> = {
 };
 
 export const handlePrismaError = (err: any): never => {
-  console.log('code:', err)
   const code = PRISMA_ERROR_CODES[err.code];
-  console.log('parsedCode:', code)
 
   if (code) {
-    console.log('GraphQLError:', GraphQLError)
     throw new GraphQLError(code);
   }
 
   console.log(err);
   throw new GraphQLError('INTERNAL_ERROR')
+}
+
+export const throwAlreadyExist = (): void => {
+  throw new GraphQLError(PRISMA_ERROR_CODES['P2002']);
 }

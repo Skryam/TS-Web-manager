@@ -1,12 +1,12 @@
 import { createStatusSchema, updateStatusSchema } from './schemas/status';
-import { handlePrismaError } from './schemas/prismaErrorCodes';
+import { handlePrismaError, throwAlreadyExist } from './schemas/prismaErrorCodes';
 
 export const statusResolver = {
   Query: {
     getStatuses: (_, __, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Error('Unauthorized');
+      }
       return prisma.status.findMany()
     },
     getStatus: (_, { id }, { prisma, user }) => {
@@ -22,7 +22,15 @@ export const statusResolver = {
         throw new Error('Unauthorized');
       }
 
-        const validated = createStatusSchema.parse(data);
+      const validated = createStatusSchema.parse(data);
+
+      const existing = await prisma.status.findUnique({
+        where: { name: validated.name }
+      })
+
+      if (existing) {
+        throwAlreadyExist(); 
+      }
 
         try {
           return await prisma.status.create({

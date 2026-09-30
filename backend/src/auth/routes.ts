@@ -3,6 +3,7 @@ import { getPrisma } from '../../lib/prisma';
 import passport from './passport';
 import encrypt from '../../lib/secure';
 import { createUserSchema, createUpdateUserPasswordSchema, UpdateUserPasswordInput } from '.././graphql/resolvers/schemas/user';
+import { throwAlreadyExist } from '../graphql/resolvers/schemas/prismaErrorCodes';
 
 const router: Router = express.Router();
 
@@ -11,8 +12,17 @@ router.use(express.json());
 const prisma = getPrisma();
 
 router.post('/signup', async (req, res) => {
+  const validated = createUserSchema.parse(req.body);
+
+  const existing = await prisma.user.findUnique({
+     where: { email: validated.email }
+    })
+  
+    if (existing) {
+      return res.status(400).json({ error: 'USER_ALREADY_EXISTS' });
+    }
+
   try {
-    const validated = createUserSchema.parse(req.body);
     const passwordDigest = encrypt(validated.password);
 
     const user = await prisma.user.create({
@@ -31,7 +41,7 @@ router.post('/signup', async (req, res) => {
       return res.status(201).json({ id: user.id, email: user.email });
     });
   } catch (e) {
-      return res.status(400).json({ error: 'USER_ALREADY_EXISTS' });
+      return res.status(500).json({ error: 'INTERNAL_ERROR '});
   }
     });
 

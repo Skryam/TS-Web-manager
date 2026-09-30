@@ -16,6 +16,7 @@ export const FormLayout = ({ title, children }: FormLayoutProps) => {
   const { getError, clearError } = usePageErrorContext();
   const { t } = useTranslation();
   const error = getError();
+  const parsedError = error?.message ?? error.error
 
   useEffect(() => {
     clearError();
@@ -27,7 +28,7 @@ export const FormLayout = ({ title, children }: FormLayoutProps) => {
 
       {error && (
         <Alert variant="danger" className="mb-3">
-          {t('components.formLayout.errors.' + (PRISMA_ERROR_CODES_TRANSLATION[error.message] ?? 'unknown'))}
+          {t('components.formLayout.errors.' + (PRISMA_ERROR_CODES_TRANSLATION[error?.message] ?? 'unknown'))}
         </Alert>
       )}
 

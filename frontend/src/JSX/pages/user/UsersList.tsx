@@ -5,11 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { User, GET_ME, GET_USERS, DELETE_USER } from '../../../graphql/queries';
 import { TableList, TableConfig } from '../../components/TableList';
 import { useFlash } from '../../components/FlashProvider';
+import { usePageErrorContext } from '../../context/PageErrorContext';
 
 export default function UsersList() {
   const flash = useFlash();
   const { t } = useTranslation();
   const { data: meData } = useQuery(GET_ME);
+  const {setError} = usePageErrorContext();
 
   const { loading, error, data } = useQuery(GET_USERS, { fetchPolicy: 'network-only' });
 
@@ -21,8 +23,9 @@ export default function UsersList() {
     try {
       await deleteUser({ variables: { id: id } });
       flash(t('flash.users.delete.success'));
-    } catch (err) {
-      flash(t('flash.users.delete.error'));
+    } catch (err: any) {
+      flash(t('flash.users.delete.error'), 'danger');
+      setError(err)
     }
   };
 

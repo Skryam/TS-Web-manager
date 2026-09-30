@@ -72,7 +72,7 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
           <Button variant='secondary' onClick={() => setShowDelete(false)}>
             {t('components.tableList.deleteModal.cancel')}
           </Button>
-          <Button variant='primary' onClick={() => {
+          <Button variant='danger' onClick={() => {
               handleDelete(deleteId);
               setShowDelete(false);
             }}>

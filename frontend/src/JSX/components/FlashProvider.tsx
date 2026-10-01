@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 import { Toast } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 type FlashVariant = 'success' | 'danger' | 'warning' | 'info';
 
@@ -18,6 +19,7 @@ export const useFlash = () => useContext(FlashContext);
 let nextId = 0;
 
 export default function FlashProvider({ children }: { children: React.ReactNode }) {
+  const { t } = useTranslation();
   const [messages, setMessages] = useState<FlashMessage[]>([]);
 
   const remove = useCallback((id: number) => {
@@ -41,7 +43,7 @@ export default function FlashProvider({ children }: { children: React.ReactNode 
         {messages.map((m) => (
           <Toast key={m.id} bg={m.variant} onClose={() => remove(m.id)} className="shadow">
             <Toast.Body className={`fw-semibold fs-5 ${m.variant !== 'warning' ? 'text-white' : ''}`}>
-              {m.text}
+              {t(m.text)}
             </Toast.Body>
           </Toast>
         ))}

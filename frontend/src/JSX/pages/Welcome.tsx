@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { GET_ME } from '../../graphql/queries';
 
-export const Welcome = () => {
+export default function Welcome() {
   const { t } = useTranslation();
   const { data } = useQuery(GET_ME);
   const isAuthenticated = !!data?.me;

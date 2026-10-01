@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@apollo/client/react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Alert, Spinner, Form } from 'react-bootstrap';
@@ -21,8 +21,6 @@ export default function EditLabel() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { setError } = usePageErrorContext();
-
-  const [submitErrors, setSubmitErrors] = useState<string | null>(null);
 
   const { error, data, loading } = useQuery(GET_LABEL_BY_ID, {
     variables: { id },
@@ -79,7 +77,7 @@ export default function EditLabel() {
   }
 
   return (
-    <FormLayout title={t('views.labels.edit.change')} error={submitErrors}>
+    <FormLayout title={t('views.labels.edit.change')}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
           <TextInput fieldName="name" label={t('views.labels.new.name')} />

@@ -34,7 +34,7 @@ export default function ViewTask() {
 
       <div className="row mt-5 p-5 shadow bg-white">
         <div className="col-12 col-md-8 order-2 order-md-1">
-          <p className="lead fw-normal mb-4">{task.description}</p>
+          <p className="lead fw-normal mb-4 text-break">{task.description}</p>
         </div>
 
         <div className="col-12 col-md-4 border-start px-3 order-1 order-md-2 mb-3 mb-md-0">

@@ -13,6 +13,7 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
+import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 
 export default function NewStatus() {
   const flash = useFlash();
@@ -23,7 +24,7 @@ export default function NewStatus() {
 
   const {setError} = usePageErrorContext();
 
-  const methods = useForm<CreateStatusInput>({
+  const methods = useLocalizedForm<CreateStatusInput>({
     resolver: zodResolver(createStatusSchema),
     mode: 'onBlur',
   });

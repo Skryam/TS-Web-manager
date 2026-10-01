@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
-import { Button, Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 import { GET_ME } from '../../graphql/queries';
 
-export default () => {
+export const Welcome = () => {
   const { t } = useTranslation();
   const { data } = useQuery(GET_ME);
   const isAuthenticated = !!data?.me;

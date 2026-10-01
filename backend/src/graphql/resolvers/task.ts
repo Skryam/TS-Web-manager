@@ -104,18 +104,20 @@ export const taskResolver: Resolvers = {
       const { labels, ...taskFields } = validated;
 
       try {
-        return prisma.task.update({
+        return await prisma.task.update({
           where: { id: Number(id) },
           data: {
               ...taskFields,
               ...(labels !== undefined && {
                 labels: {
+                  deleteMany: {},
                   create: labels.map(id => ({ labelId: Number(id) }))
                 }
               })
             },
         });
       } catch (err: any) {
+        console.log(Object.entries(err))
         handlePrismaError(err)
       }
     },

@@ -78,7 +78,13 @@ export default {
       formLayout: {
         errors: {
           alreadyExists: 'Record with this name already exists',
-          unknown: 'Server error'
+          unknown: 'Server error',
+          incorrectNew: 'The password must contain at least 8 characters, an uppercase letter, a lowercase letter, and a digit',
+          mismatch: 'The new password and password confirmation do not match.',
+          userNotFound: 'User not found',
+          invalidCurrentPassword: 'Incorrect current password',
+          validationError: 'Server validation error',
+          internalError: 'Server error'
         }
       },
       tableList: {
@@ -147,14 +153,6 @@ export default {
             password: 'Current Password',
             newPassword: 'New Password',
             submitPassword: 'Confirm password',
-            errors: {
-              incorrectNew: 'The password must contain at least 8 characters, an uppercase letter, a lowercase letter, and a digit',
-              mismatch: 'The new password and password confirmation do not match.',
-              userNotFound: 'User not found',
-              invalidCurrentPassword: 'Incorrect current password',
-              validationError: 'Server validation error',
-              internalError: 'Server error'
-            },
           }
         },
       },

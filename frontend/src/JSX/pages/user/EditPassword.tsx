@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { Form } from 'react-bootstrap';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider } from 'react-hook-form';
@@ -12,13 +10,8 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
 import { getApi } from '../../../api/client';
-
-const ERROR_KEYS: Record<string, string> = {
-  USER_NOT_FOUND: 'userNotFound',
-  INVALID_CURRENT_PASSWORD: 'invalidCurrentPassword',
-  VALIDATION_ERROR: 'validationError',
-  INTERNAL_ERROR: 'internalError'
-}
+import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
+import { usePageErrorContext } from '../../context/PageErrorContext';
 
 export default function EditPassword() {
   const flash = useFlash();
@@ -26,10 +19,9 @@ export default function EditPassword() {
   const { id } = useParams();
   const navigate = useNavigate();
   const api = getApi();
+  const {setError} = usePageErrorContext();
 
-  const [submitErrors, setSubmitErrors] = useState<string | null>(null);
-
-  const methods = useForm<UpdateUserPasswordInput>({
+  const methods = useLocalizedForm<UpdateUserPasswordInput>({
     resolver: zodResolver(createUpdateUserPasswordSchema()),
     mode: 'onBlur',
   });
@@ -41,13 +33,12 @@ export default function EditPassword() {
       navigate('/users');
     } catch (err: any) {
       flash(t('flash.users.patch.error'), 'danger');
-      const error = err.response?.data?.error;
-      setSubmitErrors(t('views.users.edit.editPassword.errors.' + ERROR_KEYS[error]) ?? 'errors.unknown');
+      setError(err)
     }
   };
 
   return (
-    <FormLayout title={t('views.users.edit.editPassword.cardName')} error={submitErrors}>
+    <FormLayout title={t('views.users.edit.editPassword.cardName')}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
           <TextInput fieldName="password" type="password" label={t('views.users.edit.editPassword.password')} />

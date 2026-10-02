@@ -1,7 +1,6 @@
 import { useQuery, useMutation } from '@apollo/client/react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { Alert, Spinner, Form, Button } from 'react-bootstrap';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider } from 'react-hook-form';
@@ -13,14 +12,16 @@ import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
+import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
+import { usePageErrorContext } from '../../context/PageErrorContext';
 
 export default function EditUser() {
   const flash = useFlash();
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
+  const {setError} = usePageErrorContext();
 
-  const [submitErrors, setSubmitErrors] = useState<string | null>(null);
 
   const { error, data, loading } = useQuery(GET_USER_BY_ID, {
     variables: { id },
@@ -31,7 +32,7 @@ export default function EditUser() {
 
   const [updateUser] = useMutation(UPDATE_USER);
 
-  const methods = useForm<UpdateUserInput>({
+  const methods = useLocalizedForm<UpdateUserInput>({
     resolver: zodResolver(updateUserSchema),
     mode: 'onBlur',
     defaultValues: {
@@ -70,7 +71,7 @@ export default function EditUser() {
     } catch (err: any) {
       console.log(err)
       flash(t('flash.users.patch.error'), 'danger');
-      setSubmitErrors(err.response?.data?.message || err.message);
+      setError(err);
     }
   };
 
@@ -85,7 +86,7 @@ export default function EditUser() {
   }
 
   return (
-    <FormLayout title={t('views.users.edit.cardName')} error={submitErrors}>
+    <FormLayout title={t('views.users.edit.cardName')}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
           <TextInput fieldName="firstName" label={t('views.users.firstName')} />

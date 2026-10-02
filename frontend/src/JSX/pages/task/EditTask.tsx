@@ -1,7 +1,6 @@
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { Alert, Spinner, Form } from 'react-bootstrap';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider } from 'react-hook-form';
@@ -21,6 +20,7 @@ import { UpdateTaskInput, updateTaskSchema } from '../../../zodSchemas/task';
 import { SelectInput } from '../../components/SelectInput';
 import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
+import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 
 export default function EditTask() {
   const flash = useFlash();
@@ -58,7 +58,7 @@ export default function EditTask() {
 
   const [updateTask] = useMutation(UPDATE_TASK);
 
-  const methods = useForm<UpdateTaskInput>({
+  const methods = useLocalizedForm<UpdateTaskInput>({
     resolver: zodResolver(updateTaskSchema),
     mode: 'onBlur',
   });

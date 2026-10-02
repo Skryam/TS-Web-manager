@@ -70,7 +70,7 @@ export default function ViewTask() {
           </div>
 
           <div className="d-flex flex-wrap">
-            <Link to={`/editTask/${task.id}`} className="btn btn-primary me-1">
+            <Link to={`/tasks/${task.id}/edit`} className="btn btn-primary me-1">
               {t('views.tasks.view.edit')}
             </Link>
           </div>

@@ -1,6 +1,5 @@
 import { useApolloClient } from '@apollo/client/react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'react-bootstrap';
 import { FormProvider } from 'react-hook-form';
@@ -14,6 +13,7 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
+import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 
 export default function NewUser() {
   const flash = useFlash();
@@ -23,7 +23,7 @@ export default function NewUser() {
   const client = useApolloClient();
   const {setError} = usePageErrorContext();
 
-  const methods = useForm<CreateUserInput>({
+  const methods = useLocalizedForm<CreateUserInput>({
     resolver: zodResolver(createUserSchema),
     mode: 'onBlur',
   });

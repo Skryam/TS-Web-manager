@@ -14,6 +14,7 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
+import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 
 export default function EditStatus() {
   const flash = useFlash();
@@ -29,7 +30,7 @@ export default function EditStatus() {
 
   const [updateStatus] = useMutation(UPDATE_STATUS);
 
-  const methods = useForm<UpdateStatusInput>({
+  const methods = useLocalizedForm<UpdateStatusInput>({
     resolver: zodResolver(updateStatusSchema),
     mode: 'onBlur',
     defaultValues: {

@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { Spinner, Alert, Badge } from 'react-bootstrap';
-import { useState, useCallback, SetStateAction } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -13,7 +12,6 @@ import {
 import { TableConfig, TableList } from '../../components/TableList';
 import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
-import { TaskFilters } from './TaskFilters';
 
 interface TaskTableProps {
   activeFilters: TaskFilterInput
@@ -57,7 +55,7 @@ export default function TasksTable({activeFilters}: TaskTableProps) {
   };
 
   const addButton = {
-    page: 'newTask',
+    page: '/tasks/create',
     label: t('views.tasks.create'),
   };
 
@@ -81,7 +79,7 @@ export default function TasksTable({activeFilters}: TaskTableProps) {
       name: 'name',
       label: t('views.tasks.name'),
       render: (id, value) => (
-        <Link to={`/viewTask/${id}`} className="link">
+        <Link to={`/tasks/${id}`} className="link">
           {String(value)}
         </Link>
       ),
@@ -111,7 +109,7 @@ export default function TasksTable({activeFilters}: TaskTableProps) {
   ];
 
   const actionButtons = {
-    editPageName: 'editTask',
+    editPageName: 'tasks',
     deleteAction: handleDelete,
   };
 

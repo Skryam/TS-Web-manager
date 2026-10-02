@@ -9,8 +9,12 @@ interface FormLayoutProps {
   children: React.ReactNode;
 }
 
-const PRISMA_ERROR_CODES_TRANSLATION: Record<string, string> = {
+const ERROR_CODES_TRANSLATION: Record<string, string> = {
   ALREADY_EXISTS: 'alreadyExists',
+  USER_NOT_FOUND: 'userNotFound',
+  INVALID_CURRENT_PASSWORD: 'invalidCurrentPassword',
+  VALIDATION_ERROR: 'validationError',
+  INTERNAL_ERROR: 'internalError'
 }
 
 export const FormLayout = ({ title, children }: FormLayoutProps) => {
@@ -28,7 +32,7 @@ export const FormLayout = ({ title, children }: FormLayoutProps) => {
 
       {error && (
         <Alert variant="danger" className="mb-3">
-          {t('components.formLayout.errors.' + (PRISMA_ERROR_CODES_TRANSLATION[error] ?? 'unknown'))}
+          {t('components.formLayout.errors.' + (ERROR_CODES_TRANSLATION[error] ?? 'unknown'))}
         </Alert>
       )}
 

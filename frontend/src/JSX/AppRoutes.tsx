@@ -25,18 +25,21 @@ export const AppRoutes = () => (
     <Route path="/newUser" element={<NewUser />} />
     <Route path="/login" element={<Login />} />
     <Route element={<ProtectedLayout />}>
-      <Route path="/statuses" element={<StatusesList />} />
       <Route path="/editUser/:id" element={<EditUser />} />
       <Route path="/users/:id/password" element={<EditPassword />} />
+
+      <Route path="/statuses" element={<StatusesList />} />
       <Route path="/newStatus" element={<NewStatus />} />
       <Route path="/editStatus/:id" element={<EditStatus />} />
+
       <Route path="/labels" element={<LabelsList />} />
       <Route path="/newLabel" element={<NewLabel />} />
       <Route path="/editLabel/:id" element={<EditLabel />} />
+
       <Route path="/tasks" element={<TasksList />} />
-      <Route path="/newTask" element={<NewTask />} />
-      <Route path="/viewTask/:id" element={<ViewTask />} />
-      <Route path="/editTask/:id" element={<EditTask />} />
+      <Route path="/tasks/create" element={<NewTask />} />
+      <Route path="/tasks/:id" element={<ViewTask />} />
+      <Route path="/tasks/:id/edit" element={<EditTask />} />
     </Route>
   </Routes>
 );

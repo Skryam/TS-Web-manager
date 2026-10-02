@@ -1,7 +1,6 @@
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { Alert, Spinner, Form } from 'react-bootstrap';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider } from 'react-hook-form';
@@ -14,6 +13,7 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
+import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 
 export default function EditLabel() {
   const flash = useFlash();
@@ -29,7 +29,7 @@ export default function EditLabel() {
 
   const [updateLabel] = useMutation(UPDATE_LABEL);
 
-  const methods = useForm<UpdateLabelInput>({
+  const methods = useLocalizedForm<UpdateLabelInput>({
     resolver: zodResolver(updateLabelSchema),
     mode: 'onBlur',
     defaultValues: {

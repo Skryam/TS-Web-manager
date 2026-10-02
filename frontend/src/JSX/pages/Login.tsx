@@ -1,6 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'react-bootstrap';
 import { FormProvider } from 'react-hook-form';
@@ -13,6 +11,8 @@ import { TextInput } from '../components/TextInput';
 import { SubmitButton } from '../components/SubmitButton';
 import { FormLayout } from '../components/FormLayout';
 import { useFlash } from '../components/FlashProvider';
+import { useLocalizedForm } from '../../hooks/useLocalizedForm';
+import { usePageErrorContext } from '../context/PageErrorContext';
 
 export default function Login() {
   const flash = useFlash();
@@ -20,9 +20,9 @@ export default function Login() {
   const client = getClient();
   const api = getApi();
   const navigate = useNavigate();
-  const [submitErrors, setSubmitErrors] = useState<string | null>(null);
+  const {setError} = usePageErrorContext();
 
-  const methods = useForm<CreateLoginInput>({
+  const methods = useLocalizedForm<CreateLoginInput>({
     resolver: zodResolver(createLoginSchema),
     mode: 'onBlur',
   });
@@ -35,15 +35,12 @@ export default function Login() {
       navigate('/');
     } catch (err: any) {
       flash(t('flash.session.create.error'), 'danger');
-      setSubmitErrors(err.response?.data?.message || err.message);
+      setError(err);
     }
   };
 
   return (
-    <FormLayout
-      title={t('views.session.new.signIn')}
-      error={submitErrors ? t('views.session.new.error') : null}
-    >
+    <FormLayout title={t('views.session.new.signIn')}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
           <TextInput fieldName="email" type="email" label={t('views.session.new.email')} />

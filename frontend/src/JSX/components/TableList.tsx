@@ -142,7 +142,7 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
                         <Button 
                         size="sm" 
                         variant="outline-primary"
-                        onClick={() => navigate(`/${editPageName}/${entity.id}`)}
+                        onClick={() => navigate(`/${editPageName}/${entity.id}/edit`)}
                         >
                           {t('components.tableList.edit')}
                         </Button>

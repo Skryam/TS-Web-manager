@@ -1,6 +1,5 @@
 import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'react-bootstrap';
 import { FormProvider } from 'react-hook-form';
@@ -20,6 +19,7 @@ import { CreateTaskInput, createTaskSchema } from '../../../zodSchemas/task';
 import { useFlash } from '../../components/FlashProvider';
 import { useTranslation } from 'react-i18next';
 import { usePageErrorContext } from '../../context/PageErrorContext';
+import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 
 export default function NewTask() {
   const flash = useFlash();
@@ -50,7 +50,7 @@ export default function NewTask() {
       label: l.name,
     })) ?? [];
 
-  const methods = useForm<CreateTaskInput>({
+  const methods = useLocalizedForm<CreateTaskInput>({
     resolver: zodResolver(createTaskSchema),
     mode: 'onBlur',
   });

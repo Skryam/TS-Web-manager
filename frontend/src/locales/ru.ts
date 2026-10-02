@@ -84,7 +84,12 @@ export default {
       formLayout: {
         errors: {
           alreadyExists: 'Запись с таким названием уже существует',
-          unknown: 'Ошибка сервера'
+          incorrectNew: 'Пароль должен содержать минимум 8 символов, заглавную и строчную буквы, а также цифру',
+          mismatch: 'Новый пароль и подтверждение пароля не соответствуют',
+          userNotFound: 'Пользователь не найден',
+          invalidCurrentPassword: 'Неверный текущий пароль',
+          validationError: 'Ошибка валидации сервера',
+          internalError: 'Ошибка сервера'
         }
       },
       tableList: {
@@ -152,14 +157,6 @@ export default {
             password: 'Текущий пароль',
             newPassword: 'Новый пароль',
             submitPassword: 'Подтверждение пароля',
-            errors: {
-              incorrectNew: 'Пароль должен содержать минимум 8 символов, заглавную и строчную буквы, а также цифру',
-              mismatch: 'Новый пароль и подтверждение пароля не соответствуют',
-              userNotFound: 'Пользователь не найден',
-              invalidCurrentPassword: 'Неверный текущий пароль',
-              validationError: 'Ошибка валидации сервера',
-              internalError: 'Ошибка сервера'
-            },
           }
         },
       },

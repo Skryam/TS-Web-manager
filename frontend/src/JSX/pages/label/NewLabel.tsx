@@ -1,6 +1,5 @@
 import { useApolloClient, useMutation } from '@apollo/client/react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'react-bootstrap';
 import { FormProvider } from 'react-hook-form';
@@ -13,6 +12,7 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
+import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 
 export default function NewLabel() {
   const flash = useFlash();
@@ -22,7 +22,7 @@ export default function NewLabel() {
   const [CreateLabel] = useMutation(CREATE_LABEL);
   const {setError} = usePageErrorContext();
 
-  const methods = useForm<CreateLabelInput>({
+  const methods = useLocalizedForm<CreateLabelInput>({
     resolver: zodResolver(createLabelSchema),
     mode: 'onBlur',
   });

@@ -59,7 +59,7 @@ export default function UsersList() {
   ];
 
   const actionButtons = {
-    editPageName: 'editUser',
+    editPageName: 'users',
     deleteAction: handleDelete,
   };
 

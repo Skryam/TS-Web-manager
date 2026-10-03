@@ -103,7 +103,7 @@ export default function EditUser() {
             </div>
               <Button
               variant="outline-secondary"
-              onClick={() => navigate(`/users/${id}/password`)}
+              onClick={() => navigate(`/users/${id}/edit/password`)}
               >
                 {t('views.users.edit.changePassword')}
               </Button>

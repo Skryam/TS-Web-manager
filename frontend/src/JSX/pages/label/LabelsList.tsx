@@ -37,7 +37,7 @@ export default function LabelsList() {
   };
 
   const addButton = {
-    page: 'newLabel',
+    page: 'labels/create',
     label: t('views.labels.create'),
   };
 
@@ -51,7 +51,7 @@ export default function LabelsList() {
   ];
 
   const actionButtons = {
-    editPageName: 'editLabel',
+    editPageName: 'labels',
     deleteAction: handleDelete,
   };
 

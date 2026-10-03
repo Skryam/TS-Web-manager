@@ -40,7 +40,7 @@ export default function StatusesList() {
   };
 
   const addButton = {
-    page: 'newStatus',
+    page: 'statuses/create',
     label: t('views.statuses.create'),
   };
 
@@ -54,7 +54,7 @@ export default function StatusesList() {
   ];
 
   const actionButtons = {
-    editPageName: 'editStatus',
+    editPageName: 'statuses',
     deleteAction: handleDelete,
   };
 

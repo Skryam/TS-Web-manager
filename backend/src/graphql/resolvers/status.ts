@@ -1,72 +1,65 @@
-import { createStatusSchema, updateStatusSchema } from './schemas/status';
-import { handlePrismaError, throwAlreadyExist } from './schemas/prismaErrorCodes';
+import { Resolvers } from '../resolversTypes';
+import { AlreadyExists } from '../../exceptions/AlreadyExists';
+import { Unauthorized } from '../../exceptions/Unauthorized';
 
-export const statusResolver = {
+import { createStatusSchema, updateStatusSchema } from './schemas/status';
+
+export const statusResolver: Resolvers = {
   Query: {
     getStatuses: (_, __, { prisma, user }) => {
       if (!user) {
-        throw new Error('Unauthorized');
+        throw new Unauthorized();
       }
-      return prisma.status.findMany()
+      return prisma.status.findMany();
     },
     getStatus: (_, { id }, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
-      return prisma.status.findUnique({ where: { id: Number(id) } })
+        throw new Unauthorized();    
+      }
+      return prisma.status.findUnique({ where: { id: Number(id) } });
     },
   },
   Mutation: {
     createStatus: async (_, { data }, { prisma, user }) => {
       if (!user) {
-        throw new Error('Unauthorized');
+        throw new Unauthorized();
       }
 
       const validated = createStatusSchema.parse(data);
 
       const existing = await prisma.status.findUnique({
-        where: { name: validated.name }
-      })
+        where: { name: validated.name },
+      });
 
       if (existing) {
-        throwAlreadyExist(); 
+        throw new AlreadyExists();
       }
 
-        try {
-          return await prisma.status.create({
-            data: validated,
-            include: { tasksWithStatus: true }
-          });
-        } catch (err: any) {
-            console.log(err)
-            handlePrismaError(err)
-        }
+      return await prisma.status.create({
+        data: validated,
+        include: { tasksWithStatus: true },
+      });
     },
     updateStatus: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
-        throw new Error('Unauthorized');
+        throw new Unauthorized();
       }
 
       const validated = updateStatusSchema.parse(data);
 
-      try {
-        return await prisma.status.update({
-          where: { id: Number(id) },
-          data: validated,
-        });
-      } catch (err: any) {
-        console.log(err)
-        handlePrismaError(err)
-      }
+      return await prisma.status.update({
+        where: { id: Number(id) },
+        data: validated,
+      });
     },
     deleteStatus: async (_, { id }, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Unauthorized();
+      }
 
       return prisma.status.delete({
         where: { id: Number(id) },
       });
     },
-  }
+  },
 };

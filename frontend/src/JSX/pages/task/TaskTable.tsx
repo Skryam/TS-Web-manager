@@ -61,17 +61,17 @@ export default function TasksTable({activeFilters}: TaskTableProps) {
 
   const tasks = data?.getTasks
     ? data.getTasks.map(
-        ({ id, name, description, status, executor, creator, labels, createdAt }) => ({
-          id,
-          name,
-          description,
-          status: status.name,
-          executor: executor ? `${executor.firstName} ${executor.lastName}` : null,
-          creator: `${creator.firstName} ${creator.lastName}`,
-          labels,
-          createdAt,
-        }),
-      )
+      ({ id, name, description, status, executor, creator, labels, createdAt }) => ({
+        id,
+        name,
+        description,
+        status: status.name,
+        executor: executor ? `${executor.firstName} ${executor.lastName}` : null,
+        creator: `${creator.firstName} ${creator.lastName}`,
+        labels,
+        createdAt,
+      }),
+    )
     : [];
 
   const columns: TableConfig<Task>['columns'] = [

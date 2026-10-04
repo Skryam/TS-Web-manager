@@ -101,14 +101,14 @@ export default function EditUser() {
               <div className="fw-semibold">{t('views.users.edit.passwordSection')}</div>
               <div className="text-muted small">{t('views.users.edit.passwordSectionHint')}</div>
             </div>
-              <Button
+            <Button
               variant="outline-secondary"
               onClick={() => navigate(`/users/${id}/edit/password`)}
-              >
-                {t('views.users.edit.changePassword')}
-              </Button>
-            </div>
-            <div className="border-bottom my-4"></div>
+            >
+              {t('views.users.edit.changePassword')}
+            </Button>
+          </div>
+          <div className="border-bottom my-4"></div>
 
           <SubmitButton />
         </Form>

@@ -1,6 +1,7 @@
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-import { getPrisma } from "../../lib/prisma";
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+
+import { getPrisma } from '../../lib/prisma';
 import encrypt from '../../lib/secure';
 
 const prisma = getPrisma();
@@ -37,8 +38,8 @@ passport.use(
       } catch (err) {
         return done(err);
       }
-    }
-  )
+    },
+  ),
 );
 
 export default passport;

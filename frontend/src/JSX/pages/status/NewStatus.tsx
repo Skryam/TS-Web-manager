@@ -1,6 +1,5 @@
 import { useApolloClient, useMutation } from '@apollo/client/react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'react-bootstrap';
 import { FormProvider } from 'react-hook-form';
@@ -40,6 +39,7 @@ export default function NewStatus() {
       flash(t('flash.statuses.create.success'), 'success');
       navigate('/statuses');
     } catch (err: any) {
+      console.log(err)
       flash(t('flash.statuses.create.error'), 'danger');
       setError(err);
     }

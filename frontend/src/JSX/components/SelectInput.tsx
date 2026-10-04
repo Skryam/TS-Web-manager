@@ -22,12 +22,10 @@ export const SelectInput = ({
   multiple = false,
 }: SelectInputProps) => {
   const {
-    register,
     formState: { errors },
     setValue,
     watch,
   } = useFormContext();
-  const { onChange: rhOnChange, ...rhfRest } = register(fieldName);
 
   const fieldErrors = errors[fieldName] as FieldError;
   const currentValue = watch(fieldName);
@@ -47,21 +45,21 @@ export const SelectInput = ({
         {label}
       </Form.Label>
 
-    <Form.Select
-      id={fieldName}
-      multiple={multiple}
-      value={normalizedValue}
-      {...(multiple ? { rows: 5 } : {})}
-      className={`form-select ${fieldErrors ? 'is-invalid' : ''}`}
-      onChange={(e) => {
-        if (multiple) {
-          const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
-          setValue(fieldName, selected.length > 0 ? selected : [], { shouldValidate: true });
-        } else {
-          const val = e.target.value;
-          setValue(fieldName, val === '' ? undefined : val, { shouldValidate: true });
-        }
-      }}
+      <Form.Select
+        id={fieldName}
+        multiple={multiple}
+        value={normalizedValue}
+        {...(multiple ? { rows: 5 } : {})}
+        className={`form-select ${fieldErrors ? 'is-invalid' : ''}`}
+        onChange={(e) => {
+          if (multiple) {
+            const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+            setValue(fieldName, selected.length > 0 ? selected : [], { shouldValidate: true });
+          } else {
+            const val = e.target.value;
+            setValue(fieldName, val === '' ? undefined : val, { shouldValidate: true });
+          }
+        }}
       >
         {!multiple && <option value="">{placeholder}</option>}
         {options.map((opt) => (

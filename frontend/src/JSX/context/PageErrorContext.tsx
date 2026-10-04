@@ -1,4 +1,3 @@
-import { GraphQLError } from 'graphql';
 import {
   createContext,
   memo,
@@ -8,7 +7,6 @@ import {
   useState,
   useCallback,
 } from 'react';
-import { AxiosError } from 'axios';
 
 interface PageErrorContextData {
   setError: (error) => void;

@@ -19,7 +19,7 @@ export default function LogoutButton() {
       await client.resetStore();
       flash(t('flash.session.delete.success'));
       navigate('/');
-    } catch (err) {
+    } catch {
       flash(t('flash.session.delete.error'));
     }
   };

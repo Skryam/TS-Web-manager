@@ -1,7 +1,6 @@
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { Alert, Spinner, Form } from 'react-bootstrap';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider } from 'react-hook-form';
@@ -77,7 +76,7 @@ export default function EditStatus() {
   }
 
   return (
-    <FormLayout title={t('views.statuses.edit.change')} error={getError()}>
+    <FormLayout title={t('views.statuses.edit.change')}>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
           <TextInput fieldName="name" label={t('views.statuses.new.name')} />

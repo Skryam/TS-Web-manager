@@ -36,26 +36,26 @@ export interface TableConfig<T extends Data> {
 
 export function TableList<T extends Data>({ title, addButton, columns, data, showActionsIf, actionButtons }: TableConfig<T>) {
 
-   const { t } = useTranslation();
-   const { editPageName, deleteAction } = actionButtons;
-   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { editPageName, deleteAction } = actionButtons;
+  const navigate = useNavigate();
 
-   const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-   const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => {
     setError(null);
-      try {
-        await deleteAction(id);
-      } catch (err: any) {
-        let userMessage = t('components.tableList.deleteError');
+    try {
+      await deleteAction(id);
+    } catch (err: any) {
+      let userMessage = t('components.tableList.deleteError');
 
-        if (err?.message?.includes("RESTRICT")) {
-          userMessage = t('components.tableList.restrictError');
-        } else {
-          userMessage = userMessage || err.message || userMessage;
-        }
-        setError(userMessage);
+      if (err?.message?.includes("RESTRICT")) {
+        userMessage = t('components.tableList.restrictError');
+      } else {
+        userMessage = userMessage || err.message || userMessage;
       }
+      setError(userMessage);
+    }
   }
 
   const [showDelete, setShowDelete] = useState(false);
@@ -73,9 +73,9 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
             {t('components.tableList.deleteModal.cancel')}
           </Button>
           <Button variant='danger' onClick={() => {
-              handleDelete(deleteId);
-              setShowDelete(false);
-            }}>
+            handleDelete(deleteId);
+            setShowDelete(false);
+          }}>
             {t('components.tableList.deleteModal.delete')}
           </Button>
         </Modal.Footer>
@@ -140,24 +140,24 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
                     <td className="text-end text-nowrap">
                       <div className="d-inline-flex gap-2">
                         <Button 
-                        size="sm" 
-                        variant="outline-primary"
-                        onClick={() => navigate(`/${editPageName}/${entity.id}/edit`)}
+                          size="sm" 
+                          variant="outline-primary"
+                          onClick={() => navigate(`/${editPageName}/${entity.id}/edit`)}
                         >
                           {t('components.tableList.edit')}
                         </Button>
                         <Button 
-                        size="sm" 
-                        variant="outline-danger"
-                        onClick={() => {
-                          setDeleteId(entity.id)
-                          setShowDelete(true)
-                        }}
+                          size="sm" 
+                          variant="outline-danger"
+                          onClick={() => {
+                            setDeleteId(entity.id)
+                            setShowDelete(true)
+                          }}
                         >
                           {t('components.tableList.delete')}
                         </Button>
-                          </div>
-                          </td>
+                      </div>
+                    </td>
                   ) : (
                     <td></td>
                   )}

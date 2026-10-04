@@ -1,13 +1,15 @@
-import { createTaskSchema, updateTaskSchema } from './schemas/task';
 import { Resolvers } from '../resolversTypes';
-import { handlePrismaError } from './schemas/prismaErrorCodes';
+import { GraphQLPrismaError } from '../../ErrorCodes';
+import { Unauthorized } from '../../exceptions/Unauthorized';
+
+import { createTaskSchema, updateTaskSchema } from './schemas/task';
 
 export const taskResolver: Resolvers = {
   Query: {
     getTasks: async (_, { filter }, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Unauthorized();
+      }
 
       const where: any = {};
 
@@ -22,9 +24,9 @@ export const taskResolver: Resolvers = {
       }
       if (filter?.labelId) {
         where.labels = { some: { label: { id: {
-            in: filter.labelId.map(Number)
-            }
-          }
+          in: filter.labelId.map(Number),
+        },
+        },
         }};
       };
 
@@ -40,13 +42,13 @@ export const taskResolver: Resolvers = {
 
       return tasks.map((task) => ({
         ...task,
-        labels: task.labels.map((tl) => tl.label)
-      }))
+        labels: task.labels.map((tl) => tl.label),
+      }));
     },
     getTask: async (_, { id }, { prisma, user }) => {
       if (!user) {
- throw new Error('Unauthorized');
-}
+        throw new Unauthorized();
+      }
 
       const task = await prisma.task.findUnique({
         where: { id: Number(id) },
@@ -54,18 +56,18 @@ export const taskResolver: Resolvers = {
           status: true,
           creator: true,
           executor: true,
-          labels: { include: { label: true } }
-        }
+          labels: { include: { label: true } },
+        },
       });
 
       if (!task) {
-        return null
+        return null;
       }
 
       return ({
         ...task,
-        labels: task.labels.map((tl) => tl.label)
-      })
+        labels: task.labels.map((tl) => tl.label),
+      });
 
       
     },
@@ -73,62 +75,53 @@ export const taskResolver: Resolvers = {
   Mutation: {
     createTask: async (_, { data }, { prisma, user }) => {
       if (!user) {
-        throw new Error('Unauthorized');
+        throw new Unauthorized();
       }
-        const validated = createTaskSchema.parse(data);
-        const { labels, ...taskFields } = validated;
+      const validated = createTaskSchema.parse(data);
+      const { labels, ...taskFields } = validated;
 
-        try {
-          return prisma.task.create({
-            data: {
-              ...taskFields,
-              creatorId: user.id,
-              ...(labels?.length && {
-                labels: {
-                  create: labels.map(id => ({ labelId: Number(id) }))
-                }
-              })
-            }
-          })
-        } catch (err: any) {
-          handlePrismaError(err)
-        }
+      return prisma.task.create({
+        data: {
+          ...taskFields,
+          creatorId: user.id,
+          ...(labels?.length && {
+            labels: {
+              create: labels.map(id => ({ labelId: Number(id) })),
+            },
+          }),
+        },
+      });
     },
     updateTask: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
-        throw new Error('Unauthorized');
+        throw new Unauthorized();
       }
 
       const validated = updateTaskSchema.parse(data);
 
       const { labels, ...taskFields } = validated;
 
-      try {
-        return await prisma.task.update({
-          where: { id: Number(id) },
-          data: {
-              ...taskFields,
-              ...(labels !== undefined && {
-                labels: {
-                  deleteMany: {},
-                  create: labels.map(id => ({ labelId: Number(id) }))
-                }
-              })
+      return await prisma.task.update({
+        where: { id: Number(id) },
+        data: {
+          ...taskFields,
+          ...(labels !== undefined && {
+            labels: {
+              deleteMany: {},
+              create: labels.map(id => ({ labelId: Number(id) })),
             },
-        });
-      } catch (err: any) {
-        console.log(Object.entries(err))
-        handlePrismaError(err)
-      }
+          }),
+        },
+      });
     },
     deleteTask: async (_, { id }, { prisma, user }) => {
       if (!user) {
-        throw new Error('Unauthorized');
+        throw new Unauthorized();
       }
 
       return prisma.task.delete({
         where: { id: Number(id) },
       });
     },
-  }
+  },
 };

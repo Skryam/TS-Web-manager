@@ -20,7 +20,9 @@ const ERROR_CODES_TRANSLATION: Record<string, string> = {
 export const FormLayout = ({ title, children }: FormLayoutProps) => {
   const { getError, clearError } = usePageErrorContext();
   const { t } = useTranslation();
-  const error = getErrorCode(getError());
+  const error1 = getError();
+  console.log('GET ERROR', error1)
+  const error = getErrorCode(error1);
 
   useEffect(() => {
     clearError();

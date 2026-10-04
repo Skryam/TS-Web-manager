@@ -3,12 +3,12 @@ import { z } from 'zod';
 export const createTaskSchema = z.object({
   name: z
     .string()
-    .min(2, { error: 'Название должно содержать минимум 2 символа' })
-    .max(50, { error: 'Название не должно превышать 50 символов' }),
+    .min(2)
+    .max(50),
 
   description: z.string().max(1000).optional(),
 
-  statusId: z.string().min(1, { error: 'Необходимо указать статус' }),
+  statusId: z.string().min(1),
 
   executorId: z
     .string()

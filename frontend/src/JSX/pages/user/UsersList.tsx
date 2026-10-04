@@ -41,9 +41,9 @@ export default function UsersList() {
 
   const users = data?.getUsers
     ? data.getUsers.map((u) => ({
-        ...u,
-        fullName: `${u.firstName} ${u.lastName}`,
-      }))
+      ...u,
+      fullName: `${u.firstName} ${u.lastName}`,
+    }))
     : [];
   console.log(users);
 

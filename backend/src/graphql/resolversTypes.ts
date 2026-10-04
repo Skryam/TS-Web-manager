@@ -26,7 +26,7 @@ export type ResolverFn<TArgs = DefaultArgs, TResult = any> = (
   parent: any,
   args: TArgs,
   context: GraphQLContext,
-  info: any
+  info: any,
 ) => Promise<TResult> | TResult;
 
 export interface Resolvers {

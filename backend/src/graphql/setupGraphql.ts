@@ -1,7 +1,8 @@
 import { expressMiddleware } from '@as-integrations/express5';
-import { getPrisma } from '../../lib/prisma';
 import { Express } from 'express';
-import { ApolloServer } from '@apollo/server'
+import { ApolloServer } from '@apollo/server';
+
+import { getPrisma } from '../../lib/prisma';
 
 const prisma = getPrisma();
   
@@ -14,8 +15,8 @@ export default (app: Express, server: ApolloServer) => {
         return {
           prisma,
           user: req.user || null,
-        }
+        };
       },
     }),
-  )
+  );
 };

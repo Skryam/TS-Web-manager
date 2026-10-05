@@ -1,6 +1,7 @@
 import { Resolvers, ArgsWithId } from '../resolversTypes';
 import { updateUserSchema, CreateUserInput as UpdateUserInput } from '../../userSchema';
 import { Unauthorized } from '../../exceptions/Unauthorized';
+import { Forbidden } from '../../exceptions/Forbidden';
 
 
 export const userResolver: Resolvers = {
@@ -8,7 +9,7 @@ export const userResolver: Resolvers = {
     getUsers: (_, __, { prisma }) => prisma.user.findMany(),
     getUser: (_, { id }, { prisma }) => prisma.user.findUnique({ where: { id: Number(id) } }),
     me: (_, __, { user }) => {
-      return user || null;
+      return user;
     },
   },
 
@@ -16,6 +17,10 @@ export const userResolver: Resolvers = {
     updateUser: async (_, { id, data }: ArgsWithId<UpdateUserInput>, { prisma, user }) => {
       if (!user) {
         throw new Unauthorized();
+      }
+
+      if (Number(id) !== Number(user.id)) {
+        throw new Forbidden();
       }
 
       const validated = updateUserSchema.parse(data);
@@ -28,6 +33,10 @@ export const userResolver: Resolvers = {
     deleteUser: async (_, { id }, { prisma, user }) => {
       if (!user) {
         throw new Unauthorized();
+      }
+
+      if (Number(id) !== Number(user.id)) {
+        throw new Forbidden();
       }
 
       return prisma.user.delete({

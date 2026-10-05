@@ -1,4 +1,5 @@
 import express, { Router } from 'express';
+import { ZodError } from 'zod';
 
 import { getPrisma } from '../../lib/prisma';
 import encrypt from '../../lib/secure';
@@ -42,6 +43,7 @@ router.post('/signup', async (req, res) => {
       return res.status(201).json({ id: user.id, email: user.email });
     });
   } catch (e) {
+    console.error(e);
     return res.status(500).json({ error: 'INTERNAL_ERROR '});
   }
 });
@@ -49,8 +51,9 @@ router.post('/signup', async (req, res) => {
 router.post('/login', passport.authenticate('local', { session: true }), (req, res) => {
   const user = req.user as { id: number; email: string } | undefined;
   if (user) {
-    res.json({ id: user.id, email: user.email });
+    return res.json({ id: user.id, email: user.email });
   }
+  return res.status(404).json({ error: 'USER_NOT_FOUND' });
 });
 
 router.post('/logout',(req, res) => {
@@ -65,7 +68,7 @@ router.patch('/users/:id/password', async (req, res) => {
   }
 
   try {
-    const validated = createUpdateUserPasswordSchema().parse(req.body);
+    const validated = createUpdateUserPasswordSchema.parse(req.body);
 
     const user = await prisma.user.findUnique({
       where: { id: currentUser.id },
@@ -87,12 +90,12 @@ router.patch('/users/:id/password', async (req, res) => {
 
     return res.json({ ok: true });
   } catch (e: any) {
-    if (e.name === 'ZodError') {
+    if (e instanceof ZodError) {
       return res.status(400).json({
         error: 'VALIDATION_ERROR',
       });
     }
-    console.log('500', e);
+    console.error('500', e);
     return res.status(500).json({ error: 'INTERNAL_ERROR '});
   }
 });

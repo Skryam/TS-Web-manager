@@ -34,6 +34,7 @@ export default function Login() {
       flash(t('flash.session.create.success'));
       navigate('/');
     } catch (err: any) {
+      console.log(err)
       flash(t('flash.session.create.error'), 'danger');
       setError(err);
     }

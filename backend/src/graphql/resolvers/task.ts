@@ -1,8 +1,14 @@
 import { Resolvers } from '../resolversTypes';
-import { GraphQLPrismaError } from '../../ErrorCodes';
 import { Unauthorized } from '../../exceptions/Unauthorized';
 
 import { createTaskSchema, updateTaskSchema } from './schemas/task';
+
+interface Filter {
+  statusId?: number;
+  executorId?: number;
+  labels?: object;
+  creatorId?: number;
+}
 
 export const taskResolver: Resolvers = {
   Query: {
@@ -11,7 +17,7 @@ export const taskResolver: Resolvers = {
         throw new Unauthorized();
       }
 
-      const where: any = {};
+      const where: Filter = {};
 
       if (filter?.statusId) {
         where.statusId = Number(filter.statusId);
@@ -84,7 +90,7 @@ export const taskResolver: Resolvers = {
         data: {
           ...taskFields,
           creatorId: user.id,
-          ...(labels?.length && {
+          ...(labels !== undefined && {
             labels: {
               create: labels.map(id => ({ labelId: Number(id) })),
             },

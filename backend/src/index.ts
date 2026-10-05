@@ -28,15 +28,12 @@ const server = new ApolloServer({
   includeStacktraceInErrorResponses: false,
   formatError: (_, rawError) => {
     if (rawError instanceof GraphQLError) {
-      console.log('KAK EST', rawError);
       return  rawError;
     }
 
     else if (rawError instanceof Prisma.PrismaClientKnownRequestError) {
-      console.log('OBRABOTKA', rawError);
       return GraphQLPrismaError(rawError);
     }
-    console.log('InternalError', rawError);
     return new InternalError();
   },
 });

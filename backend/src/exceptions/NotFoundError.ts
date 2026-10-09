@@ -4,8 +4,8 @@ import { AppErrorCodes } from '../enums/AppErrorCodes';
 
 
 
-export class InternalError extends GraphQLError {
+export class NotFoundError extends GraphQLError {
   constructor () {
-    super(AppErrorCodes.INTERNAL_ERROR);
+    super(AppErrorCodes.NOT_FOUND);
   }
 }

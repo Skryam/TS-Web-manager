@@ -3,9 +3,8 @@ import { GraphQLError } from 'graphql';
 import { AppErrorCodes } from '../enums/AppErrorCodes';
 
 
-
-export class InternalError extends GraphQLError {
+export class UnauthorizedError extends GraphQLError {
   constructor () {
-    super(AppErrorCodes.INTERNAL_ERROR);
+    super(AppErrorCodes.ALREADY_EXISTS);
   }
 }

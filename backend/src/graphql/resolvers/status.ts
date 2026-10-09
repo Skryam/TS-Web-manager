@@ -1,6 +1,6 @@
 import { Resolvers } from '../resolversTypes';
-import { AlreadyExists } from '../../exceptions/AlreadyExists';
-import { Unauthorized } from '../../exceptions/Unauthorized';
+import { AlreadyExistsError } from '../../exceptions/AlreadyExistsError';
+import { UnauthorizedError } from '../../exceptions/UnauthorizedError';
 
 import { createStatusSchema, updateStatusSchema } from './schemas/status';
 
@@ -8,13 +8,13 @@ export const statusResolver: Resolvers = {
   Query: {
     getStatuses: (_, __, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
       return prisma.status.findMany();
     },
     getStatus: (_, { id }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();    
+        throw new UnauthorizedError();    
       }
       return prisma.status.findUnique({ where: { id: Number(id) } });
     },
@@ -22,7 +22,7 @@ export const statusResolver: Resolvers = {
   Mutation: {
     createStatus: async (_, { data }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       const validated = createStatusSchema.parse(data);
@@ -32,7 +32,7 @@ export const statusResolver: Resolvers = {
       });
 
       if (existing) {
-        throw new AlreadyExists();
+        throw new AlreadyExistsError();
       }
 
       return await prisma.status.create({
@@ -42,7 +42,7 @@ export const statusResolver: Resolvers = {
     },
     updateStatus: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       const validated = updateStatusSchema.parse(data);
@@ -54,7 +54,7 @@ export const statusResolver: Resolvers = {
     },
     deleteStatus: async (_, { id }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       return prisma.status.delete({

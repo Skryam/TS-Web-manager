@@ -3,7 +3,7 @@ import { ZodError } from 'zod';
 
 import { getPrisma } from '../../lib/prisma';
 import encrypt from '../../lib/secure';
-import { createUserSchema, createUpdateUserPasswordSchema } from '../userSchema';
+import { createUserSchema, createUpdateUserPasswordSchema } from '../graphql/resolvers/schemas/userSchemas';
 
 import passport from './passport';
 

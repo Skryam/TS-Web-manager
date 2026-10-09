@@ -1,7 +1,8 @@
 import { Resolvers, ArgsWithId } from '../resolversTypes';
-import { updateUserSchema, CreateUserInput as UpdateUserInput } from '../../userSchema';
-import { Unauthorized } from '../../exceptions/Unauthorized';
-import { Forbidden } from '../../exceptions/Forbidden';
+import { UnauthorizedError } from '../../exceptions/UnauthorizedError';
+import { ForbiddenError } from '../../exceptions/ForbiddenError';
+
+import { updateUserSchema, CreateUserInput as UpdateUserInput } from './schemas/userSchemas';
 
 
 export const userResolver: Resolvers = {
@@ -16,11 +17,11 @@ export const userResolver: Resolvers = {
   Mutation: {
     updateUser: async (_, { id, data }: ArgsWithId<UpdateUserInput>, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       if (Number(id) !== Number(user.id)) {
-        throw new Forbidden();
+        throw new ForbiddenError();
       }
 
       const validated = updateUserSchema.parse(data);
@@ -32,11 +33,11 @@ export const userResolver: Resolvers = {
     },
     deleteUser: async (_, { id }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       if (Number(id) !== Number(user.id)) {
-        throw new Forbidden();
+        throw new ForbiddenError();
       }
 
       return prisma.user.delete({

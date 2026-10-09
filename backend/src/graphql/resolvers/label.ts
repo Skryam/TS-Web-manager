@@ -1,7 +1,6 @@
 import { Resolvers, DefaultArgs } from '../resolversTypes';
-import { GraphQLPrismaError } from '../../ErrorCodes';
-import { AlreadyExists } from '../../exceptions/AlreadyExists';
-import { Unauthorized } from '../../exceptions/Unauthorized';
+import { AlreadyExistsError } from '../../exceptions/AlreadyExistsError';
+import { UnauthorizedError } from '../../exceptions/UnauthorizedError';
 
 import { createLabelSchema, CreateLabelInput, updateLabelSchema} from './schemas/label';
 
@@ -9,13 +8,13 @@ export const labelResolver: Resolvers = {
   Query: {
     getLabels: (_, __, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
       return prisma.label.findMany();
     },
     getLabel: (_, { id }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
       return prisma.label.findUnique({ where: { id: Number(id) } });
     },
@@ -23,7 +22,7 @@ export const labelResolver: Resolvers = {
   Mutation: {
     createLabel: async (_, { data }: DefaultArgs<CreateLabelInput>, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       const validated = createLabelSchema.parse(data);
@@ -33,7 +32,7 @@ export const labelResolver: Resolvers = {
       });
 
       if (existing) {
-        throw new AlreadyExists();
+        throw new AlreadyExistsError();
       }
 
       return await prisma.label.create({
@@ -42,7 +41,7 @@ export const labelResolver: Resolvers = {
     },
     updateLabel: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       const validated = updateLabelSchema.parse(data);
@@ -54,7 +53,7 @@ export const labelResolver: Resolvers = {
     },
     deleteLabel: async (_, { id }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       return prisma.label.delete({

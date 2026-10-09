@@ -13,8 +13,8 @@ import passport from './auth/passport';
 import typeDefs from './graphql/typeDefs';
 import { getResolvers } from './graphql/resolvers/index';
 import authRoutes from './auth/routes';
-import { GraphQLPrismaError } from './ErrorCodes';
 import { InternalError } from './exceptions/InternalError';
+import { GraphQLPrismaError } from './exceptions/GraphQLPrismaError';
 
 const app = express();
 const httpServer = http.createServer(app);

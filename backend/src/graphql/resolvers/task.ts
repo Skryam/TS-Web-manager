@@ -1,5 +1,5 @@
 import { Resolvers } from '../resolversTypes';
-import { Unauthorized } from '../../exceptions/Unauthorized';
+import { UnauthorizedError } from '../../exceptions/UnauthorizedError';
 
 import { createTaskSchema, updateTaskSchema } from './schemas/task';
 
@@ -14,7 +14,7 @@ export const taskResolver: Resolvers = {
   Query: {
     getTasks: async (_, { filter }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       const where: Filter = {};
@@ -53,7 +53,7 @@ export const taskResolver: Resolvers = {
     },
     getTask: async (_, { id }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       const task = await prisma.task.findUnique({
@@ -81,7 +81,7 @@ export const taskResolver: Resolvers = {
   Mutation: {
     createTask: async (_, { data }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
       const validated = createTaskSchema.parse(data);
       const { labels, ...taskFields } = validated;
@@ -100,7 +100,7 @@ export const taskResolver: Resolvers = {
     },
     updateTask: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       const validated = updateTaskSchema.parse(data);
@@ -122,7 +122,7 @@ export const taskResolver: Resolvers = {
     },
     deleteTask: async (_, { id }, { prisma, user }) => {
       if (!user) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
 
       return prisma.task.delete({

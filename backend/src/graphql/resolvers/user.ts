@@ -1,4 +1,4 @@
-import { Resolvers, ArgsWithId } from '../resolversTypes';
+import { Resolvers, DefaultArgs } from '../resolversTypes';
 import { UnauthorizedError } from '../../exceptions/UnauthorizedError';
 import { ForbiddenError } from '../../exceptions/ForbiddenError';
 
@@ -8,14 +8,14 @@ import { updateUserSchema, CreateUserInput as UpdateUserInput } from './schemas/
 export const userResolver: Resolvers = {
   Query: {
     getUsers: (_, __, { prisma }) => prisma.user.findMany(),
-    getUser: (_, { id }, { prisma }) => prisma.user.findUnique({ where: { id: Number(id) } }),
+    getUser: (_, { id }: DefaultArgs, { prisma }) => prisma.user.findUnique({ where: { id: Number(id) } }),
     me: (_, __, { user }) => {
       return user;
     },
   },
 
   Mutation: {
-    updateUser: async (_, { id, data }: ArgsWithId<UpdateUserInput>, { prisma, user }) => {
+    updateUser: async (_, { id, data }: DefaultArgs<UpdateUserInput>, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }
@@ -31,7 +31,7 @@ export const userResolver: Resolvers = {
         data: validated,
       });
     },
-    deleteUser: async (_, { id }, { prisma, user }) => {
+    deleteUser: async (_, { id }: DefaultArgs, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }

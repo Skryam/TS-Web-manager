@@ -4,17 +4,13 @@ import express from 'express';
 import { ApolloServer } from '@apollo/server';
 import cors from 'cors';
 import session from 'express-session';
-import { GraphQLError } from 'graphql';
-
-import { Prisma } from '../generated/prisma/client';
 
 import initGraphql from './graphql/setupGraphql';
 import passport from './auth/passport';
 import typeDefs from './graphql/typeDefs';
 import { getResolvers } from './graphql/resolvers/index';
 import authRoutes from './auth/routes';
-import { InternalError } from './exceptions/InternalError';
-import { GraphQLPrismaError } from './exceptions/GraphQLPrismaError';
+import { formatServerError } from './graphql/formatServerError/formatServerError';
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -26,16 +22,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   includeStacktraceInErrorResponses: false,
-  formatError: (_, rawError) => {
-    if (rawError instanceof GraphQLError) {
-      return  rawError;
-    }
-
-    else if (rawError instanceof Prisma.PrismaClientKnownRequestError) {
-      return GraphQLPrismaError(rawError);
-    }
-    return new InternalError();
-  },
+  formatError: formatServerError,
 });
 
 const main = async () => {

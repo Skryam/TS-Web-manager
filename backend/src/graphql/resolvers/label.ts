@@ -2,7 +2,7 @@ import { Resolvers, DefaultArgs } from '../resolversTypes';
 import { AlreadyExistsError } from '../../exceptions/AlreadyExistsError';
 import { UnauthorizedError } from '../../exceptions/UnauthorizedError';
 
-import { createLabelSchema, CreateLabelInput, updateLabelSchema} from './schemas/label';
+import { createLabelSchema, CreateLabelInput, updateLabelSchema, UpdateLabelInput} from './schemas/label';
 
 export const labelResolver: Resolvers = {
   Query: {
@@ -12,7 +12,7 @@ export const labelResolver: Resolvers = {
       }
       return prisma.label.findMany();
     },
-    getLabel: (_, { id }, { prisma, user }) => {
+    getLabel: (_, { id }: DefaultArgs, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }
@@ -39,7 +39,7 @@ export const labelResolver: Resolvers = {
         data: validated,
       });
     },
-    updateLabel: async (_, { id, data }, { prisma, user }) => {
+    updateLabel: async (_, { id, data }: DefaultArgs<UpdateLabelInput>, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }
@@ -51,7 +51,7 @@ export const labelResolver: Resolvers = {
         data: validated,
       });
     },
-    deleteLabel: async (_, { id }, { prisma, user }) => {
+    deleteLabel: async (_, { id }: DefaultArgs, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }

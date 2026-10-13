@@ -1,9 +1,10 @@
-import express, { Router } from 'express';
+import express, { NextFunction, Request, Response, Router } from 'express';
 import { ZodError } from 'zod';
 
 import { getPrisma } from '../../lib/prisma';
 import encrypt from '../../lib/secure';
 import { createUserSchema, createUpdateUserPasswordSchema } from '../graphql/resolvers/schemas/userSchemas';
+import { AppErrorCodes } from '../enums/AppErrorCodes';
 
 import passport from './passport';
 
@@ -21,7 +22,7 @@ router.post('/signup', async (req, res) => {
   });
   
   if (existing) {
-    return res.status(400).json({ error: 'ALREADY_EXISTS' });
+    return res.status(400).json({ error: AppErrorCodes.ALREADY_EXISTS });
   }
 
   try {
@@ -38,22 +39,22 @@ router.post('/signup', async (req, res) => {
 
     req.login(user, (err) => {
       if (err) {
-        return res.status(500).json({ error: 'LOGIN_FAILED' });
+        return res.status(500).json({ error: AppErrorCodes.LOGIN_FAILED });
       }
       return res.status(201).json({ id: user.id, email: user.email });
     });
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ error: 'INTERNAL_ERROR '});
+    return res.status(500).json({ error: AppErrorCodes.INTERNAL_ERROR});
   }
 });
 
 router.post('/login', passport.authenticate('local', { session: true }), (req, res) => {
-  const user = req.user as { id: number; email: string } | undefined;
+  const user = req.user;
   if (user) {
     return res.json({ id: user.id, email: user.email });
   }
-  return res.status(404).json({ error: 'USER_NOT_FOUND' });
+  return res.status(404).json({ error: AppErrorCodes.NOT_FOUND });
 });
 
 router.post('/logout',(req, res) => {
@@ -75,11 +76,11 @@ router.patch('/users/:id/password', async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ error: 'USER_NOT_FOUND' });
+      return res.status(404).json({ error: AppErrorCodes.NOT_FOUND });
     }
 
     if (encrypt(validated.password) !== user.passwordDigest) {
-      return res.status(422).json({ error: 'INVALID_CURRENT_PASSWORD' });
+      return res.status(422).json({ error: AppErrorCodes.INVALID_CURRENT_PASSWORD });
     }
 
     const passwordDigest = encrypt(validated.newPassword);
@@ -92,12 +93,17 @@ router.patch('/users/:id/password', async (req, res) => {
   } catch (e: any) {
     if (e instanceof ZodError) {
       return res.status(400).json({
-        error: 'VALIDATION_ERROR',
+        error: AppErrorCodes.VALIDATION_ERROR,
       });
     }
     console.error('500', e);
-    return res.status(500).json({ error: 'INTERNAL_ERROR '});
+    return res.status(500).json({ error: AppErrorCodes.INTERNAL_ERROR});
   }
 });
+
+router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err);
+  
+})
 
 export default router;

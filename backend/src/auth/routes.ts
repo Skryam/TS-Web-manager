@@ -6,6 +6,7 @@ import encrypt from '../../lib/secure';
 import { createUserSchema, createUpdateUserPasswordSchema } from '../graphql/resolvers/schemas/userSchemas';
 import { AppErrorCodes } from '../enums/AppErrorCodes';
 import { asyncHandler } from '../utils/RouterErrorsHandler';
+import { RestException } from '../exceptions/Rest/RestException';
 
 import passport from './passport';
 
@@ -87,15 +88,9 @@ router.patch('/users/:id/password', asyncHandler(async (req, res) => {
   return res.json({ ok: true });
 }));
 
-router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof ZodError) {
-    return res.status(400).json({
-      error: AppErrorCodes.VALIDATION_ERROR,
-    });
-  }
-
-  else if (AppErrorCodes тут текст) {
-    return (тут мапинг текста и отправка крч код + текст)
+router.use((err: Error, req: Request, res: Response, _) => {
+  if (err instanceof RestException) {
+    return res.status(err.httpCode).json({ error: err.code });
   }
   
   return res.status(500).json({ error: AppErrorCodes.INTERNAL_ERROR});

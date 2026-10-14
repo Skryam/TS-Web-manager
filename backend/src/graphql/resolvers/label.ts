@@ -1,6 +1,6 @@
 import { Resolvers, DefaultArgs } from '../resolversTypes';
-import { AlreadyExistsError } from '../../exceptions/AlreadyExistsError';
-import { UnauthorizedError } from '../../exceptions/UnauthorizedError';
+import { AlreadyExistsError } from '../../exceptions/Graphql/AlreadyExistsError';
+import { UnauthorizedError } from '../../exceptions/Graphql/UnauthorizedError';
 
 import { createLabelSchema, CreateLabelInput, updateLabelSchema, UpdateLabelInput} from './schemas/label';
 

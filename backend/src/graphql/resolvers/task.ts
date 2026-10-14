@@ -1,30 +1,17 @@
-import { DefaultArgs, Resolvers } from '../resolversTypes';
-import { UnauthorizedError } from '../../exceptions/UnauthorizedError';
+import { Resolvers } from '../resolversTypes';
+import { UnauthorizedError } from '../../exceptions/Graphql/UnauthorizedError';
+import { Prisma } from '../../../generated/prisma';
 
-import { CreateTaskInput, createTaskSchema, UpdateTaskInput, updateTaskSchema } from './schemas/task';
-
-interface InputFilter {
-  statusId: string;
-  executorId: string;
-  labelId: [string];
-  isCreatorOnly: boolean;
-}
-
-interface PrismaFilter {
-  statusId?: number;
-  executorId?: number;
-  labels?: object;
-  creatorId?: number;
-}
+import { createTaskSchema, updateTaskSchema } from './schemas/task';
 
 export const taskResolver: Resolvers = {
   Query: {
-    getTasks: async (_, { filter }: DefaultArgs<InputFilter>, { prisma, user }) => {
+    getTasks: async (_, { filter }, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }
 
-      const where: PrismaFilter = {};
+      const where: Prisma.TaskWhereInput = {};
 
       if (filter?.statusId) {
         where.statusId = Number(filter.statusId);
@@ -58,7 +45,7 @@ export const taskResolver: Resolvers = {
         labels: task.labels.map((tl) => tl.label),
       }));
     },
-    getTask: async (_, { id }: DefaultArgs, { prisma, user }) => {
+    getTask: async (_, { id }, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }
@@ -86,7 +73,7 @@ export const taskResolver: Resolvers = {
     },
   },
   Mutation: {
-    createTask: async (_, { data }: DefaultArgs<CreateTaskInput>, { prisma, user }) => {
+    createTask: async (_, { data }, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }
@@ -105,7 +92,7 @@ export const taskResolver: Resolvers = {
         },
       });
     },
-    updateTask: async (_, { id, data }: DefaultArgs<UpdateTaskInput>, { prisma, user }) => {
+    updateTask: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }
@@ -127,7 +114,7 @@ export const taskResolver: Resolvers = {
         },
       });
     },
-    deleteTask: async (_, { id }: DefaultArgs, { prisma, user }) => {
+    deleteTask: async (_, { id }, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }

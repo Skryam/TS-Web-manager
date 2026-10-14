@@ -5,6 +5,7 @@ import { getPrisma } from '../../lib/prisma';
 import encrypt from '../../lib/secure';
 import { createUserSchema, createUpdateUserPasswordSchema } from '../graphql/resolvers/schemas/userSchemas';
 import { AppErrorCodes } from '../enums/AppErrorCodes';
+import { asyncHandler } from '../utils/RouterErrorsHandler';
 
 import passport from './passport';
 
@@ -14,7 +15,7 @@ router.use(express.json());
 
 const prisma = getPrisma();
 
-router.post('/signup', async (req, res) => {
+router.post('/signup', asyncHandler(async (req, res) => { 
   const validated = createUserSchema.parse(req.body);
 
   const existing = await prisma.user.findUnique({
@@ -22,88 +23,82 @@ router.post('/signup', async (req, res) => {
   });
   
   if (existing) {
-    return res.status(400).json({ error: AppErrorCodes.ALREADY_EXISTS });
+    throw AppErrorCodes.ALREADY_EXISTS;
   }
 
-  try {
-    const passwordDigest = encrypt(validated.password);
+  const passwordDigest = encrypt(validated.password);
 
-    const user = await prisma.user.create({
-      data: {
-        firstName: validated.firstName,
-        lastName: validated.lastName,
-        email: validated.email,
-        passwordDigest,
-      },
-    });
+  const user = await prisma.user.create({
+    data: {
+      firstName: validated.firstName,
+      lastName: validated.lastName,
+      email: validated.email,
+      passwordDigest,
+    },
+  });
 
-    req.login(user, (err) => {
-      if (err) {
-        return res.status(500).json({ error: AppErrorCodes.LOGIN_FAILED });
-      }
-      return res.status(201).json({ id: user.id, email: user.email });
-    });
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({ error: AppErrorCodes.INTERNAL_ERROR});
-  }
-});
+  req.login(user, (err) => {
+    if (err) {
+      return res.status(500).json({ error: AppErrorCodes.LOGIN_FAILED });
+    }
+    return res.status(201).json({ id: user.id, email: user.email });
+  });
+}));
 
-router.post('/login', passport.authenticate('local', { session: true }), (req, res) => {
+router.post('/login', passport.authenticate('local', { session: true }), asyncHandler(async (req, res) => {
   const user = req.user;
   if (user) {
     return res.json({ id: user.id, email: user.email });
   }
-  return res.status(404).json({ error: AppErrorCodes.NOT_FOUND });
-});
+  throw AppErrorCodes.NOT_FOUND;
+}));
 
-router.post('/logout',(req, res) => {
+router.post('/logout', asyncHandler(async (req, res) => {
   req.logout(() => res.json({ success: true }));
-});
+}));
 
-router.patch('/users/:id/password', async (req, res) => {
+router.patch('/users/:id/password', asyncHandler(async (req, res) => {
   const currentUser = req.user as { id: number };
 
   if (!req.isAuthenticated() || currentUser.id !== Number(req.params.id)) {
-    return res.status(403);
+    throw AppErrorCodes.UNAUTHORIZED;
   }
 
-  try {
-    const validated = createUpdateUserPasswordSchema.parse(req.body);
+  const validated = createUpdateUserPasswordSchema.parse(req.body);
 
-    const user = await prisma.user.findUnique({
-      where: { id: currentUser.id },
-    });
+  const user = await prisma.user.findUnique({
+    where: { id: currentUser.id },
+  });
 
-    if (!user) {
-      return res.status(404).json({ error: AppErrorCodes.NOT_FOUND });
-    }
-
-    if (encrypt(validated.password) !== user.passwordDigest) {
-      return res.status(422).json({ error: AppErrorCodes.INVALID_CURRENT_PASSWORD });
-    }
-
-    const passwordDigest = encrypt(validated.newPassword);
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { passwordDigest },
-    });
-
-    return res.json({ ok: true });
-  } catch (e: any) {
-    if (e instanceof ZodError) {
-      return res.status(400).json({
-        error: AppErrorCodes.VALIDATION_ERROR,
-      });
-    }
-    console.error('500', e);
-    return res.status(500).json({ error: AppErrorCodes.INTERNAL_ERROR});
+  if (!user) {
+    throw AppErrorCodes.NOT_FOUND;
   }
-});
+
+  if (encrypt(validated.password) !== user.passwordDigest) {
+    throw AppErrorCodes.INVALID_CURRENT_PASSWORD;
+  }
+
+  const passwordDigest = encrypt(validated.newPassword);
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { passwordDigest },
+  });
+
+  return res.json({ ok: true });
+}));
 
 router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err);
+  if (err instanceof ZodError) {
+    return res.status(400).json({
+      error: AppErrorCodes.VALIDATION_ERROR,
+    });
+  }
+
+  else if (AppErrorCodes тут текст) {
+    return (тут мапинг текста и отправка крч код + текст)
+  }
   
-})
+  return res.status(500).json({ error: AppErrorCodes.INTERNAL_ERROR});
+});
 
 export default router;

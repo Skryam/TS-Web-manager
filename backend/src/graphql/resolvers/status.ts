@@ -1,6 +1,6 @@
 import { DefaultArgs, Resolvers } from '../resolversTypes';
-import { AlreadyExistsError } from '../../exceptions/AlreadyExistsError';
-import { UnauthorizedError } from '../../exceptions/UnauthorizedError';
+import { AlreadyExistsError } from '../../exceptions/Graphql/AlreadyExistsError';
+import { UnauthorizedError } from '../../exceptions/Graphql/UnauthorizedError';
 
 import { CreateStatusInput, createStatusSchema, UpdateStatusInput, updateStatusSchema } from './schemas/status';
 

@@ -2,7 +2,7 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
 
 import { Prisma } from '../../../generated/prisma/client';
 import { mapPrismaError } from '../../utils/mapPrismaError';
-import { InternalError } from '../../exceptions/InternalError';
+import { InternalError } from '../../exceptions/Graphql/InternalError';
 
 export const formatServerError = (_: GraphQLFormattedError, rawError: unknown) => {
   if (rawError instanceof GraphQLError) {

@@ -1,6 +1,6 @@
 import { Resolvers, DefaultArgs } from '../resolversTypes';
-import { UnauthorizedError } from '../../exceptions/UnauthorizedError';
-import { ForbiddenError } from '../../exceptions/ForbiddenError';
+import { UnauthorizedError } from '../../exceptions/Graphql/UnauthorizedError';
+import { ForbiddenError } from '../../exceptions/Graphql/ForbiddenError';
 
 import { updateUserSchema, CreateUserInput as UpdateUserInput } from './schemas/userSchemas';
 

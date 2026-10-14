@@ -1,6 +1,6 @@
 import { GraphQLError } from 'graphql';
 
-import { AppErrorCodes } from '../enums/AppErrorCodes';
+import { AppErrorCodes } from '../../enums/AppErrorCodes';
 
 
 export class UnauthorizedError extends GraphQLError {

@@ -1,5 +1,4 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
-import { ZodError } from 'zod';
 
 import { getPrisma } from '../../lib/prisma';
 import encrypt from '../../lib/secure';
@@ -7,6 +6,11 @@ import { createUserSchema, createUpdateUserPasswordSchema } from '../graphql/res
 import { AppErrorCodes } from '../enums/AppErrorCodes';
 import { asyncHandler } from '../utils/RouterErrorsHandler';
 import { RestException } from '../exceptions/Rest/RestException';
+import { AlreadyExistsError } from '../exceptions/Rest/AlreadyExistsError';
+import { LoginFailed } from '../exceptions/Rest/LoginFailed';
+import { NotFoundError } from '../exceptions/Rest/NotFoundError';
+import { UnauthorizedError } from '../exceptions/Rest/UnauthorizedError';
+import { InvalidCurrentPassword } from '../exceptions/Rest/InvalidCurrentPassword';
 
 import passport from './passport';
 
@@ -24,7 +28,7 @@ router.post('/signup', asyncHandler(async (req, res) => {
   });
   
   if (existing) {
-    throw AppErrorCodes.ALREADY_EXISTS;
+    throw new AlreadyExistsError;
   }
 
   const passwordDigest = encrypt(validated.password);
@@ -40,18 +44,18 @@ router.post('/signup', asyncHandler(async (req, res) => {
 
   req.login(user, (err) => {
     if (err) {
-      return res.status(500).json({ error: AppErrorCodes.LOGIN_FAILED });
+      throw new LoginFailed;
     }
     return res.status(201).json({ id: user.id, email: user.email });
   });
 }));
 
 router.post('/login', passport.authenticate('local', { session: true }), asyncHandler(async (req, res) => {
-  const user = req.user;
+  const user = req.user as {id; email};
   if (user) {
     return res.json({ id: user.id, email: user.email });
   }
-  throw AppErrorCodes.NOT_FOUND;
+  throw new NotFoundError;
 }));
 
 router.post('/logout', asyncHandler(async (req, res) => {
@@ -62,7 +66,7 @@ router.patch('/users/:id/password', asyncHandler(async (req, res) => {
   const currentUser = req.user as { id: number };
 
   if (!req.isAuthenticated() || currentUser.id !== Number(req.params.id)) {
-    throw AppErrorCodes.UNAUTHORIZED;
+    throw new UnauthorizedError;
   }
 
   const validated = createUpdateUserPasswordSchema.parse(req.body);
@@ -72,11 +76,11 @@ router.patch('/users/:id/password', asyncHandler(async (req, res) => {
   });
 
   if (!user) {
-    throw AppErrorCodes.NOT_FOUND;
+    throw new NotFoundError;
   }
 
   if (encrypt(validated.password) !== user.passwordDigest) {
-    throw AppErrorCodes.INVALID_CURRENT_PASSWORD;
+    throw new InvalidCurrentPassword;
   }
 
   const passwordDigest = encrypt(validated.newPassword);
@@ -88,12 +92,26 @@ router.patch('/users/:id/password', asyncHandler(async (req, res) => {
   return res.json({ ok: true });
 }));
 
-router.use((err: Error, req: Request, res: Response, _) => {
+router.use((err: Error, req: Request, res: Response, _: NextFunction) => {
   if (err instanceof RestException) {
     return res.status(err.httpCode).json({ error: err.code });
   }
   
   return res.status(500).json({ error: AppErrorCodes.INTERNAL_ERROR});
+});
+
+router.use((_, res, next) => {
+  if (res.headersSent) {
+    return next();
+  }
+  
+  if (res.locals.data !== undefined) {
+    return res
+      .status(res.locals.statusCode || 200)
+      .json(res.locals.data);
+  }
+
+  next();
 });
 
 export default router;

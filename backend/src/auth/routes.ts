@@ -20,13 +20,12 @@ router.use(express.json());
 
 const prisma = getPrisma();
 
-router.post('/signup', asyncHandler(async (req, res) => { 
+router.post('/signup', asyncHandler(async (req, res, next) => {
   const validated = createUserSchema.parse(req.body);
 
   const existing = await prisma.user.findUnique({
     where: { email: validated.email },
   });
-  
   if (existing) {
     throw new AlreadyExistsError;
   }
@@ -46,23 +45,28 @@ router.post('/signup', asyncHandler(async (req, res) => {
     if (err) {
       throw new LoginFailed;
     }
-    return res.status(201).json({ id: user.id, email: user.email });
+    res.locals.data = { id: user.id, email: user.email };
+    next();
   });
 }));
 
-router.post('/login', passport.authenticate('local', { session: true }), asyncHandler(async (req, res) => {
+router.post('/login', passport.authenticate('local', { session: true }), asyncHandler(async (req, res, next) => {
   const user = req.user as {id; email};
   if (user) {
-    return res.json({ id: user.id, email: user.email });
+    res.locals.data = { id: user.id, email: user.email };
+    next();
   }
   throw new NotFoundError;
 }));
 
-router.post('/logout', asyncHandler(async (req, res) => {
-  req.logout(() => res.json({ success: true }));
+router.post('/logout', asyncHandler(async (req, res, next) => {
+  req.logout(() => {
+    res.locals.data = { success: true };
+    next();
+  });
 }));
 
-router.patch('/users/:id/password', asyncHandler(async (req, res) => {
+router.patch('/users/:id/password', asyncHandler(async (req, res, next) => {
   const currentUser = req.user as { id: number };
 
   if (!req.isAuthenticated() || currentUser.id !== Number(req.params.id)) {
@@ -89,14 +93,14 @@ router.patch('/users/:id/password', asyncHandler(async (req, res) => {
     data: { passwordDigest },
   });
 
-  return res.json({ ok: true });
+  res.locals = { ok: true };
+  next();
 }));
 
 router.use((err: Error, req: Request, res: Response, _: NextFunction) => {
   if (err instanceof RestException) {
     return res.status(err.httpCode).json({ error: err.code });
   }
-  
   return res.status(500).json({ error: AppErrorCodes.INTERNAL_ERROR});
 });
 
@@ -104,7 +108,6 @@ router.use((_, res, next) => {
   if (res.headersSent) {
     return next();
   }
-  
   if (res.locals.data !== undefined) {
     return res
       .status(res.locals.statusCode || 200)

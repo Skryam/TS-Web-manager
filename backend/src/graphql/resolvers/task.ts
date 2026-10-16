@@ -79,18 +79,18 @@ export const taskResolver: Resolvers = {
       }
       const validated = createTaskSchema.parse(data);
       const { labels, ...taskFields } = validated;
+      const createData: Prisma.TaskCreateArgs['data'] = {
+        ...taskFields,
+        creatorId: user.id,
+      };
 
-      return prisma.task.create({
-        data: {
-          ...taskFields,
-          creatorId: user.id,
-          ...(labels !== undefined && {
-            labels: {
-              create: labels.map(id => ({ labelId: Number(id) })),
-            },
-          }),
-        },
-      });
+      if (labels?.length) {
+        createData.labels = {
+          create: labels.map(id => ({ labelId: Number(id) })),
+        };
+      }
+
+      return prisma.task.create({ data: createData });
     },
     updateTask: async (_, { id, data }, { prisma, user }) => {
       if (!user) {
@@ -98,20 +98,19 @@ export const taskResolver: Resolvers = {
       }
 
       const validated = updateTaskSchema.parse(data);
-
       const { labels, ...taskFields } = validated;
+      const updateData: Prisma.TaskUpdateArgs['data'] = { ...taskFields };
+
+      if (labels?.length) {
+        updateData.labels = {
+          deleteMany: {},
+          create: labels.map(id => ({ labelId: Number(id) })),
+        };
+      }
 
       return await prisma.task.update({
         where: { id: Number(id) },
-        data: {
-          ...taskFields,
-          ...(labels !== undefined && {
-            labels: {
-              deleteMany: {},
-              create: labels.map(id => ({ labelId: Number(id) })),
-            },
-          }),
-        },
+        data: updateData,
       });
     },
     deleteTask: async (_, { id }, { prisma, user }) => {

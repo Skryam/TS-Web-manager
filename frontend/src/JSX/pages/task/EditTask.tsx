@@ -6,21 +6,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import {
-  GET_LABELS,
-  GET_STATUSES,
-  GET_TASK_BY_ID,
-  GET_USERS,
-  UPDATE_TASK,
-} from '../../../graphql/queries';
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
-import { UpdateTaskInput, updateTaskSchema } from '../../../zodSchemas/task';
+import { CreateTaskInput, createTaskSchema } from '../../../zodSchemas/task';
 import { SelectInput } from '../../components/SelectInput';
 import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
+import { GET_TASK_BY_ID, UPDATE_TASK } from '../../../graphql/queries/task';
+import { GET_STATUSES } from '../../../graphql/queries/status';
+import { GET_USERS } from '../../../graphql/queries/user';
+import { GET_LABELS } from '../../../graphql/queries/label';
 
 export default function EditTask() {
   const flash = useFlash();
@@ -58,8 +55,8 @@ export default function EditTask() {
 
   const [updateTask] = useMutation(UPDATE_TASK);
 
-  const methods = useLocalizedForm<UpdateTaskInput>({
-    resolver: zodResolver(updateTaskSchema),
+  const methods = useLocalizedForm<CreateTaskInput>({
+    resolver: zodResolver(createTaskSchema),
     mode: 'onBlur',
   });
 
@@ -77,7 +74,7 @@ export default function EditTask() {
     }
   }, [task, reset]);
 
-  const onSubmit = async (data: UpdateTaskInput) => {
+  const onSubmit = async (data: CreateTaskInput) => {
     try {
       await updateTask({
         variables: {

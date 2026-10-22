@@ -8,7 +8,7 @@ import {
   GET_TASKS,
   Task,
   TaskFilterInput,
-} from '../../../graphql/queries';
+} from '../../../graphql/queries/task';
 import { TableConfig, TableList } from '../../components/TableList';
 import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';

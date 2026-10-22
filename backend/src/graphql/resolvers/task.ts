@@ -97,13 +97,14 @@ export const taskResolver: Resolvers = {
         throw new UnauthorizedError();
       }
 
-      const validated = updateTaskSchema.parse(data);
+      const validated = createTaskSchema.parse(data);
       const { labels, ...taskFields } = validated;
       const updateData: Prisma.TaskUpdateArgs['data'] = { ...taskFields };
 
+      updateData.labels = { deleteMany: {} };
+
       if (labels?.length) {
         updateData.labels = {
-          deleteMany: {},
           create: labels.map(id => ({ labelId: Number(id) })),
         };
       }

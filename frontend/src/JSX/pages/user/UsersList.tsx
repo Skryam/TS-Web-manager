@@ -2,7 +2,7 @@ import { useQuery, useMutation } from '@apollo/client/react';
 import { Spinner, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
-import { User, GET_ME, GET_USERS, DELETE_USER } from '../../../graphql/queries';
+import { User, GET_ME, GET_USERS, DELETE_USER } from '../../../graphql/queries/user';
 import { TableList, TableConfig } from '../../components/TableList';
 import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';

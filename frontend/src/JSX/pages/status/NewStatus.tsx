@@ -5,7 +5,7 @@ import { Form } from 'react-bootstrap';
 import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { CREATE_STATUS, GET_STATUSES } from '../../../graphql/queries';
+import { CREATE_STATUS, GET_STATUSES } from '../../../graphql/queries/status';
 import { CreateStatusInput, createStatusSchema } from '../../../zodSchemas/status';
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';

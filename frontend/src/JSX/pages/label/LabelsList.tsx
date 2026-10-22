@@ -2,9 +2,9 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import { Spinner, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
-import { GET_LABELS, DELETE_LABEL, Label } from '../../../graphql/queries';
 import { TableConfig, TableList } from '../../components/TableList';
 import { useFlash } from '../../components/FlashProvider';
+import { DELETE_LABEL, GET_LABELS, Label } from '../../../graphql/queries/label';
 
 export default function LabelsList() {
   const flash = useFlash();

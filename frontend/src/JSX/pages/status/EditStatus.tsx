@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { GET_STATUS_BY_ID, UPDATE_STATUS } from '../../../graphql/queries';
+import { GET_STATUS_BY_ID, UPDATE_STATUS } from '../../../graphql/queries/status';
 import { updateStatusSchema, UpdateStatusInput } from '../../../zodSchemas/status';
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';

@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { GET_LABEL_BY_ID, UPDATE_LABEL } from '../../../graphql/queries';
 import { updateLabelSchema, UpdateLabelInput } from '../../../zodSchemas/label';
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
@@ -14,6 +13,7 @@ import { FormLayout } from '../../components/FormLayout';
 import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
+import { GET_LABEL_BY_ID, UPDATE_LABEL } from '../../../graphql/queries/label';
 
 export default function EditLabel() {
   const flash = useFlash();

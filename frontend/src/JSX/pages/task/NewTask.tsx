@@ -4,13 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'react-bootstrap';
 import { FormProvider } from 'react-hook-form';
 
-import {
-  CREATE_TASK,
-  GET_LABELS,
-  GET_STATUSES,
-  GET_TASKS,
-  GET_USERS,
-} from '../../../graphql/queries';
+
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
@@ -20,6 +14,10 @@ import { useFlash } from '../../components/FlashProvider';
 import { useTranslation } from 'react-i18next';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
+import { CREATE_TASK, GET_TASKS } from '../../../graphql/queries/task';
+import { GET_STATUSES } from '../../../graphql/queries/status';
+import { GET_USERS } from '../../../graphql/queries/user';
+import { GET_LABELS } from '../../../graphql/queries/label';
 
 export default function NewTask() {
   const flash = useFlash();

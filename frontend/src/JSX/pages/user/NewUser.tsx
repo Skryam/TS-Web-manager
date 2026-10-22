@@ -6,7 +6,7 @@ import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { getApi } from '../../../api/client';
-import { GET_ME } from '../../../graphql/queries';
+import { GET_ME } from '../../../graphql/queries/user';
 import { createUserSchema, CreateUserInput } from '../../../zodSchemas/user';
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';

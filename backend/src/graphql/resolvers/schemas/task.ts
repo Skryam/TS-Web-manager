@@ -19,5 +19,5 @@ export const createTaskSchema = z.object({
 });
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 
-export const updateTaskSchema = createTaskSchema.partial({ name: true, statusId: true });
+export const updateTaskSchema = createTaskSchema.partial({ name: true });
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;

@@ -4,7 +4,7 @@ import { Alert, Spinner, Badge } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 import { formatDate } from '../../../utils/formatDate';
-import { GET_TASK_BY_ID } from '../../../graphql/queries';
+import { GET_TASK_BY_ID } from '../../../graphql/queries/task';
 
 export default function ViewTask() {
   const { t } = useTranslation();

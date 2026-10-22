@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { GET_USER_BY_ID, UPDATE_USER } from '../../../graphql/queries';
+import { GET_USER_BY_ID, UPDATE_USER } from '../../../graphql/queries/user';
 import { updateUserSchema, UpdateUserInput } from '../../../zodSchemas/user';
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';

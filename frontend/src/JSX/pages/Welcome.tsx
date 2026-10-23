@@ -2,8 +2,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-
-import { GET_ME } from '../../graphql/queries/task';
+import { GET_ME } from '../../graphql/queries/user';
 
 export default function Welcome() {
   const { t } = useTranslation();

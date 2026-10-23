@@ -38,7 +38,7 @@ interface UpdateStatusData {
   }
 }
 
-interface UpdateStatusArgs {
+interface UpdateStatusVariables {
   id: string,
   data: {
     name: string
@@ -84,7 +84,7 @@ export const CREATE_STATUS: TypedDocumentNode<CreateStatusData, CreateStatusVari
   }
 `;
 
-export const UPDATE_STATUS: TypedDocumentNode<UpdateStatusData, UpdateStatusArgs> = gql`
+export const UPDATE_STATUS: TypedDocumentNode<UpdateStatusData, UpdateStatusVariables> = gql`
   mutation UpdateStatus($id: ID!, $data: UpdateStatusInput!) {
     updateStatus(id: $id, data: $data) {
       id

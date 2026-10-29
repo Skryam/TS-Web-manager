@@ -1,5 +1,4 @@
-import { useApolloClient, useMutation } from '@apollo/client/react';
-import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'react-bootstrap';
 import { FormProvider } from 'react-hook-form';
@@ -9,17 +8,14 @@ import { createLabelSchema, CreateLabelInput } from '../../../zodSchemas/label';
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
-import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
-import { CREATE_LABEL, GET_LABELS } from '../../../graphql/queries/label';
+import { CREATE_LABEL } from '../../../graphql/queries/label';
+import { run } from '../../components/Run';
 
 export default function NewLabel() {
-  const flash = useFlash();
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const client = useApolloClient();
-  const [CreateLabel] = useMutation(CREATE_LABEL);
+  const [createLabel] = useMutation(CREATE_LABEL);
   const {setError} = usePageErrorContext();
 
   const methods = useLocalizedForm<CreateLabelInput>({
@@ -28,19 +24,16 @@ export default function NewLabel() {
   });
 
   const onSubmit = async (data: CreateLabelInput) => {
-    try {
-      await CreateLabel({
-        variables: {
-          data: data,
-        },
-      });
-      await client.refetchQueries({ include: [GET_LABELS] });
-      flash(t('flash.labels.create.success'));
-      navigate('/labels');
-    } catch (err: any) {
-      flash(t('flash.labels.create.error'), 'danger');
-      setError(err);
-    }
+    return run(() => createLabel({ 
+      variables: {
+        data: data,
+      }
+    }), {
+      sucessKey: 'flash.labels.create.success',
+      errorKey: 'flash.labels.create.error',
+      navigateTo: '/labels',
+      setError
+    })
   };
 
   return (

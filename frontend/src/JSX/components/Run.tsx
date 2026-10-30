@@ -22,8 +22,9 @@ export const run = async (
     const result = await mutation();
     flash(t(sucessKey))
     navigate(navigateTo)
+    return result;
   } catch (err) {
-    flash(t(errorKey))
+    flash(t(errorKey), 'danger')
     setError(err)
   }
 }

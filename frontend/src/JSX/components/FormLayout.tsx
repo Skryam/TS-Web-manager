@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
-import { Alert } from 'react-bootstrap';
+import { Alert, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { usePageErrorContext } from '../context/PageErrorContext';
 import { getErrorCode } from '../../utils/GetErrorCode';
+import { FormProvider, UseFormReturn } from 'react-hook-form';
+import { ApolloClient } from '@apollo/client';
 
 interface FormLayoutProps {
   title: string;
+  providerMethods: UseFormReturn<any>;
+  onSubmit: (data: any) => Promise<ApolloClient.MutateResult | undefined>;
   children: React.ReactNode;
 }
 
@@ -17,12 +21,15 @@ const ERROR_CODES_TRANSLATION: Record<string, string> = {
   INTERNAL_ERROR: 'internalError'
 }
 
-export const FormLayout = ({ title, children }: FormLayoutProps) => {
+export const FormLayout = ({
+  title,
+  providerMethods,
+  onSubmit,
+  children
+ }: FormLayoutProps) => {
   const { getError, clearError } = usePageErrorContext();
   const { t } = useTranslation();
-  const error1 = getError();
-  console.log('GET ERROR', error1)
-  const error = getErrorCode(error1);
+  const error = getErrorCode(getError());
 
   useEffect(() => {
     clearError();
@@ -38,7 +45,11 @@ export const FormLayout = ({ title, children }: FormLayoutProps) => {
         </Alert>
       )}
 
-      {children}
+      <FormProvider {...providerMethods}>
+        <Form onSubmit={providerMethods.handleSubmit(onSubmit)}>
+          {children}
+        </Form>
+      </FormProvider>
     </div>
   );
 };

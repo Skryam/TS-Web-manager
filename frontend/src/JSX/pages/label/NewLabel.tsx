@@ -1,7 +1,5 @@
 import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form } from 'react-bootstrap';
-import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { createLabelSchema, CreateLabelInput } from '../../../zodSchemas/label';
@@ -37,14 +35,14 @@ export default function NewLabel() {
   };
 
   return (
-    <FormLayout title={t('views.labels.new.create')}>
-      <FormProvider {...methods}>
-        <Form onSubmit={methods.handleSubmit(onSubmit)}>
-          <TextInput fieldName="name" label={t('views.labels.new.name')} />
+    <FormLayout
+      title={t('views.labels.new.create')}
+      providerMethods={methods}
+      onSubmit={onSubmit}
+      >
+        <TextInput fieldName="name" label={t('views.labels.new.name')} />
 
-          <SubmitButton />
-        </Form>
-      </FormProvider>
+        <SubmitButton />
     </FormLayout>
   );
 }

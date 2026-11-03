@@ -1,8 +1,5 @@
-import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
-import { useNavigate } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form } from 'react-bootstrap';
-import { FormProvider } from 'react-hook-form';
 
 
 import { TextInput } from '../../components/TextInput';
@@ -10,19 +7,17 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { SelectInput } from '../../components/SelectInput';
 import { CreateTaskInput, createTaskSchema } from '../../../zodSchemas/task';
-import { useFlash } from '../../components/FlashProvider';
 import { useTranslation } from 'react-i18next';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
-import { CREATE_TASK, GET_TASKS } from '../../../graphql/queries/task';
+import { CREATE_TASK } from '../../../graphql/queries/task';
 import { GET_STATUSES } from '../../../graphql/queries/status';
 import { GET_USERS } from '../../../graphql/queries/user';
 import { GET_LABELS } from '../../../graphql/queries/label';
+import { useRun } from '../../components/Run';
 
 export default function NewTask() {
-  const flash = useFlash();
-  const navigate = useNavigate();
-  const client = useApolloClient();
+  const run = useRun();
   const [CreateTask] = useMutation(CREATE_TASK);
   const { t } = useTranslation();
   const {setError} = usePageErrorContext();
@@ -54,38 +49,35 @@ export default function NewTask() {
   });
 
   const onSubmit = async (data: CreateTaskInput) => {
-    try {
-      await CreateTask({
-        variables: {
-          data: data,
-        },
-      });
-      await client.refetchQueries({ include: [GET_TASKS] });
-      flash(t('flash.tasks.create.success'));
-      navigate('/tasks');
-    } catch (err: any) {
-      flash(t('flash.tasks.create.error'), 'danger');
-      setError(err);
-    }
+    return run(() => CreateTask({ 
+      variables: {
+        data: data,
+      }
+    }), {
+      sucessKey: 'flash.tasks.create.success',
+      errorKey: 'flash.tasks.create.error',
+      navigateTo: '/tasks',
+      setError
+    })
   };
 
   return (
-    <FormLayout title={t('views.tasks.new.title')}>
-      <FormProvider {...methods}>
-        <Form onSubmit={methods.handleSubmit(onSubmit)}>
-          <TextInput fieldName="name" label={t('views.tasks.new.name')} />
+  <FormLayout
+    title={'views.tasks.new.create'}
+    providerMethods={methods}
+    onSubmit={onSubmit}
+    >
+      <TextInput fieldName="name" label={t('views.tasks.new.name')} />
 
-          <TextInput fieldName="description" label={t('views.tasks.new.description')} as="textarea" rows={5} />
+      <TextInput fieldName="description" label={t('views.tasks.new.description')} as="textarea" rows={5} />
 
-          <SelectInput fieldName="statusId" label={t('views.tasks.new.status')} options={statuses} />
+      <SelectInput fieldName="statusId" label={t('views.tasks.new.status')} options={statuses} />
 
-          <SelectInput fieldName="executorId" label={t('views.tasks.new.executor')} options={users} />
+      <SelectInput fieldName="executorId" label={t('views.tasks.new.executor')} options={users} />
 
-          <SelectInput fieldName="labels" label={t('views.tasks.new.labels')} options={labels} multiple />
+      <SelectInput fieldName="labels" label={t('views.tasks.new.labels')} options={labels} multiple />
 
-          <SubmitButton />
-        </Form>
-      </FormProvider>
+      <SubmitButton />
     </FormLayout>
   );
 }

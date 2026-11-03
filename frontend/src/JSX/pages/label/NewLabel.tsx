@@ -9,9 +9,10 @@ import { FormLayout } from '../../components/FormLayout';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 import { CREATE_LABEL } from '../../../graphql/queries/label';
-import { run } from '../../components/Run';
+import { useRun } from '../../components/Run';
 
 export default function NewLabel() {
+  const run = useRun();
   const { t } = useTranslation();
   const [createLabel] = useMutation(CREATE_LABEL);
   const {setError} = usePageErrorContext();

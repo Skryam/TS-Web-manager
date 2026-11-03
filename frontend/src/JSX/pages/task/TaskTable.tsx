@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import {
   DELETE_TASK,
   GET_TASKS,
-  Task,
   TaskFilterInput,
 } from '../../../graphql/queries/task';
 import { TableConfig, TableList } from '../../components/TableList';

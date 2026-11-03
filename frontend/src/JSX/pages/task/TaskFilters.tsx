@@ -57,8 +57,6 @@ export const TaskFilters = memo(function TaskFilters({ onApply }: TaskFiltersPro
     setInputFilters((prev) => ({ ...prev, [field]: value }));
   };
 
-  console.log('КОМПОНЕНТ');
-
   return (
     <div className="card shadow-sm mb-4 border-0">
       <div className="card-body p-4 bg-light rounded">

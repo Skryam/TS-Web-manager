@@ -1,25 +1,19 @@
-import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form } from 'react-bootstrap';
-import { FormProvider } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import { getApi } from '../../api/client';
 import { createLoginSchema, CreateLoginInput } from '../../zodSchemas/login';
-import { getClient } from '../../apollo/client';
 import { TextInput } from '../components/TextInput';
 import { SubmitButton } from '../components/SubmitButton';
 import { FormLayout } from '../components/FormLayout';
-import { useFlash } from '../components/FlashProvider';
 import { useLocalizedForm } from '../../hooks/useLocalizedForm';
 import { usePageErrorContext } from '../context/PageErrorContext';
+import { t } from 'i18next';
+import { useRun } from '../components/Run';
+import { getClient } from '../../apollo/client';
 
 export default function Login() {
-  const flash = useFlash();
-  const { t } = useTranslation();
-  const client = getClient();
+  const run = useRun();
   const api = getApi();
-  const navigate = useNavigate();
   const {setError} = usePageErrorContext();
 
   const methods = useLocalizedForm<CreateLoginInput>({
@@ -28,29 +22,29 @@ export default function Login() {
   });
 
   const onSubmit = async (data: CreateLoginInput) => {
-    try {
-      await api.post('/auth/login', data);
-      await client.resetStore();
-      flash(t('flash.session.create.success'));
-      navigate('/');
-    } catch (err: any) {
-      console.log(err)
-      flash(t('flash.session.create.error'), 'danger');
-      setError(err);
-    }
-  };
+    return run(async () => {
+      const res = api.post('/auth/login', data);
+      await getClient().resetStore();
+      return res;
+    }, {
+      sucessKey: 'flash.session.create.success',
+      errorKey: 'flash.session.create.error',
+      navigateTo: '/',
+      setError
+      })
+    };
 
   return (
-    <FormLayout title={t('views.session.new.signIn')}>
-      <FormProvider {...methods}>
-        <Form onSubmit={methods.handleSubmit(onSubmit)}>
-          <TextInput fieldName="email" type="email" label={t('views.session.new.email')} />
+  <FormLayout
+    title={'views.session.new.signIn'}
+    providerMethods={methods}
+    onSubmit={onSubmit}
+    >
+      <TextInput fieldName="email" type="email" label={t('views.session.new.email')} />
 
-          <TextInput fieldName="password" type="password" label={t('views.session.new.password')} />
+      <TextInput fieldName="password" type="password" label={t('views.session.new.password')} />
 
-          <SubmitButton />
-        </Form>
-      </FormProvider>
+      <SubmitButton />
     </FormLayout>
   );
 }

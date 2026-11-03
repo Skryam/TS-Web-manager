@@ -47,10 +47,10 @@ interface CreateTaskData {
 interface CreateTaskVariables {
   data: {
     name: string
-    description: string
+    description?: string
     statusId: string
-    executorId: string
-    labels: string[]
+    executorId?: string
+    labels?: string[]
   }
 }
 

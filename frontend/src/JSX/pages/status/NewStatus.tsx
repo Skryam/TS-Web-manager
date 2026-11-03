@@ -8,9 +8,10 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
-import { run } from '../../components/Run';
+import { useRun } from '../../components/Run';
 
 export default function NewStatus() {
+  const run = useRun();
   const [CreateStatus] = useMutation(CREATE_STATUS);
 
   const {setError} = usePageErrorContext();
@@ -26,8 +27,8 @@ export default function NewStatus() {
         data: data,
       }
     }), {
-      sucessKey: 'flash.labels.create.success',
-      errorKey: 'flash.labels.create.error',
+      sucessKey: 'flash.statuses.create.success',
+      errorKey: 'flash.statuses.create.error',
       navigateTo: '/statuses',
       setError
     })
@@ -35,11 +36,11 @@ export default function NewStatus() {
 
   return (
     <FormLayout
-      title={'views.labels.new.create'}
+      title={'views.statuses.new.create'}
       providerMethods={methods}
       onSubmit={onSubmit}
       >
-        <TextInput fieldName="name" label={'views.labels.new.name'} />
+        <TextInput fieldName="name" label={'views.statuses.new.name'} />
 
         <SubmitButton />
     </FormLayout>

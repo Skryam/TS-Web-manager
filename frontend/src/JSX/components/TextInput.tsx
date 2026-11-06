@@ -36,7 +36,7 @@ export const TextInput = ({
   return (
     <div className="mb-3">
       <Form.Label htmlFor={fieldName} className="form-label">
-        {label}
+        {t(label)}
       </Form.Label>
       {as === 'textarea' ? (
         <Form.Control

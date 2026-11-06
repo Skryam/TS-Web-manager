@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { Spinner, Alert, Badge } from 'react-bootstrap';
+import { Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -9,49 +9,31 @@ import {
   TaskFilterInput,
 } from '../../../graphql/queries/task';
 import { TableConfig, TableList } from '../../components/TableList';
-import { useFlash } from '../../components/FlashProvider';
-import { usePageErrorContext } from '../../context/PageErrorContext';
+import { QueryResult } from '../../components/QueryResult';
+import { useRun } from '../../components/Run';
 
 interface TaskTableProps {
   activeFilters: TaskFilterInput
 }
 
 export default function TasksTable({activeFilters}: TaskTableProps) {
-  const flash = useFlash();
+  const run = useRun();
   const { t } = useTranslation();
-  const {setError} = usePageErrorContext();
 
   const { data, loading, error } = useQuery(GET_TASKS, {
     fetchPolicy: 'network-only',
     variables: { filter: activeFilters },
   });
 
-  const [deleteTask] = useMutation(DELETE_TASK);
+  const [deleteTask] = useMutation(DELETE_TASK, {
+    refetchQueries: [{ query: GET_TASKS, variables: { filter: activeFilters } }],
+  });
 
-  if (loading) {
-    return <Spinner animation="border" role="status" />;
-  }
-  if (error) {
-    return <Alert variant="danger">Ошибка: {error.message}</Alert>;
-  }
-  if (!data) {
-    return null;
-  }
-
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteTask({
-        variables: { id: id },
-        refetchQueries: [
-          { query: GET_TASKS, variables: { filter: activeFilters } },
-        ]
-      });
-      flash(t('flash.tasks.delete.success'));
-    } catch (err: any) {
-      flash(t('flash.tasks.delete.error'));
-      setError(err)
-    }
-  };
+  const handleDelete = async (id: string) =>
+    run(() => deleteTask({ variables: { id } }), {
+      sucessKey: 'flash.tasks.delete.success',
+      errorKey: 'flash.tasks.delete.error',
+    });
 
   const addButton = {
     page: '/tasks/create',
@@ -113,12 +95,14 @@ export default function TasksTable({activeFilters}: TaskTableProps) {
   };
 
   return (
-    <TableList
-      title={t('views.tasks.title')}
-      addButton={addButton}
-      columns={columns}
-      data={tasks}
-      actionButtons={actionButtons}
-    />
+     <QueryResult loading={loading} error={error} data={data}>
+      <TableList
+        title={t('views.tasks.title')}
+        addButton={addButton}
+        columns={columns}
+        data={tasks}
+        actionButtons={actionButtons}
+      ></TableList>
+    </QueryResult>
   );
 }

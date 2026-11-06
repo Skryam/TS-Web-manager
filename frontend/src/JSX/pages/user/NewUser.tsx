@@ -9,7 +9,6 @@ import { FormLayout } from '../../components/FormLayout';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 import { useRun } from '../../components/Run';
-import { GET_ME } from '../../../graphql/queries/user';
 import { getClient } from '../../../apollo/client';
 
 export default function NewUser() {
@@ -25,8 +24,8 @@ export default function NewUser() {
 
   const onSubmit = async (data: CreateUserInput) => {
     return run(async () => {
-      const res = api.post('/auth/signup');
-      await getClient().refetchQueries({ include: [GET_ME] });
+      const res = await api.post('/auth/signup', data);
+      await getClient().resetStore();
       return res;
       }, {
       sucessKey: 'flash.users.create.success',

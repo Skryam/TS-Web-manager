@@ -1,43 +1,27 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { Spinner, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 import { DELETE_STATUS, GET_STATUSES, Status } from '../../../graphql/queries/status';
 import { TableConfig, TableList } from '../../components/TableList';
-import { useFlash } from '../../components/FlashProvider';
-import { usePageErrorContext } from '../../context/PageErrorContext';
+import { QueryResult } from '../../components/QueryResult';
+import { useRun } from '../../components/Run';
 
 export default function StatusesList() {
-  const flash = useFlash();
+  const run = useRun();
   const { t } = useTranslation();
   const { loading, error, data } = useQuery(GET_STATUSES, {
     fetchPolicy: 'network-only',
   });
-  const {setError} = usePageErrorContext();
 
   const [deleteStatus] = useMutation(DELETE_STATUS, {
     refetchQueries: [{ query: GET_STATUSES }],
   });
 
-  if (loading) {
-    return <Spinner animation="border" role="status" />;
-  }
-  if (error) {
-    return <Alert variant="danger">Ошибка: {error.message}</Alert>;
-  }
-  if (!data) {
-    return null;
-  }
-
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteStatus({ variables: { id: id } });
-      flash(t('flash.statuses.delete.success'), 'success');
-    } catch (err: any) {
-      flash(t('flash.statuses.delete.error'), 'danger');
-      setError(err)
-    }
-  };
+  const handleDelete = async (id: string) => 
+    run(() => deleteStatus({ variables: { id } }), {
+      sucessKey: 'flash.statuses.delete.success',
+      errorKey: 'flash.statuses.delete.error',
+    });
 
   const addButton = {
     page: 'statuses/create',
@@ -59,12 +43,14 @@ export default function StatusesList() {
   };
 
   return (
-    <TableList
-      title={t('views.statuses.status')}
-      addButton={addButton}
-      columns={columns}
-      data={statuses}
-      actionButtons={actionButtons}
-    ></TableList>
+    <QueryResult loading={loading} error={error} data={data}>
+      <TableList
+        title={t('views.statuses.status')}
+        addButton={addButton}
+        columns={columns}
+        data={statuses}
+        actionButtons={actionButtons}
+      ></TableList>
+    </QueryResult>
   );
 }

@@ -100,6 +100,9 @@ export default {
           delete: 'Delete'
         },
       },
+      queryResult: {
+        error: 'Error'
+      }
     },
 
     layouts: {

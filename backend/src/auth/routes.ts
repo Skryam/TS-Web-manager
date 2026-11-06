@@ -101,6 +101,7 @@ router.use((err: Error, req: Request, res: Response, _: NextFunction) => {
   if (err instanceof RestException) {
     return res.status(err.httpCode).json({ error: err.code });
   }
+  console.error(err);
   return res.status(500).json({ error: AppErrorCodes.INTERNAL_ERROR});
 });
 

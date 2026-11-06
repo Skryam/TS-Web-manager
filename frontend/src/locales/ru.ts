@@ -105,6 +105,9 @@ export default {
           delete: 'Удалить'
         },
       },
+      queryResult: {
+        error: 'Ошибка'
+      }
     },
     layouts: {
       application: {

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next"
 
 import { formatDate } from "../../utils/formatDate";
+import { ApolloClient } from "@apollo/client";
 
 type Data = {
   id: string;
@@ -30,7 +31,7 @@ export interface TableConfig<T extends Data> {
 
   actionButtons: {
     editPageName: string;
-    deleteAction: (id: string) => Promise<void> | void;
+    deleteAction: (id: string) => Promise<unknown>;
   }
 }
 
@@ -94,7 +95,7 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
             variant="primary" 
             onClick={() => navigate(`/${addButton.page}`)}
           >
-            {addButton.label}
+            {t(addButton.label)}
           </Button>
         )}
       </div>
@@ -105,7 +106,7 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
             <tr>
               <th style={{ width: '60px' }} className="text-center">ID</th>
               {columns.map(({ label }, i) => (
-                <th key={i}>{label}</th>
+                <th key={i}>{t(label)}</th>
               ))}
               <th style={{ width: '150px' }}>{t('components.tableList.created')}</th>
               <th style={{ width: '240px' }} className="text-end">{t('components.tableList.actions')}</th>

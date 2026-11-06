@@ -1,17 +1,13 @@
 import { useQuery, useMutation } from '@apollo/client/react';
-import { Spinner, Alert } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
 
 import { User, GET_ME, GET_USERS, DELETE_USER } from '../../../graphql/queries/user';
 import { TableList, TableConfig } from '../../components/TableList';
-import { useFlash } from '../../components/FlashProvider';
-import { usePageErrorContext } from '../../context/PageErrorContext';
+import { QueryResult } from '../../components/QueryResult';
+import { useRun } from '../../components/Run';
 
 export default function UsersList() {
-  const flash = useFlash();
-  const { t } = useTranslation();
+  const run = useRun();
   const { data: meData } = useQuery(GET_ME);
-  const {setError} = usePageErrorContext();
 
   const { loading, error, data } = useQuery(GET_USERS, { fetchPolicy: 'network-only' });
 
@@ -19,25 +15,11 @@ export default function UsersList() {
     refetchQueries: [{ query: GET_USERS }, { query: GET_ME }],
   });
 
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteUser({ variables: { id: id } });
-      flash(t('flash.users.delete.success'));
-    } catch (err: any) {
-      flash(t('flash.users.delete.error'), 'danger');
-      setError(err)
-    }
-  };
-
-  if (loading) {
-    return <Spinner animation="border" role="status" />;
-  }
-  if (error) {
-    return <Alert variant="danger">Ошибка: {error.message}</Alert>;
-  }
-  if (!data) {
-    return null;
-  }
+  const handleDelete = async (id: string) =>
+    run(() => deleteUser({ variables: { id } }), {
+      sucessKey: 'flash.users.delete.success',
+      errorKey: 'flash.users.delete.error',
+    });
 
   const users = data?.getUsers
     ? data.getUsers.map((u) => ({
@@ -50,11 +32,11 @@ export default function UsersList() {
   const columns: TableConfig<User>['columns'] = [
     {
       name: 'fullName',
-      label: t('views.users.fullName'),
+      label: 'views.users.fullName',
     },
     {
       name: 'email',
-      label: t('views.users.email'),
+      label: 'views.users.email',
     },
   ];
 
@@ -64,12 +46,14 @@ export default function UsersList() {
   };
 
   return (
-    <TableList
-      title={t('views.users.title')}
-      columns={columns}
-      data={users}
-      showActionsIf={(user) => meData?.me?.id === user.id}
-      actionButtons={actionButtons}
-    ></TableList>
+    <QueryResult loading={loading} error={error} data={data}>
+      <TableList
+        title={'views.users.title'}
+        columns={columns}
+        data={users}
+        showActionsIf={(user) => meData?.me?.id === user.id}
+        actionButtons={actionButtons}
+      ></TableList>
+    </QueryResult>
   );
 }

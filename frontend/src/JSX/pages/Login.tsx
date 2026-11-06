@@ -23,7 +23,7 @@ export default function Login() {
 
   const onSubmit = async (data: CreateLoginInput) => {
     return run(async () => {
-      const res = api.post('/auth/login', data);
+      const res =  await api.post('/auth/login', data);
       await getClient().resetStore();
       return res;
     }, {

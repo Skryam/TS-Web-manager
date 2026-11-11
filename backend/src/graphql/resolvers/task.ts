@@ -2,7 +2,7 @@ import { Resolvers } from '../resolversTypes';
 import { UnauthorizedError } from '../../exceptions/Graphql/UnauthorizedError';
 import { Prisma } from '../../../generated/prisma';
 
-import { createTaskSchema, updateTaskSchema } from './schemas/task';
+import { createTaskSchema } from './schemas/task';
 
 export const taskResolver: Resolvers = {
   Query: {

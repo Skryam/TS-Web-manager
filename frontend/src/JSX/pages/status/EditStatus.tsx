@@ -1,9 +1,7 @@
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Alert, Spinner, Form } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { GET_STATUS_BY_ID, UPDATE_STATUS } from '../../../graphql/queries/status';
@@ -11,79 +9,69 @@ import { updateStatusSchema, UpdateStatusInput } from '../../../zodSchemas/statu
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
-import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
+import { QueryResult } from '../../components/QueryResult';
+import { useRun } from '../../components/Run';
 
 export default function EditStatus() {
-  const flash = useFlash();
+  const run = useRun();
   const { t } = useTranslation();
   const { id } = useParams();
-  const navigate = useNavigate();
-  const {getError, setError} = usePageErrorContext();
+  const { setError } = usePageErrorContext();
+  
+  if (id) {
+    const { error, data, loading } = useQuery(GET_STATUS_BY_ID, {
+      variables: { id },
+      skip: !id,
+    });
 
-  const { error, data, loading } = useQuery(GET_STATUS_BY_ID, {
-    variables: { id },
-    skip: !id,
-  });
+    const [updateStatus] = useMutation(UPDATE_STATUS);
 
-  const [updateStatus] = useMutation(UPDATE_STATUS);
+    const methods = useLocalizedForm<UpdateStatusInput>({
+      resolver: zodResolver(updateStatusSchema),
+      mode: 'onBlur',
+      defaultValues: {
+        name: data?.getStatus?.name || '',
+      },
+    });
 
-  const methods = useLocalizedForm<UpdateStatusInput>({
-    resolver: zodResolver(updateStatusSchema),
-    mode: 'onBlur',
-    defaultValues: {
-      name: data?.getStatus?.name || '',
-    },
-  });
+    const { reset } = methods;
 
-  const { reset } = methods;
+    useEffect(() => {
+      if (data?.getStatus) {
+        reset({
+          name: data.getStatus.name,
+        });
+      }
+    }, [data, reset]);
 
-  useEffect(() => {
-    if (data?.getStatus) {
-      reset({
-        name: data.getStatus.name,
-      });
-    }
-  }, [data, reset]);
-
-  const onSubmit = async (data: UpdateStatusInput) => {
-    try {
-      await updateStatus({
+    const onSubmit = async (data: UpdateStatusInput) => {
+      return run(() => updateStatus({ 
         variables: {
-          id: id,
-          data: {
-            name: data.name,
-          },
-        },
-      });
-      flash(t('flash.statuses.patch.success'), 'success');
-      navigate('/statuses');
-    } catch (err: any) {
-      flash(t('flash.statuses.patch.error'), 'danger');
-      setError(err);
-    }
-  };
+          id: id!,
+          data: data,
+        }
+      }), {
+        sucessKey: 'flash.labels.patch.success',
+        errorKey: 'flash.labels.patch.error',
+        navigateTo: '/labels',
+        setError
+      })
+    };
 
-  if (loading) {
-    return <Spinner animation="border" role="status" />;
-  }
-  if (error) {
-    return <Alert variant="danger">Ошибка: {error.message}</Alert>;
-  }
-  if (!data?.getStatus) {
-    return <div>Статус не найден</div>;
-  }
-
-  return (
-    <FormLayout title={t('views.statuses.edit.change')}>
-      <FormProvider {...methods}>
-        <Form onSubmit={methods.handleSubmit(onSubmit)}>
+    return (
+      <QueryResult loading={loading} error={error} data={data?.getStatus} redirectPath='/statuses'>
+        <FormLayout
+          title={t('views.statuses.edit.change')}
+          providerMethods={methods}
+          onSubmit={onSubmit}
+        >
           <TextInput fieldName="name" label={t('views.statuses.new.name')} />
-
           <SubmitButton />
-        </Form>
-      </FormProvider>
-    </FormLayout>
-  );
+        </FormLayout>
+      </QueryResult>
+
+    );
+  }
 }

@@ -1,99 +1,85 @@
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Alert, Spinner, Form, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import { GET_USER_BY_ID, UPDATE_USER } from '../../../graphql/queries/user';
 import { updateUserSchema, UpdateUserInput } from '../../../zodSchemas/user';
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
-import { useFlash } from '../../components/FlashProvider';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 import { usePageErrorContext } from '../../context/PageErrorContext';
+import { QueryResult } from '../../components/QueryResult';
+import { useRun } from '../../components/Run';
+import { useTranslation } from 'react-i18next';
 
 export default function EditUser() {
-  const flash = useFlash();
   const { t } = useTranslation();
+  const run = useRun();
   const { id } = useParams();
   const navigate = useNavigate();
   const {setError} = usePageErrorContext();
 
+  if (id) {
+    const { error, data, loading } = useQuery(GET_USER_BY_ID, {
+      variables: { id },
+      skip: !id,
+    });
 
-  const { error, data, loading } = useQuery(GET_USER_BY_ID, {
-    variables: { id },
-    skip: !id,
-  });
+    const user = data?.getUser;
 
-  const user = data?.getUser;
+    const [updateUser] = useMutation(UPDATE_USER);
 
-  const [updateUser] = useMutation(UPDATE_USER);
+    const methods = useLocalizedForm<UpdateUserInput>({
+      resolver: zodResolver(updateUserSchema),
+      mode: 'onBlur',
+      defaultValues: {
+        firstName: user?.firstName || '',
+        lastName: user?.lastName || '',
+        email: user?.email || '',
+      },
+    });
 
-  const methods = useLocalizedForm<UpdateUserInput>({
-    resolver: zodResolver(updateUserSchema),
-    mode: 'onBlur',
-    defaultValues: {
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      email: user?.email || '',
-    },
-  });
+    const { reset } = methods;
 
-  const { reset } = methods;
+    useEffect(() => {
+      if (user) {
+        reset({
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        });
+      }
+    }, [user, reset]);
 
-  useEffect(() => {
-    if (user) {
-      reset({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-      });
-    }
-  }, [user, reset]);
-
-  const onSubmit = async (data: UpdateUserInput) => {
-    try {
-      await updateUser({
+    const onSubmit = async (data: UpdateUserInput) => {
+      return run(() => updateUser({ 
         variables: {
-          id: id,
-          data: {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-          },
-        },
-      });
-      flash(t('flash.users.patch.success'));
-      navigate('/users');
-    } catch (err: any) {
-      console.log(err)
-      flash(t('flash.users.patch.error'), 'danger');
-      setError(err);
-    }
-  };
+          id: id!,
+          data: data,
+        }
+        }), {
+          sucessKey: 'flash.users.patch.success',
+          errorKey: 'flash.users.patch.error',
+          navigateTo: '/users',
+          setError
+        })
+      };
 
-  if (loading) {
-    return <Spinner animation="border" role="status" />;
-  }
-  if (error) {
-    return <Alert variant="danger">Ошибка: {error.message}</Alert>;
-  }
-  if (!user) {
-    return <div>Пользователь не найден</div>;
-  }
+    return (
+      <QueryResult loading={loading} error={error} data={data?.getUser} redirectPath='/statuses'>
+        <FormLayout
+          title={'views.statuses.edit.change'}
+          providerMethods={methods}
+          onSubmit={onSubmit}
+        >
+          <TextInput fieldName="firstName" label={'views.users.firstName'} />
 
-  return (
-    <FormLayout title={t('views.users.edit.cardName')}>
-      <FormProvider {...methods}>
-        <Form onSubmit={methods.handleSubmit(onSubmit)}>
-          <TextInput fieldName="firstName" label={t('views.users.firstName')} />
+          <TextInput fieldName="lastName" label={'views.users.lastName'} />
 
-          <TextInput fieldName="lastName" label={t('views.users.lastName')} />
-
-          <TextInput fieldName="email" type="email" label={t('views.users.email')} />
+          <TextInput fieldName="email" type="email" label={'views.users.email'} />
 
           <div className="border-top my-4"></div>
           <div className="d-flex justify-content-between align-items-center mb-3">
@@ -111,8 +97,8 @@ export default function EditUser() {
           <div className="border-bottom my-4"></div>
 
           <SubmitButton />
-        </Form>
-      </FormProvider>
-    </FormLayout>
-  );
+        </FormLayout>
+      </QueryResult>
+    );
+  }
 }

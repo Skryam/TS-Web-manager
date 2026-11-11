@@ -1,9 +1,7 @@
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Alert, Spinner, Form } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { TextInput } from '../../components/TextInput';
@@ -11,130 +9,122 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { CreateTaskInput, createTaskSchema } from '../../../zodSchemas/task';
 import { SelectInput } from '../../components/SelectInput';
-import { useFlash } from '../../components/FlashProvider';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 import { GET_TASK_BY_ID, UPDATE_TASK } from '../../../graphql/queries/task';
 import { GET_STATUSES } from '../../../graphql/queries/status';
 import { GET_USERS } from '../../../graphql/queries/user';
 import { GET_LABELS } from '../../../graphql/queries/label';
+import { QueryResult } from '../../components/QueryResult';
+import { useRun } from '../../components/Run';
 
 export default function EditTask() {
-  const flash = useFlash();
+  const run = useRun();
   const { t } = useTranslation();
   const { id } = useParams();
-  const navigate = useNavigate();
   const { setError } = usePageErrorContext();
 
-  const { error, data, loading } = useQuery(GET_TASK_BY_ID, {
-    variables: { id },
-    skip: !id,
-  });
-  const task = data?.getTask;
+  if (id) {
+    const { error, data, loading } = useQuery(GET_TASK_BY_ID, {
+      variables: { id },
+      skip: !id,
+    });
+    const task = data?.getTask;
 
-  const { data: statusesData } = useQuery(GET_STATUSES);
-  const statuses =
-    statusesData?.getStatuses?.map((s) => ({
-      id: s.id,
-      label: s.name,
-    })) ?? [];
+    const { data: statusesData } = useQuery(GET_STATUSES);
+    const statuses =
+      statusesData?.getStatuses?.map((s) => ({
+        id: s.id,
+        label: s.name,
+      })) ?? [];
 
-  const { data: usersData } = useQuery(GET_USERS);
-  const users =
-    usersData?.getUsers?.map((u) => ({
-      id: u.id,
-      label: `${u.firstName} ${u.lastName}`,
-    })) ?? [];
+    const { data: usersData } = useQuery(GET_USERS);
+    const users =
+      usersData?.getUsers?.map((u) => ({
+        id: u.id,
+        label: `${u.firstName} ${u.lastName}`,
+      })) ?? [];
 
-  const { data: labelsData } = useQuery(GET_LABELS);
-  const labels =
-    labelsData?.getLabels.map((l) => ({
-      id: l.id,
-      label: l.name,
-    })) ?? [];
+    const { data: labelsData } = useQuery(GET_LABELS);
+    const labels =
+      labelsData?.getLabels.map((l) => ({
+        id: l.id,
+        label: l.name,
+      })) ?? [];
 
-  const [updateTask] = useMutation(UPDATE_TASK);
+    const [updateTask] = useMutation(UPDATE_TASK);
 
-  const methods = useLocalizedForm<CreateTaskInput>({
-    resolver: zodResolver(createTaskSchema),
-    mode: 'onBlur',
-  });
+    const methods = useLocalizedForm<CreateTaskInput>({
+      resolver: zodResolver(createTaskSchema),
+      mode: 'onBlur',
+    });
 
-  const { reset } = methods;
+    const { reset } = methods;
 
-  useEffect(() => {
-    if (task) {
-      reset({
-        name: task.name ?? '',
-        description: task.description ?? '',
-        statusId: String(task.status?.id ?? ''),
-        executorId: String(task.executor?.id ?? ''),
-        labels: task.labels?.map((label) => String(label.id)) ?? [],
-      });
-    }
-  }, [task, reset]);
+    useEffect(() => {
+      if (task) {
+        reset({
+          name: task.name ?? '',
+          description: task.description ?? '',
+          statusId: String(task.status?.id ?? ''),
+          executorId: String(task.executor?.id ?? ''),
+          labels: task.labels?.map((label) => String(label.id)) ?? [],
+        });
+      }
+    }, [task, reset]);
 
-  const onSubmit = async (data: CreateTaskInput) => {
-    try {
-      await updateTask({
-        variables: {
-          id: id,
-          data,
-        },
-      });
-      flash(t('flash.tasks.patch.success'));
-      navigate('/tasks');
-    } catch (err: any) {
-      flash(t('flash.tasks.patch.error'), 'danger');
-      setError(err);
-    }
-  };
+    const onSubmit = async (data: CreateTaskInput) => {
+      return run(() => updateTask({ 
+          variables: {
+            id: id!,
+            data: data,
+          }
+        }), {
+          sucessKey: 'flash.tasks.patch.success',
+          errorKey: 'flash.tasks.patch.error',
+          navigateTo: '/tasks',
+          setError
+        })
+      };
 
-  if (loading) {
-    return <Spinner animation="border" role="status" />;
+    return (
+    <QueryResult loading={loading} error={error} data={data?.getTask} redirectPath='/tasks'>
+      <FormLayout
+        title={t('views.statuses.edit.change')}
+        providerMethods={methods}
+        onSubmit={onSubmit}
+      >
+        <TextInput fieldName="name" label={'views.tasks.edit.name'} />
+
+        <TextInput
+          fieldName="description"
+          label={'views.tasks.edit.description'}
+          as="textarea"
+          rows={5}
+        />
+
+        <SelectInput
+          fieldName="statusId"
+          label={'views.tasks.edit.status'}
+          options={statuses}
+        />
+
+        <SelectInput
+          fieldName="executorId"
+          label={'views.tasks.edit.executor'}
+          options={users}
+        />
+
+        <SelectInput
+          fieldName="labels"
+          label={'views.tasks.edit.labels'}
+          options={labels}
+          multiple
+        />
+
+        <SubmitButton />
+      </FormLayout>
+    </QueryResult>
+    );
   }
-  if (error) {
-    return <Alert variant="danger">Ошибка: {error.message}</Alert>;
-  }
-  if (!data?.getTask) {
-    return <div>Задача не найден</div>;
-  }
-
-  return (
-    <FormLayout title={t('views.tasks.edit.title')}>
-      <FormProvider {...methods}>
-        <Form onSubmit={methods.handleSubmit(onSubmit)}>
-          <TextInput fieldName="name" label={t('views.tasks.edit.name')} />
-
-          <TextInput
-            fieldName="description"
-            label={t('views.tasks.edit.description')}
-            as="textarea"
-            rows={5}
-          />
-
-          <SelectInput
-            fieldName="statusId"
-            label={t('views.tasks.edit.status')}
-            options={statuses}
-          />
-
-          <SelectInput
-            fieldName="executorId"
-            label={t('views.tasks.edit.executor')}
-            options={users}
-          />
-
-          <SelectInput
-            fieldName="labels"
-            label={t('views.tasks.edit.labels')}
-            options={labels}
-            multiple
-          />
-
-          <SubmitButton />
-        </Form>
-      </FormProvider>
-    </FormLayout>
-  );
 }

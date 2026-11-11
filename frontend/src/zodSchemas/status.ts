@@ -5,5 +5,5 @@ export const createStatusSchema = z.object({
 });
 export type CreateStatusInput = z.infer<typeof createStatusSchema>;
 
-export const updateStatusSchema = createStatusSchema.partial();
+export const updateStatusSchema = createStatusSchema;
 export type UpdateStatusInput = z.infer<typeof updateStatusSchema>;

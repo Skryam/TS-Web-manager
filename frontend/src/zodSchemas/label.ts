@@ -5,5 +5,5 @@ export const createLabelSchema = z.object({
 });
 export type CreateLabelInput = z.infer<typeof createLabelSchema>;
 
-export const updateLabelSchema = createLabelSchema.partial();
+export const updateLabelSchema = createLabelSchema;
 export type UpdateLabelInput = z.infer<typeof updateLabelSchema>;

@@ -1,25 +1,29 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { Form } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import { createUpdateUserPasswordSchema, UpdateUserPasswordInput } from '../../../zodSchemas/user';
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
-import { useFlash } from '../../components/FlashProvider';
 import { getApi } from '../../../api/client';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 import { usePageErrorContext } from '../../context/PageErrorContext';
+import { QueryResult } from '../../components/QueryResult';
+import { useRun } from '../../components/Run';
+import { useQuery } from '@apollo/client/react';
+import { GET_USER_BY_ID } from '../../../graphql/queries/user';
 
 export default function EditPassword() {
-  const flash = useFlash();
-  const { t } = useTranslation();
+  const run = useRun();
   const { id } = useParams();
-  const navigate = useNavigate();
   const api = getApi();
   const {setError} = usePageErrorContext();
+
+  const { error, data, loading } = useQuery(GET_USER_BY_ID, {
+    variables: { id },
+    skip: !id,
+  });
+  console.log(id, error, data)
 
   const methods = useLocalizedForm<UpdateUserPasswordInput>({
     resolver: zodResolver(createUpdateUserPasswordSchema()),
@@ -27,29 +31,31 @@ export default function EditPassword() {
   });
 
   const onSubmit = async (data: UpdateUserPasswordInput) => {
-    try {
-      await api.patch(`/auth/users/${id}/password`, data)
-      flash(t('flash.users.patch.success'));
-      navigate('/users');
-    } catch (err: any) {
-      flash(t('flash.users.patch.error'), 'danger');
-      setError(err)
-    }
+    return run(async () => {
+      return api.patch(`/auth/users/${id}/password`, data);
+      }, {
+      sucessKey: 'flash.users.patch.success',
+      errorKey: 'flash.users.patch.error',
+      navigateTo: '/',
+      setError
+    })
   };
 
   return (
-    <FormLayout title={t('views.users.edit.editPassword.cardName')}>
-      <FormProvider {...methods}>
-        <Form onSubmit={methods.handleSubmit(onSubmit)}>
-          <TextInput fieldName="password" type="password" label={t('views.users.edit.editPassword.password')} />
+    <QueryResult loading={loading} error={error} data={data?.getUser} redirectPath='/users'>
+      <FormLayout
+        title={'views.statuses.edit.change'}
+        providerMethods={methods}
+        onSubmit={onSubmit}
+      >
+        <TextInput fieldName="password" type="password" label={'views.users.edit.editPassword.password'} />
 
-          <TextInput fieldName="newPassword" type="password" label={t('views.users.edit.editPassword.newPassword')} />
+        <TextInput fieldName="newPassword" type="password" label={'views.users.edit.editPassword.newPassword'} />
 
-          <TextInput fieldName="confirmPassword" type="password" label={t('views.users.edit.editPassword.submitPassword')} />
+        <TextInput fieldName="confirmPassword" type="password" label={'views.users.edit.editPassword.submitPassword'} />
 
-          <SubmitButton />
-        </Form>
-      </FormProvider>
-    </FormLayout>
+        <SubmitButton />
+      </FormLayout>
+    </QueryResult>
   );
 }

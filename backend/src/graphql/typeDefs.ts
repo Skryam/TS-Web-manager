@@ -106,15 +106,15 @@ export default `#graphql
   type Query {
     me: User
     getUsers: [User!]!
-    getUser(id: ID!): User!
+    getUser(id: ID!): User
 
     getTasks(filter: TaskFilterInput): [Task!]!
-    getTask(id: ID!): Task!
+    getTask(id: ID!): Task
 
     getStatuses: [Status!]!
-    getStatus(id: ID!): Status!
+    getStatus(id: ID!): Status
 
     getLabels: [Label!]!
-    getLabel(id: ID!): Label!
+    getLabel(id: ID!): Label
   }
 `;

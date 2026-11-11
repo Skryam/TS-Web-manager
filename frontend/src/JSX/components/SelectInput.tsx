@@ -1,5 +1,6 @@
 import { Form } from 'react-bootstrap';
 import { FieldError, useFormContext } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 interface SelectOption {
   id: string | number;
@@ -21,6 +22,7 @@ export const SelectInput = ({
   placeholder = '',
   multiple = false,
 }: SelectInputProps) => {
+  const { t } = useTranslation();
   const {
     formState: { errors },
     setValue,
@@ -42,7 +44,7 @@ export const SelectInput = ({
   return (
     <div className="mb-3">
       <Form.Label htmlFor={fieldName} className="form-label">
-        {label}
+        {t(label)}
       </Form.Label>
 
       <Form.Select

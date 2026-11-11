@@ -68,6 +68,9 @@ export default {
         },
       },
       authError: 'Access denied! Please login',
+      queryResult: {
+        error: 'Not found',
+      }
     },
 
     components: {
@@ -212,7 +215,7 @@ export default {
           executorHolder: 'All',
           labels: 'Labels',
           showMyTasks: 'Show only my tasks',
-          noLabels: 'Нет доступных лейблов',
+          noLabels: 'No labels available',
           applyFilters: 'Apply filters',
         },
         new: {

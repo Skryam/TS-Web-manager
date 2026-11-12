@@ -8,7 +8,7 @@ import { GET_TASK_BY_ID } from '../../../graphql/queries/task';
 
 export default function ViewTask() {
   const { t } = useTranslation();
-  const { id } = useParams();
+  const id = useIdParams();;
 
   const { error, data, loading } = useQuery(GET_TASK_BY_ID, {
     variables: { id },

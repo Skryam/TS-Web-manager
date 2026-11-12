@@ -75,6 +75,7 @@ export default {
       },
       authError: 'Доступ запрещён! Пожалуйста, авторизируйтесь.',
       queryResult: {
+        invalidId: 'Некорректный id',
         error: 'Запись не найдена',
       }
     },

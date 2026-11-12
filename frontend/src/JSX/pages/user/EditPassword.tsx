@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { createUpdateUserPasswordSchema, UpdateUserPasswordInput } from '../../../zodSchemas/user';
@@ -12,10 +11,11 @@ import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';
 import { useQuery } from '@apollo/client/react';
 import { GET_USER_BY_ID } from '../../../graphql/queries/user';
+import { useIdParams } from '../../../hooks/useIdParams';
 
 export default function EditPassword() {
   const run = useRun();
-  const { id } = useParams();
+  const id = useIdParams();
   const api = getApi();
   const {setError} = usePageErrorContext();
 

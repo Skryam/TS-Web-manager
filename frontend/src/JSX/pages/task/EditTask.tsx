@@ -1,6 +1,5 @@
 import { useQuery, useMutation } from '@apollo/client/react';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
 
@@ -17,114 +16,113 @@ import { GET_USERS } from '../../../graphql/queries/user';
 import { GET_LABELS } from '../../../graphql/queries/label';
 import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';
+import { useIdParams } from '../../../hooks/useIdParams';
 
 export default function EditTask() {
   const run = useRun();
   const { t } = useTranslation();
-  const { id } = useParams();
+  const id = useIdParams();
   const { setError } = usePageErrorContext();
 
-  if (id) {
-    const { error, data, loading } = useQuery(GET_TASK_BY_ID, {
-      variables: { id },
-      skip: !id,
-    });
-    const task = data?.getTask;
+  const { error, data, loading } = useQuery(GET_TASK_BY_ID, {
+    variables: { id },
+    skip: !id,
+  });
+  const task = data?.getTask;
 
-    const { data: statusesData } = useQuery(GET_STATUSES);
-    const statuses =
-      statusesData?.getStatuses?.map((s) => ({
-        id: s.id,
-        label: s.name,
-      })) ?? [];
+  const { data: statusesData } = useQuery(GET_STATUSES);
+  const statuses =
+    statusesData?.getStatuses?.map((s) => ({
+      id: s.id,
+      label: s.name,
+    })) ?? [];
 
-    const { data: usersData } = useQuery(GET_USERS);
-    const users =
-      usersData?.getUsers?.map((u) => ({
-        id: u.id,
-        label: `${u.firstName} ${u.lastName}`,
-      })) ?? [];
+  const { data: usersData } = useQuery(GET_USERS);
+  const users =
+    usersData?.getUsers?.map((u) => ({
+      id: u.id,
+      label: `${u.firstName} ${u.lastName}`,
+    })) ?? [];
 
-    const { data: labelsData } = useQuery(GET_LABELS);
-    const labels =
-      labelsData?.getLabels.map((l) => ({
-        id: l.id,
-        label: l.name,
-      })) ?? [];
+  const { data: labelsData } = useQuery(GET_LABELS);
+  const labels =
+    labelsData?.getLabels.map((l) => ({
+      id: l.id,
+      label: l.name,
+    })) ?? [];
 
-    const [updateTask] = useMutation(UPDATE_TASK);
+  const [updateTask] = useMutation(UPDATE_TASK);
 
-    const methods = useLocalizedForm<CreateTaskInput>({
-      resolver: zodResolver(createTaskSchema),
-      mode: 'onBlur',
-    });
+  const methods = useLocalizedForm<CreateTaskInput>({
+    resolver: zodResolver(createTaskSchema),
+    mode: 'onBlur',
+  });
 
-    const { reset } = methods;
+  const { reset } = methods;
 
-    useEffect(() => {
-      if (task) {
-        reset({
-          name: task.name ?? '',
-          description: task.description ?? '',
-          statusId: String(task.status?.id ?? ''),
-          executorId: String(task.executor?.id ?? ''),
-          labels: task.labels?.map((label) => String(label.id)) ?? [],
-        });
-      }
-    }, [task, reset]);
+  useEffect(() => {
+    if (task) {
+      reset({
+        name: task.name ?? '',
+        description: task.description ?? '',
+        statusId: String(task.status?.id ?? ''),
+        executorId: String(task.executor?.id ?? ''),
+        labels: task.labels?.map((label) => String(label.id)) ?? [],
+      });
+    }
+  }, [task, reset]);
 
-    const onSubmit = async (data: CreateTaskInput) => {
-      return run(() => updateTask({ 
-          variables: {
-            id: id!,
-            data: data,
-          }
-        }), {
-          sucessKey: 'flash.tasks.patch.success',
-          errorKey: 'flash.tasks.patch.error',
-          navigateTo: '/tasks',
-          setError
-        })
-      };
+  const onSubmit = async (data: CreateTaskInput) => {
+    return run(() => updateTask({ 
+        variables: {
+          id: id!,
+          data: data,
+        }
+      }), {
+        sucessKey: 'flash.tasks.patch.success',
+        errorKey: 'flash.tasks.patch.error',
+        navigateTo: '/tasks',
+        setError
+      })
+    };
 
-    return (
-    <QueryResult loading={loading} error={error} data={data?.getTask} redirectPath='/tasks'>
-      <FormLayout
-        title={t('views.statuses.edit.change')}
-        providerMethods={methods}
-        onSubmit={onSubmit}
-      >
-        <TextInput fieldName="name" label={'views.tasks.edit.name'} />
+  return (
+  <QueryResult loading={loading} error={error} data={data?.getTask} redirectPath='/tasks'>
+    <FormLayout
+      title={t('views.statuses.edit.change')}
+      providerMethods={methods}
+      onSubmit={onSubmit}
+    >
+      <TextInput fieldName="name" label={'views.tasks.edit.name'} />
 
-        <TextInput
-          fieldName="description"
-          label={'views.tasks.edit.description'}
-          as="textarea"
-          rows={5}
-        />
+      <TextInput
+        fieldName="description"
+        label={'views.tasks.edit.description'}
+        as="textarea"
+        rows={5}
+      />
 
-        <SelectInput
-          fieldName="statusId"
-          label={'views.tasks.edit.status'}
-          options={statuses}
-        />
+      <SelectInput
+        fieldName="statusId"
+        label={'views.tasks.edit.status'}
+        options={statuses}
+      />
 
-        <SelectInput
-          fieldName="executorId"
-          label={'views.tasks.edit.executor'}
-          options={users}
-        />
+      <SelectInput
+        fieldName="executorId"
+        label={'views.tasks.edit.executor'}
+        options={users}
+      />
 
-        <SelectInput
-          fieldName="labels"
-          label={'views.tasks.edit.labels'}
-          options={labels}
-          multiple
-        />
+      <SelectInput
+        fieldName="labels"
+        label={'views.tasks.edit.labels'}
+        options={labels}
+        multiple
+      />
 
-        <SubmitButton />
-      </FormLayout>
-    </QueryResult>
-    );
-  }
+      <SubmitButton />
+    </FormLayout>
+  </QueryResult>
+  );
 }

@@ -69,6 +69,7 @@ export default {
       },
       authError: 'Access denied! Please login',
       queryResult: {
+        invalidId: 'Invalid id',
         error: 'Not found',
       }
     },

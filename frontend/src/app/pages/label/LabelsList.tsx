@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import { useTranslation } from 'react-i18next';
 
 import { TableConfig, TableList } from '../../components/TableList';
-import { DELETE_LABEL, GET_LABELS, Label } from '../../../graphql/queries/label';
+import { DELETE_LABEL, GET_LABELS, Label } from '../../../graphql/queries/labels';
 import { useRun } from '../../components/Run';
 import { QueryResult } from '../../components/QueryResult';
 

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { GET_USER_BY_ID, UPDATE_USER } from '../../../graphql/queries/user';
+import { GET_USER_BY_ID, UPDATE_USER } from '../../../graphql/queries/users';
 import { updateUserSchema, UpdateUserInput } from '../../../zodSchemas/user';
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';

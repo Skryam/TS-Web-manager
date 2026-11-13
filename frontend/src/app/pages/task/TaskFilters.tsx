@@ -3,10 +3,10 @@ import { Form, Button } from 'react-bootstrap';
 
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@apollo/client/react";
-import { TaskFilterInput } from "../../../graphql/queries/task";
-import { GET_STATUSES } from "../../../graphql/queries/status";
-import { GET_USERS } from "../../../graphql/queries/user";
-import { GET_LABELS } from "../../../graphql/queries/label";
+import { TaskFilterInput } from "../../../graphql/queries/tasks";
+import { GET_STATUSES } from "../../../graphql/queries/statuses";
+import { GET_USERS } from "../../../graphql/queries/users";
+import { GET_LABELS } from "../../../graphql/queries/labels";
 
 interface TaskFiltersProps {
   onApply: (filters: TaskFilterInput) => void;

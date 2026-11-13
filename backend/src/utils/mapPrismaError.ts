@@ -1,8 +1,8 @@
 import { GraphQLError } from 'graphql';
 
-import { InternalError } from '../exceptions/Graphql/InternalError';
-import { AlreadyExistsError } from '../exceptions/Graphql/AlreadyExistsError';
-import { NotFoundError } from '../exceptions/Graphql/NotFoundError';
+import { InternalError } from '../exceptions/graphql/InternalError';
+import { AlreadyExistsError } from '../exceptions/graphql/AlreadyExistsError';
+import { NotFoundError } from '../exceptions/graphql/NotFoundError';
 import { Prisma } from '../../generated/prisma';
 import { PrismaErrorCodes } from '../enums/PrismaErrorCodes';
 

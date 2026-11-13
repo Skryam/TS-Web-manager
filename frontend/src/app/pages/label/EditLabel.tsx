@@ -9,7 +9,7 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
-import { GET_LABEL_BY_ID, UPDATE_LABEL } from '../../../graphql/queries/label';
+import { GET_LABEL_BY_ID, UPDATE_LABEL } from '../../../graphql/queries/labels';
 import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';
 import { useIdParams } from '../../../hooks/useIdParams';

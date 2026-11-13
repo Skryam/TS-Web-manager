@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client/react';
 import { Navbar, Nav, Container, ButtonGroup, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import LogoutButton from '../pages/LogoutButton';
-import { GET_ME } from '../../graphql/queries/user';
+import { GET_ME } from '../../graphql/queries/users';
 
 export default function AppNavbar() {
   const { i18n } = useTranslation();

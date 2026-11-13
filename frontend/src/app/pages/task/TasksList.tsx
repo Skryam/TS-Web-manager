@@ -2,7 +2,7 @@ import { useState, useCallback, SetStateAction } from 'react';
 
 import {
   TaskFilterInput,
-} from '../../../graphql/queries/task';
+} from '../../../graphql/queries/tasks';
 import { TaskFilters } from './TaskFilters';
 import TasksTable from './TaskTable';
 

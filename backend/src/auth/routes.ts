@@ -2,15 +2,15 @@ import express, { NextFunction, Request, Response, Router } from 'express';
 
 import { getPrisma } from '../../lib/prisma';
 import encrypt from '../../lib/secure';
-import { createUserSchema, createUpdateUserPasswordSchema } from '../graphql/resolvers/schemas/userSchemas';
+import { createUserSchema, createUpdateUserPasswordSchema } from '../graphql/resolvers/schemas/users';
 import { AppErrorCodes } from '../enums/AppErrorCodes';
-import { asyncHandler } from '../utils/RouterErrorsHandler';
-import { RestException } from '../exceptions/Rest/RestException';
-import { AlreadyExistsError } from '../exceptions/Rest/AlreadyExistsError';
-import { LoginFailed } from '../exceptions/Rest/LoginFailed';
-import { NotFoundError } from '../exceptions/Rest/NotFoundError';
-import { UnauthorizedError } from '../exceptions/Rest/UnauthorizedError';
-import { InvalidCurrentPassword } from '../exceptions/Rest/InvalidCurrentPassword';
+import { RestException } from '../exceptions/rest/RestException';
+import { AlreadyExistsError } from '../exceptions/rest/AlreadyExistsError';
+import { LoginFailed } from '../exceptions/rest/LoginFailed';
+import { NotFoundError } from '../exceptions/rest/NotFoundError';
+import { UnauthorizedError } from '../exceptions/rest/UnauthorizedError';
+import { InvalidCurrentPassword } from '../exceptions/rest/InvalidCurrentPassword';
+import { asyncHandler } from '../utils/routerErrorsHandler';
 
 import passport from './passport';
 
@@ -27,7 +27,7 @@ router.post('/signup', asyncHandler(async (req, res, next) => {
     where: { email: validated.email },
   });
   if (existing) {
-    throw new AlreadyExistsError;
+    throw new AlreadyExistsError();
   }
 
   const passwordDigest = encrypt(validated.password);
@@ -43,7 +43,7 @@ router.post('/signup', asyncHandler(async (req, res, next) => {
 
   req.login(user, (err) => {
     if (err) {
-      throw new LoginFailed;
+      throw new LoginFailed();
     }
     res.locals.data = { id: user.id, email: user.email };
     next();
@@ -54,14 +54,14 @@ router.post('/login', passport.authenticate('local', { session: true }), asyncHa
   const user = req.user as {id; email};
   if (user) {
     res.locals.data = { id: user.id, email: user.email };
-    next();
+    return next();
   }
-  throw new NotFoundError;
+  throw new NotFoundError();
 }));
 
 router.post('/logout', asyncHandler(async (req, res, next) => {
   req.logout(() => {
-    res.locals.data = { success: true };
+    res.locals.isValid = true;
     next();
   });
 }));
@@ -70,7 +70,7 @@ router.patch('/users/:id/password', asyncHandler(async (req, res, next) => {
   const currentUser = req.user as { id: number };
 
   if (!req.isAuthenticated() || currentUser.id !== Number(req.params.id)) {
-    throw new UnauthorizedError;
+    throw new UnauthorizedError();
   }
 
   const validated = createUpdateUserPasswordSchema.parse(req.body);
@@ -80,11 +80,11 @@ router.patch('/users/:id/password', asyncHandler(async (req, res, next) => {
   });
 
   if (!user) {
-    throw new NotFoundError;
+    throw new NotFoundError();
   }
 
   if (encrypt(validated.password) !== user.passwordDigest) {
-    throw new InvalidCurrentPassword;
+    throw new InvalidCurrentPassword();
   }
 
   const passwordDigest = encrypt(validated.newPassword);
@@ -107,7 +107,7 @@ router.use((err: Error, req: Request, res: Response, _: NextFunction) => {
 
 router.use((_, res, next) => {
   if (res.headersSent) {
-    return next();
+    return;
   }
   if (res.locals.data !== undefined) {
     return res
@@ -116,6 +116,13 @@ router.use((_, res, next) => {
   }
 
   next();
+});
+
+router.use((req, res) => {
+  if (res.headersSent) {
+    return;
+  }
+  res.status(404).json({ error: AppErrorCodes.NOT_FOUND });
 });
 
 export default router;

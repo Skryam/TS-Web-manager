@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { CREATE_STATUS } from '../../../graphql/queries/status';
+import { CREATE_STATUS } from '../../../graphql/queries/statuses';
 import { CreateStatusInput, createStatusSchema } from '../../../zodSchemas/status';
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';

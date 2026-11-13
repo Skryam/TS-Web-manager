@@ -1,8 +1,8 @@
 import { Resolvers, DefaultArgs } from '../resolversTypes';
-import { UnauthorizedError } from '../../exceptions/Graphql/UnauthorizedError';
-import { ForbiddenError } from '../../exceptions/Graphql/ForbiddenError';
+import { UnauthorizedError } from '../../exceptions/graphql/UnauthorizedError';
+import { ForbiddenError } from '../../exceptions/graphql/ForbiddenError';
 
-import { updateUserSchema, CreateUserInput as UpdateUserInput } from './schemas/userSchemas';
+import { updateUserSchema, CreateUserInput as UpdateUserInput } from './schemas/users';
 
 
 export const userResolver: Resolvers = {

@@ -7,7 +7,7 @@ import {
   DELETE_TASK,
   GET_TASKS,
   TaskFilterInput,
-} from '../../../graphql/queries/task';
+} from '../../../graphql/queries/tasks';
 import { TableConfig, TableList } from '../../components/TableList';
 import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';

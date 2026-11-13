@@ -8,7 +8,7 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
-import { CREATE_LABEL } from '../../../graphql/queries/label';
+import { CREATE_LABEL } from '../../../graphql/queries/labels';
 import { useRun } from '../../components/Run';
 
 export default function NewLabel() {

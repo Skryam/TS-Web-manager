@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { useTranslation } from 'react-i18next';
 
-import { DELETE_STATUS, GET_STATUSES, Status } from '../../../graphql/queries/status';
+import { DELETE_STATUS, GET_STATUSES, Status } from '../../../graphql/queries/statuses';
 import { TableConfig, TableList } from '../../components/TableList';
 import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';

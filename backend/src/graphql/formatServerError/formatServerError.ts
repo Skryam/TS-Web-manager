@@ -2,9 +2,9 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
 
 import { Prisma } from '../../../generated/prisma/client';
 import { mapPrismaError } from '../../utils/mapPrismaError';
-import { InternalError } from '../../exceptions/Graphql/InternalError';
+import { InternalError } from '../../exceptions/graphql/InternalError';
 import { AppErrorCodes } from '../../enums/AppErrorCodes';
-import { PrismaValidationError } from '../../exceptions/Graphql/PrismaValidationError';
+import { PrismaValidationError } from '../../exceptions/graphql/PrismaValidationError';
 
 const APP_ERROR_CODES = new Set<string>(Object.values(AppErrorCodes));
 

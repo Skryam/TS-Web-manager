@@ -1,9 +1,9 @@
 import { ResolverFn } from '../resolversTypes';
 
-import { userResolver } from './user';
-import { taskResolver } from './task';
-import { statusResolver } from './status';
-import { labelResolver } from './label';
+import { userResolver } from './users';
+import { taskResolver } from './tasks';
+import { statusResolver } from './statuses';
+import { labelResolver } from './labels';
 
 export interface Resolvers {
   [key: string]: any;

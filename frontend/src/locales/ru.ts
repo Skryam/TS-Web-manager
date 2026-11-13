@@ -77,6 +77,9 @@ export default {
       queryResult: {
         invalidId: 'Некорректный id',
         error: 'Запись не найдена',
+      },
+      errors: {
+        pageNotFound: 'Страница не найдена',
       }
     },
     components: {

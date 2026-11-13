@@ -10,10 +10,10 @@ import { CreateTaskInput, createTaskSchema } from '../../../zodSchemas/task';
 import { useTranslation } from 'react-i18next';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
-import { CREATE_TASK } from '../../../graphql/queries/task';
-import { GET_STATUSES } from '../../../graphql/queries/status';
-import { GET_USERS } from '../../../graphql/queries/user';
-import { GET_LABELS } from '../../../graphql/queries/label';
+import { CREATE_TASK } from '../../../graphql/queries/tasks';
+import { GET_STATUSES } from '../../../graphql/queries/statuses';
+import { GET_USERS } from '../../../graphql/queries/users';
+import { GET_LABELS } from '../../../graphql/queries/labels';
 import { useRun } from '../../components/Run';
 
 export default function NewTask() {

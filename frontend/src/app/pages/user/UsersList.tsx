@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from '@apollo/client/react';
 
-import { User, GET_ME, GET_USERS, DELETE_USER } from '../../../graphql/queries/user';
+import { User, GET_ME, GET_USERS, DELETE_USER } from '../../../graphql/queries/users';
 import { TableList, TableConfig } from '../../components/TableList';
 import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';

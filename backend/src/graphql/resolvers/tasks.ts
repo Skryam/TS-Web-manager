@@ -1,8 +1,8 @@
-import { Resolvers } from '../resolversTypes';
-import { UnauthorizedError } from '../../exceptions/Graphql/UnauthorizedError';
+import { DefaultArgs, Resolvers } from '../resolversTypes';
+import { UnauthorizedError } from '../../exceptions/graphql/UnauthorizedError';
 import { Prisma } from '../../../generated/prisma';
 
-import { createTaskSchema } from './schemas/task';
+import { CreateTaskInput, createTaskSchema, UpdateTaskInput } from './schemas/tasks';
 
 export const taskResolver: Resolvers = {
   Query: {
@@ -45,7 +45,7 @@ export const taskResolver: Resolvers = {
         labels: task.labels.map((tl) => tl.label),
       }));
     },
-    getTask: async (_, { id }, { prisma, user }) => {
+    getTask: async (_, { id }: DefaultArgs, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }
@@ -73,7 +73,7 @@ export const taskResolver: Resolvers = {
     },
   },
   Mutation: {
-    createTask: async (_, { data }, { prisma, user }) => {
+    createTask: async (_, { data }: DefaultArgs<CreateTaskInput>, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }
@@ -92,7 +92,7 @@ export const taskResolver: Resolvers = {
 
       return prisma.task.create({ data: createData });
     },
-    updateTask: async (_, { id, data }, { prisma, user }) => {
+    updateTask: async (_, { id, data }: DefaultArgs<UpdateTaskInput>, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }
@@ -114,7 +114,7 @@ export const taskResolver: Resolvers = {
         data: updateData,
       });
     },
-    deleteTask: async (_, { id }, { prisma, user }) => {
+    deleteTask: async (_, { id }: DefaultArgs, { prisma, user }) => {
       if (!user) {
         throw new UnauthorizedError();
       }

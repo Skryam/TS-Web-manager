@@ -71,6 +71,9 @@ export default {
       queryResult: {
         invalidId: 'Invalid id',
         error: 'Not found',
+      },
+      errors: {
+        pageNotFound: 'Page not found',
       }
     },
 

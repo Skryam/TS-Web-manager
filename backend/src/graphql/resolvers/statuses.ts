@@ -1,8 +1,8 @@
 import { DefaultArgs, Resolvers } from '../resolversTypes';
-import { AlreadyExistsError } from '../../exceptions/Graphql/AlreadyExistsError';
-import { UnauthorizedError } from '../../exceptions/Graphql/UnauthorizedError';
+import { AlreadyExistsError } from '../../exceptions/graphql/AlreadyExistsError';
+import { UnauthorizedError } from '../../exceptions/graphql/UnauthorizedError';
 
-import { CreateStatusInput, createStatusSchema, UpdateStatusInput, updateStatusSchema } from './schemas/status';
+import { CreateStatusInput, createStatusSchema, UpdateStatusInput, updateStatusSchema } from './schemas/statuses';
 
 export const statusResolver: Resolvers = {
   Query: {

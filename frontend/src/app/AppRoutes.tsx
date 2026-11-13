@@ -17,6 +17,7 @@ import NewTask from './pages/task/NewTask.tsx';
 import ViewTask from './pages/task/ViewTask.tsx';
 import EditTask from './pages/task/EditTask.tsx';
 import EditPassword from './pages/user/EditPassword.tsx';
+import { NotFoundRedirect } from './components/NotFoundRedirect.tsx';
 
 export const AppRoutes = () => (
   <Routes>
@@ -40,6 +41,8 @@ export const AppRoutes = () => (
       <Route path="/tasks/create" element={<NewTask />} />
       <Route path="/tasks/:id" element={<ViewTask />} />
       <Route path="/tasks/:id/edit" element={<EditTask />} />
+
     </Route>
+    <Route path="*" element={<NotFoundRedirect />} />
   </Routes>
 );

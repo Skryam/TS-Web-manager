@@ -10,7 +10,7 @@ import { usePageErrorContext } from '../../context/PageErrorContext';
 import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';
 import { useQuery } from '@apollo/client/react';
-import { GET_USER_BY_ID } from '../../../graphql/queries/user';
+import { GET_USER_BY_ID } from '../../../graphql/queries/users';
 import { useIdParams } from '../../../hooks/useIdParams';
 
 export default function EditPassword() {

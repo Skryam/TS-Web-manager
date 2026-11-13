@@ -4,10 +4,10 @@ import { ApolloProvider } from '@apollo/client/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { getClient } from './apollo/client.ts';
-import { App } from './JSX/App.tsx';
+import { App } from './app/App.tsx';
 import './i18n/i18n.ts';
-import FlashProvider from './JSX/components/FlashProvider.tsx';
-import { PageErrorProvider } from './JSX/context/PageErrorContext.tsx';
+import FlashProvider from './app/components/FlashProvider.tsx';
+import { PageErrorProvider } from './app/context/PageErrorContext.tsx';
 
 const client = getClient();
 

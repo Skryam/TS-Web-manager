@@ -51,7 +51,7 @@ router.post('/signup', asyncHandler(async (req, res, next) => {
 }));
 
 router.post('/login', passport.authenticate('local', { session: true }), asyncHandler(async (req, res, next) => {
-  const user = req.user as {id; email};
+  const user = req.user;
   if (user) {
     res.locals.data = { id: user.id, email: user.email };
     return next();
@@ -67,7 +67,7 @@ router.post('/logout', asyncHandler(async (req, res, next) => {
 }));
 
 router.patch('/users/:id/password', asyncHandler(async (req, res, next) => {
-  const currentUser = req.user as { id: number };
+  const currentUser = req.user!;
 
   if (!req.isAuthenticated() || currentUser.id !== Number(req.params.id)) {
     throw new UnauthorizedError();
@@ -109,7 +109,10 @@ router.use((_, res, next) => {
   if (res.headersSent) {
     return;
   }
-  if (res.locals.data !== undefined) {
+  if (res.locals.handled) {
+    if ( res.locals.data === undefined) {
+      return res.status(res.locals.statusCode || 204).end();
+    }
     return res
       .status(res.locals.statusCode || 200)
       .json(res.locals.data);

@@ -4,6 +4,7 @@ type AsyncHandler = (req: Request, res: Response, next: NextFunction) => Promise
 
 export const asyncHandler = (fn: AsyncHandler): RequestHandler => {
   return (req, res, next) => {
+    res.locals.handled = true;
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 };

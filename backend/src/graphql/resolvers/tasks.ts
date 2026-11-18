@@ -25,9 +25,7 @@ export const taskResolver: Resolvers = {
       if (filter?.labelId) {
         where.labels = { some: { label: { id: {
           in: filter.labelId.map(Number),
-        },
-        },
-        }};
+        }}}};
       };
 
       const tasks = await prisma.task.findMany({
@@ -68,8 +66,6 @@ export const taskResolver: Resolvers = {
         ...task,
         labels: task.labels.map((tl) => tl.label),
       });
-
-      
     },
   },
   Mutation: {

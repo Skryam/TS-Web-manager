@@ -6,11 +6,11 @@ export interface GetTasksData {
     name: string;
     description: string;
     status: { name: string };
-    executor: { firstName: string, lastName: string };
-    creator: { firstName: string, lastName: string };
+    executor: { firstName: string; lastName: string };
+    creator: { firstName: string; lastName: string };
     labels: { name: string }[];
     createdAt: string;
-  }
+  };
 }
 
 export interface TaskFilterInput {
@@ -21,7 +21,7 @@ export interface TaskFilterInput {
 }
 
 interface GetTaskVariables {
-  id: string
+  id: string;
 }
 
 interface GetTaskData {
@@ -29,57 +29,57 @@ interface GetTaskData {
     id: string;
     name: string;
     description: string;
-    status: { id: string, name: string }
-    executor: { id: string, firstName: string, lastName: string };
-    creator: { id: string, firstName: string, lastName: string };
-    labels: { id: string, name: string }[];
+    status: { id: string; name: string };
+    executor: { id: string; firstName: string; lastName: string };
+    creator: { id: string; firstName: string; lastName: string };
+    labels: { id: string; name: string }[];
     createdAt: string;
   };
 }
 
 interface CreateTaskData {
   createTask: {
-    id: string,
-    name: string
-  }
+    id: string;
+    name: string;
+  };
 }
 
 interface CreateTaskVariables {
   data: {
-    name: string
-    description?: string
-    statusId: string
-    executorId?: string
-    labels?: string[]
-  }
+    name: string;
+    description?: string;
+    statusId: string;
+    executorId?: string;
+    labels?: string[];
+  };
 }
 
 interface UpdateTaskData {
   updateTask: {
-    id: string,
-    name: string
-  }
+    id: string;
+    name: string;
+  };
 }
 
 interface UpdateTaskVariables {
-  id: string
+  id: string;
   data: {
-    name: string
-    description?: string
-    statusId: string
-    executorId?: string
-    labels?: string[]
-  }
+    name: string;
+    description?: string;
+    statusId: string;
+    executorId?: string;
+    labels?: string[];
+  };
 }
 
 interface DeleteTaskData {
   deleteTask: {
-    id: string
-  }
+    id: string;
+  };
 }
 
 interface DeleteTaskVariables {
-  id: string
+  id: string;
 }
 
 export const GET_TASKS: TypedDocumentNode<GetTasksData, { filter?: TaskFilterInput }> = gql`

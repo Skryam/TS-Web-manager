@@ -80,7 +80,7 @@ export default {
       },
       errors: {
         pageNotFound: 'Страница не найдена',
-      }
+      },
     },
     components: {
       submitButton: {
@@ -95,8 +95,8 @@ export default {
           userNotFound: 'Пользователь не найден',
           invalidCurrentPassword: 'Неверный текущий пароль',
           validationError: 'Ошибка валидации сервера',
-          internalError: 'Ошибка сервера'
-        }
+          internalError: 'Ошибка сервера',
+        },
       },
       tableList: {
         deleteError: 'Ошибка удаления',
@@ -108,12 +108,12 @@ export default {
         deleteModal: {
           body: 'Вы уверены что хотите удалить запись?',
           cancel: 'Отмена',
-          delete: 'Удалить'
+          delete: 'Удалить',
         },
       },
       queryResult: {
-        error: 'Ошибка'
-      }
+        error: 'Ошибка',
+      },
     },
     layouts: {
       application: {
@@ -154,7 +154,7 @@ export default {
           errors: {
             userAlreadyExists: 'Пользователь уже существует',
             loginFailed: 'Ошибка входа',
-          }
+          },
         },
         edit: {
           cardName: 'Изменение пользователя',
@@ -166,7 +166,7 @@ export default {
             password: 'Текущий пароль',
             newPassword: 'Новый пароль',
             submitPassword: 'Подтверждение пароля',
-          }
+          },
         },
       },
 
@@ -225,6 +225,7 @@ export default {
           executorHolder: 'Все исполнители',
           labels: 'Метки',
           showMyTasks: 'Показывать только мои задачи',
+          reset: 'Сброс',
           noLabels: 'Нет доступных лейблов',
           applyFilters: 'Применить фильтры',
         },

@@ -27,19 +27,19 @@ export default function NewUser() {
       const res = await api.post('/auth/signup', data);
       await getClient().resetStore();
       return res;
-      }, {
+    }, {
       sucessKey: 'flash.users.create.success',
       errorKey: 'flash.users.create.error',
       navigateTo: '/',
-      setError
-    })
+      setError,
+    });
   };
 
   return (
-  <FormLayout
-    title={'views.users.new.signUp'}
-    providerMethods={methods}
-    onSubmit={onSubmit}
+    <FormLayout
+      title={'views.users.new.signUp'}
+      providerMethods={methods}
+      onSubmit={onSubmit}
     >
       <TextInput fieldName="firstName" label={t('views.users.firstName')} />
 

@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { t } from 'i18next';
 
 import { getApi } from '../../api/client';
 import { createLoginSchema, CreateLoginInput } from '../../zodSchemas/login';
@@ -7,7 +8,6 @@ import { SubmitButton } from '../components/SubmitButton';
 import { FormLayout } from '../components/FormLayout';
 import { useLocalizedForm } from '../../hooks/useLocalizedForm';
 import { usePageErrorContext } from '../context/PageErrorContext';
-import { t } from 'i18next';
 import { useRun } from '../components/Run';
 import { getClient } from '../../apollo/client';
 
@@ -30,15 +30,15 @@ export default function Login() {
       sucessKey: 'flash.session.create.success',
       errorKey: 'flash.session.create.error',
       navigateTo: '/',
-      setError
-      })
-    };
+      setError,
+    });
+  };
 
   return (
-  <FormLayout
-    title={'views.session.new.signIn'}
-    providerMethods={methods}
-    onSubmit={onSubmit}
+    <FormLayout
+      title={'views.session.new.signIn'}
+      providerMethods={methods}
+      onSubmit={onSubmit}
     >
       <TextInput fieldName="email" type="email" label={t('views.session.new.email')} />
 

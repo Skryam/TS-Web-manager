@@ -1,4 +1,4 @@
-import { gql, TypedDocumentNode } from "@apollo/client";
+import { gql, TypedDocumentNode } from '@apollo/client';
 
 export interface Status {
   id: string;
@@ -11,7 +11,7 @@ interface GetStatusData {
 }
 
 interface GetStatusVariables {
-  id: string
+  id: string;
 }
 
 interface GetStatusesData {
@@ -20,39 +20,39 @@ interface GetStatusesData {
 
 interface CreateStatusData {
   createStatus: {
-    id: string,
-    name: string
-  }
+    id: string;
+    name: string;
+  };
 }
 
 interface CreateStatusVariables {
   data: {
-    name: string
-  }
+    name: string;
+  };
 }
 
 interface UpdateStatusData {
   updateStatus: {
-    id: string,
-    name: string
-  }
+    id: string;
+    name: string;
+  };
 }
 
 interface UpdateStatusVariables {
-  id: string,
+  id: string;
   data: {
-    name: string
-  }
+    name: string;
+  };
 }
 
 interface DeleteStatusData {
   deleteStatus: {
-    id: string
-  }
+    id: string;
+  };
 }
 
 interface DeleteStatusVariables {
-  id: string
+  id: string;
 }
 
 export const GET_STATUS_BY_ID: TypedDocumentNode<GetStatusData, GetStatusVariables> = gql`

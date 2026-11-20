@@ -25,13 +25,13 @@ export default function NewStatus() {
     return run(() => CreateStatus({ 
       variables: {
         data: data,
-      }
+      },
     }), {
       sucessKey: 'flash.statuses.create.success',
       errorKey: 'flash.statuses.create.error',
       navigateTo: '/statuses',
-      setError
-    })
+      setError,
+    });
   };
 
   return (
@@ -39,10 +39,10 @@ export default function NewStatus() {
       title={'views.statuses.new.create'}
       providerMethods={methods}
       onSubmit={onSubmit}
-      >
-        <TextInput fieldName="name" label={'views.statuses.new.name'} />
+    >
+      <TextInput fieldName="name" label={'views.statuses.new.name'} />
 
-        <SubmitButton />
+      <SubmitButton />
     </FormLayout>
   );
 }

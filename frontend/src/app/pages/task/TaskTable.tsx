@@ -13,7 +13,7 @@ import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';
 
 interface TaskTableProps {
-  activeFilters: TaskFilterInput
+  activeFilters: TaskFilterInput;
 }
 
 export default function TasksTable({activeFilters}: TaskTableProps) {
@@ -95,7 +95,7 @@ export default function TasksTable({activeFilters}: TaskTableProps) {
   };
 
   return (
-     <QueryResult loading={loading} error={error} data={data}>
+    <QueryResult loading={loading} error={error} data={data}>
       <TableList
         title={t('views.tasks.title')}
         addButton={addButton}

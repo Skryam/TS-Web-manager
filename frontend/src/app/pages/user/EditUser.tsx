@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'react-i18next';
 
 import { GET_USER_BY_ID, UPDATE_USER } from '../../../graphql/queries/users';
 import { updateUserSchema, UpdateUserInput } from '../../../zodSchemas/user';
@@ -13,19 +14,18 @@ import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';
-import { useTranslation } from 'react-i18next';
-import { useIdParams } from '../../../hooks/useIdParams';
+import { useValidatedRoute } from '../../../hooks/useValidatedRoute';
 
 export default function EditUser() {
+  const { id, isValid } = useValidatedRoute();
   const { t } = useTranslation();
   const run = useRun();
-  const id = useIdParams();
   const navigate = useNavigate();
   const {setError} = usePageErrorContext();
 
   const { error, data, loading } = useQuery(GET_USER_BY_ID, {
-    variables: { id },
-    skip: !id,
+    variables: { id: id ?? '' },
+    skip: !isValid,
   });
 
   const user = data?.getUser;
@@ -42,31 +42,29 @@ export default function EditUser() {
     },
   });
 
-  const { reset } = methods;
-
   useEffect(() => {
     if (user) {
-      reset({
+      methods.reset({
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
       });
     }
-  }, [user, reset]);
+  }, [user, methods.reset]);
 
   const onSubmit = async (data: UpdateUserInput) => {
     return run(() => updateUser({ 
       variables: {
         id: id!,
         data: data,
-      }
-      }), {
-        sucessKey: 'flash.users.patch.success',
-        errorKey: 'flash.users.patch.error',
-        navigateTo: '/users',
-        setError
-      })
-    };
+      },
+    }), {
+      sucessKey: 'flash.users.patch.success',
+      errorKey: 'flash.users.patch.error',
+      navigateTo: '/users',
+      setError,
+    });
+  };
 
   return (
     <QueryResult loading={loading} error={error} data={data?.getUser} redirectPath='/statuses'>

@@ -3,7 +3,7 @@ import {
   memo,
   useMemo,
   ReactNode,
-  useContext,
+  use,
   useState,
   useCallback,
 } from 'react';
@@ -27,14 +27,14 @@ export const PageErrorProvider = memo(function PageErrorProvider(props: PageErro
 
   const getError = useCallback(() => submitErrors, [submitErrors]);
   const setError = useCallback((error) => setSubmitErrors(error), []);
-  const clearError = useCallback(() => setSubmitErrors(undefined), [])
+  const clearError = useCallback(() => setSubmitErrors(undefined), []);
 
   const context = useMemo<PageErrorContextData>(() => ({setError, getError, clearError}), [setError, getError]);
 
-  return <PageErrorContext.Provider {...props} value={context} />;
+  return <PageErrorContext {...props} value={context} />;
 });
 
 export const usePageErrorContext = (): PageErrorContextData =>
-  useContext(PageErrorContext);
+  use(PageErrorContext);
 
 export default PageErrorContext;

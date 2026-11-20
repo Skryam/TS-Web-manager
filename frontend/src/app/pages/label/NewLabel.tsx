@@ -26,13 +26,13 @@ export default function NewLabel() {
     return run(() => createLabel({ 
       variables: {
         data: data,
-      }
+      },
     }), {
       sucessKey: 'flash.labels.create.success',
       errorKey: 'flash.labels.create.error',
       navigateTo: '/labels',
-      setError
-    })
+      setError,
+    });
   };
 
   return (
@@ -40,10 +40,10 @@ export default function NewLabel() {
       title={t('views.labels.new.create')}
       providerMethods={methods}
       onSubmit={onSubmit}
-      >
-        <TextInput fieldName="name" label={t('views.labels.new.name')} />
+    >
+      <TextInput fieldName="name" label={t('views.labels.new.name')} />
 
-        <SubmitButton />
+      <SubmitButton />
     </FormLayout>
   );
 }

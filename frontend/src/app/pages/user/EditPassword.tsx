@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery } from '@apollo/client/react';
 
 import { createUpdateUserPasswordSchema, UpdateUserPasswordInput } from '../../../zodSchemas/user';
 import { TextInput } from '../../components/TextInput';
@@ -9,21 +10,19 @@ import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';
-import { useQuery } from '@apollo/client/react';
 import { GET_USER_BY_ID } from '../../../graphql/queries/users';
-import { useIdParams } from '../../../hooks/useIdParams';
+import { useValidatedRoute } from '../../../hooks/useValidatedRoute';
 
 export default function EditPassword() {
+  const { id, isValid } = useValidatedRoute();
   const run = useRun();
-  const id = useIdParams();
   const api = getApi();
   const {setError} = usePageErrorContext();
 
   const { error, data, loading } = useQuery(GET_USER_BY_ID, {
-    variables: { id },
-    skip: !id,
+    variables: { id: id ?? '' },
+    skip: !isValid,
   });
-  console.log(id, error, data)
 
   const methods = useLocalizedForm<UpdateUserPasswordInput>({
     resolver: zodResolver(createUpdateUserPasswordSchema()),
@@ -33,12 +32,12 @@ export default function EditPassword() {
   const onSubmit = async (data: UpdateUserPasswordInput) => {
     return run(async () => {
       return api.patch(`/auth/users/${id}/password`, data);
-      }, {
+    }, {
       sucessKey: 'flash.users.patch.success',
       errorKey: 'flash.users.patch.error',
       navigateTo: '/',
-      setError
-    })
+      setError,
+    });
   };
 
   return (

@@ -74,7 +74,7 @@ export default {
       },
       errors: {
         pageNotFound: 'Page not found',
-      }
+      },
     },
 
     components: {
@@ -91,8 +91,8 @@ export default {
           userNotFound: 'User not found',
           invalidCurrentPassword: 'Incorrect current password',
           validationError: 'Server validation error',
-          internalError: 'Server error'
-        }
+          internalError: 'Server error',
+        },
       },
       tableList: {
         deleteError: 'Error deleting',
@@ -104,12 +104,12 @@ export default {
         deleteModal: {
           body: 'Are you sure you want to delete the record?',
           cancel: 'Cancel',
-          delete: 'Delete'
+          delete: 'Delete',
         },
       },
       queryResult: {
-        error: 'Error'
-      }
+        error: 'Error',
+      },
     },
 
     layouts: {
@@ -151,7 +151,7 @@ export default {
           errors: {
             userAlreadyExists: 'The user already exists.',
             loginFailed: 'Login error',
-          }
+          },
         },
         edit: {
           cardName: 'Edit User',
@@ -163,7 +163,7 @@ export default {
             password: 'Current Password',
             newPassword: 'New Password',
             submitPassword: 'Confirm password',
-          }
+          },
         },
       },
       welcome: {
@@ -219,6 +219,7 @@ export default {
           executorHolder: 'All',
           labels: 'Labels',
           showMyTasks: 'Show only my tasks',
+          reset: 'Reset',
           noLabels: 'No labels available',
           applyFilters: 'Apply filters',
         },

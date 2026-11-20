@@ -12,17 +12,17 @@ import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 import { GET_LABEL_BY_ID, UPDATE_LABEL } from '../../../graphql/queries/labels';
 import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';
-import { useIdParams } from '../../../hooks/useIdParams';
+import { useValidatedRoute } from '../../../hooks/useValidatedRoute';
 
 export default function EditLabel() {
+  const { id, isValid } = useValidatedRoute();
   const run = useRun();
   const { t } = useTranslation();
-  const id = useIdParams();
   const { setError } = usePageErrorContext();
 
   const { error, data, loading } = useQuery(GET_LABEL_BY_ID, {
-    variables: { id },
-    skip: !id,
+    variables: { id: id ?? '' },
+    skip: !isValid,
   });
 
   const [updateLabel] = useMutation(UPDATE_LABEL);
@@ -35,28 +35,24 @@ export default function EditLabel() {
     },
   });
 
-  const { reset } = methods;
-
   useEffect(() => {
     if (data?.getLabel) {
-      reset({
-        name: data.getLabel.name,
-      });
+      methods.reset({ name: data.getLabel.name });
     }
-  }, [data, reset]);
+  }, [data, methods.reset]);
 
-  const onSubmit = async (data: UpdateLabelInput) => {
+  const onSubmit = async (formData: UpdateLabelInput) => {
     return run(() => updateLabel({ 
       variables: {
         id: id!,
-        data: data,
-      }
+        data: formData,
+      },
     }), {
       sucessKey: 'flash.labels.patch.success',
       errorKey: 'flash.labels.patch.error',
       navigateTo: '/labels',
-      setError
-    })
+      setError,
+    });
   };
 
   return (

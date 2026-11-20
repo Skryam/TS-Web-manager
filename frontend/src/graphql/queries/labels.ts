@@ -1,4 +1,4 @@
-import { gql, TypedDocumentNode } from "@apollo/client";
+import { gql, TypedDocumentNode } from '@apollo/client';
 
 export interface Label {
   id: string;
@@ -11,7 +11,7 @@ interface GetLabelData {
 }
 
 interface GetLabelVariables {
-  id: string
+  id: string;
 }
 
 interface GetLabelsData {
@@ -20,39 +20,39 @@ interface GetLabelsData {
 
 interface CreateLabelData {
   createStatus: {
-    id: string,
-    name: string
-  }
+    id: string;
+    name: string;
+  };
 }
 
 interface CreateLabelVariables {
   data: {
-    name: string
-  }
+    name: string;
+  };
 }
 
 interface UpdateLabelData {
   updateStatus: {
-    id: string,
-    name: string
-  }
+    id: string;
+    name: string;
+  };
 }
 
 interface UpdateLabelVariables {
-  id: string,
+  id: string;
   data: {
-    name: string
-  }
+    name: string;
+  };
 }
 
 interface DeleteLabelData {
   deleteStatus: {
-    id: string
-  }
+    id: string;
+  };
 }
 
 interface DeleteLabelVariables {
-  id: string
+  id: string;
 }
 
 export const GET_LABELS: TypedDocumentNode<GetLabelsData> = gql`

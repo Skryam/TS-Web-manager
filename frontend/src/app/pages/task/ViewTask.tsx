@@ -1,18 +1,19 @@
 import { useQuery } from '@apollo/client/react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Alert, Spinner, Badge } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 import { formatDate } from '../../../utils/formatDate';
 import { GET_TASK_BY_ID } from '../../../graphql/queries/tasks';
+import { useValidatedRoute } from '../../../hooks/useValidatedRoute';
 
 export default function ViewTask() {
   const { t } = useTranslation();
-  const id = useIdParams();;
+  const { id, isValid } = useValidatedRoute();
 
   const { error, data, loading } = useQuery(GET_TASK_BY_ID, {
-    variables: { id },
-    skip: !id,
+    variables: { id: id ?? '' },
+    skip: !isValid,
   });
 
   if (loading) {

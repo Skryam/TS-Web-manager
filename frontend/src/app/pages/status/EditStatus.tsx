@@ -12,17 +12,17 @@ import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';
-import { useIdParams } from '../../../hooks/useIdParams';
+import { useValidatedRoute } from '../../../hooks/useValidatedRoute';
 
 export default function EditStatus() {
+  const { id, isValid } = useValidatedRoute();
   const run = useRun();
   const { t } = useTranslation();
-  const id = useIdParams();
   const { setError } = usePageErrorContext();
   
   const { error, data, loading } = useQuery(GET_STATUS_BY_ID, {
-    variables: { id },
-    skip: !id,
+    variables: { id: id ?? '' },
+    skip: !isValid,
   });
 
   const [updateStatus] = useMutation(UPDATE_STATUS);
@@ -35,28 +35,24 @@ export default function EditStatus() {
     },
   });
 
-  const { reset } = methods;
-
   useEffect(() => {
     if (data?.getStatus) {
-      reset({
-        name: data.getStatus.name,
-      });
+      methods.reset({ name: data.getStatus.name });
     }
-  }, [data, reset]);
+  }, [data, methods.reset]);
 
   const onSubmit = async (data: UpdateStatusInput) => {
     return run(() => updateStatus({ 
       variables: {
         id: id!,
         data: data,
-      }
+      },
     }), {
       sucessKey: 'flash.labels.patch.success',
       errorKey: 'flash.labels.patch.error',
       navigateTo: '/labels',
-      setError
-    })
+      setError,
+    });
   };
 
   return (

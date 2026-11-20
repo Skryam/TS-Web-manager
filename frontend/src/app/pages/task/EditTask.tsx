@@ -16,17 +16,17 @@ import { GET_USERS } from '../../../graphql/queries/users';
 import { GET_LABELS } from '../../../graphql/queries/labels';
 import { QueryResult } from '../../components/QueryResult';
 import { useRun } from '../../components/Run';
-import { useIdParams } from '../../../hooks/useIdParams';
+import { useValidatedRoute } from '../../../hooks/useValidatedRoute';
 
 export default function EditTask() {
+  const { id, isValid } = useValidatedRoute();
   const run = useRun();
   const { t } = useTranslation();
-  const id = useIdParams();
   const { setError } = usePageErrorContext();
 
   const { error, data, loading } = useQuery(GET_TASK_BY_ID, {
-    variables: { id },
-    skip: !id,
+    variables: { id: id ?? '' },
+    skip: !isValid,
   });
   const task = data?.getTask;
 
@@ -58,11 +58,9 @@ export default function EditTask() {
     mode: 'onBlur',
   });
 
-  const { reset } = methods;
-
   useEffect(() => {
     if (task) {
-      reset({
+      methods.reset({
         name: task.name ?? '',
         description: task.description ?? '',
         statusId: String(task.status?.id ?? ''),
@@ -70,59 +68,59 @@ export default function EditTask() {
         labels: task.labels?.map((label) => String(label.id)) ?? [],
       });
     }
-  }, [task, reset]);
+  }, [task, methods.reset]);
 
   const onSubmit = async (data: CreateTaskInput) => {
     return run(() => updateTask({ 
-        variables: {
-          id: id!,
-          data: data,
-        }
-      }), {
-        sucessKey: 'flash.tasks.patch.success',
-        errorKey: 'flash.tasks.patch.error',
-        navigateTo: '/tasks',
-        setError
-      })
-    };
+      variables: {
+        id: id!,
+        data: data,
+      },
+    }), {
+      sucessKey: 'flash.tasks.patch.success',
+      errorKey: 'flash.tasks.patch.error',
+      navigateTo: '/tasks',
+      setError,
+    });
+  };
 
   return (
-  <QueryResult loading={loading} error={error} data={data?.getTask} redirectPath='/tasks'>
-    <FormLayout
-      title={t('views.statuses.edit.change')}
-      providerMethods={methods}
-      onSubmit={onSubmit}
-    >
-      <TextInput fieldName="name" label={'views.tasks.edit.name'} />
+    <QueryResult loading={loading} error={error} data={data?.getTask} redirectPath='/tasks'>
+      <FormLayout
+        title={t('views.statuses.edit.change')}
+        providerMethods={methods}
+        onSubmit={onSubmit}
+      >
+        <TextInput fieldName="name" label={'views.tasks.edit.name'} />
 
-      <TextInput
-        fieldName="description"
-        label={'views.tasks.edit.description'}
-        as="textarea"
-        rows={5}
-      />
+        <TextInput
+          fieldName="description"
+          label={'views.tasks.edit.description'}
+          as="textarea"
+          rows={5}
+        />
 
-      <SelectInput
-        fieldName="statusId"
-        label={'views.tasks.edit.status'}
-        options={statuses}
-      />
+        <SelectInput
+          fieldName="statusId"
+          label={'views.tasks.edit.status'}
+          options={statuses}
+        />
 
-      <SelectInput
-        fieldName="executorId"
-        label={'views.tasks.edit.executor'}
-        options={users}
-      />
+        <SelectInput
+          fieldName="executorId"
+          label={'views.tasks.edit.executor'}
+          options={users}
+        />
 
-      <SelectInput
-        fieldName="labels"
-        label={'views.tasks.edit.labels'}
-        options={labels}
-        multiple
-      />
+        <SelectInput
+          fieldName="labels"
+          label={'views.tasks.edit.labels'}
+          options={labels}
+          multiple
+        />
 
-      <SubmitButton />
-    </FormLayout>
-  </QueryResult>
+        <SubmitButton />
+      </FormLayout>
+    </QueryResult>
   );
 }

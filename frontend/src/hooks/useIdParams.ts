@@ -1,9 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 export const useIdParams = () => {
   const { id } = useParams();
-  if (Number(id)) {
-    return id;
+
+  if (!id || Number.isNaN(Number(id))) {
+    return null;
   }
-  return null;
-}
+  return id;
+};

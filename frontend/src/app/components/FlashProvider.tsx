@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState } from 'react';
+import { createContext, useCallback, use, useState } from 'react';
 import { Toast } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +14,7 @@ type ShowFlash = (text: string, variant?: FlashVariant) => void;
 
 const FlashContext = createContext<ShowFlash>(() => {});
 
-export const useFlash = () => useContext(FlashContext);
+export const useFlash = () => use(FlashContext);
 
 let nextId = 0;
 
@@ -36,7 +36,7 @@ export default function FlashProvider({ children }: { children: React.ReactNode 
   );
 
   return (
-    <FlashContext.Provider value={showFlash}>
+    <FlashContext value={showFlash}>
       {children}
       
       <div className="toast-container position-fixed bottom-0 end-0" style={{ zIndex: 1080, padding: '5rem' }}>
@@ -48,6 +48,6 @@ export default function FlashProvider({ children }: { children: React.ReactNode 
           </Toast>
         ))}
       </div>
-    </FlashContext.Provider>
+    </FlashContext>
   );
 }

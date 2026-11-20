@@ -1,13 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { useTranslation } from 'react-i18next';
 
 import { TextInput } from '../../components/TextInput';
 import { SubmitButton } from '../../components/SubmitButton';
 import { FormLayout } from '../../components/FormLayout';
 import { SelectInput } from '../../components/SelectInput';
 import { CreateTaskInput, createTaskSchema } from '../../../zodSchemas/task';
-import { useTranslation } from 'react-i18next';
 import { usePageErrorContext } from '../../context/PageErrorContext';
 import { useLocalizedForm } from '../../../hooks/useLocalizedForm';
 import { CREATE_TASK } from '../../../graphql/queries/tasks';
@@ -52,20 +51,20 @@ export default function NewTask() {
     return run(() => CreateTask({ 
       variables: {
         data: data,
-      }
+      },
     }), {
       sucessKey: 'flash.tasks.create.success',
       errorKey: 'flash.tasks.create.error',
       navigateTo: '/tasks',
-      setError
-    })
+      setError,
+    });
   };
 
   return (
-  <FormLayout
-    title={'views.tasks.new.create'}
-    providerMethods={methods}
-    onSubmit={onSubmit}
+    <FormLayout
+      title={'views.tasks.new.create'}
+      providerMethods={methods}
+      onSubmit={onSubmit}
     >
       <TextInput fieldName="name" label={t('views.tasks.new.name')} />
 

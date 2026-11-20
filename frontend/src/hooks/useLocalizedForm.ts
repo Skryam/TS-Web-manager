@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { useForm, UseFormProps, UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
+import { useEffect } from 'react';
+import { useForm, UseFormProps, UseFormReturn } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 
 export function useLocalizedForm<T extends object>(
-  props: UseFormProps<T>
+  props: UseFormProps<T>,
 ): UseFormReturn<T> {
   const { i18n } = useTranslation();
   const methods = useForm<T>(props);

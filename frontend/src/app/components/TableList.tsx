@@ -1,10 +1,9 @@
-import { Container, Table, Button, Alert, Modal } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useTranslation } from "react-i18next"
+import { Container, Table, Button, Alert, Modal } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { formatDate } from "../../utils/formatDate";
-import { ApolloClient } from "@apollo/client";
+import { formatDate } from '../../utils/formatDate';
 
 type Data = {
   id: string;
@@ -15,14 +14,14 @@ export interface TableConfig<T extends Data> {
   title: string;
 
   addButton?: {
-    page: string,
-    label: string
+    page: string;
+    label: string;
   };
 
   columns: Array<{
     name: string;
     label: string;
-    render?: (...options) => React.ReactNode
+    render?: (...options) => React.ReactNode;
   }>;
 
   data: Array<T>;
@@ -32,7 +31,7 @@ export interface TableConfig<T extends Data> {
   actionButtons: {
     editPageName: string;
     deleteAction: (id: string) => Promise<unknown>;
-  }
+  };
 }
 
 export function TableList<T extends Data>({ title, addButton, columns, data, showActionsIf, actionButtons }: TableConfig<T>) {
@@ -50,14 +49,14 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
     } catch (err: any) {
       let userMessage = t('components.tableList.deleteError');
 
-      if (err?.message?.includes("RESTRICT")) {
+      if (err?.message?.includes('RESTRICT')) {
         userMessage = t('components.tableList.restrictError');
       } else {
         userMessage = userMessage || err.message || userMessage;
       }
       setError(userMessage);
     }
-  }
+  };
 
   const [showDelete, setShowDelete] = useState(false);
   const [deleteId, setDeleteId] = useState('');
@@ -89,7 +88,7 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
       )}
 
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="mb-0">{title}</h2>
+        <h2 className="mb-0">{t(title)}</h2>
         {addButton && (
           <Button 
             variant="primary" 
@@ -151,8 +150,8 @@ export function TableList<T extends Data>({ title, addButton, columns, data, sho
                           size="sm" 
                           variant="outline-danger"
                           onClick={() => {
-                            setDeleteId(entity.id)
-                            setShowDelete(true)
+                            setDeleteId(entity.id);
+                            setShowDelete(true);
                           }}
                         >
                           {t('components.tableList.delete')}

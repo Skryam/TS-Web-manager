@@ -1,4 +1,4 @@
-import { gql, TypedDocumentNode } from "@apollo/client";
+import { gql, TypedDocumentNode } from '@apollo/client';
 
 export interface User {
   id: string;
@@ -31,7 +31,7 @@ interface DeleteUserVariables {
 interface DeleteUserData {
   deleteUser: {
     id: string;
-  }
+  };
 }
 
 interface UpdateUserData {
@@ -40,16 +40,16 @@ interface UpdateUserData {
     firstName: string;
     lastName: string;
     email: string;
-  }
+  };
 }
 
 interface UpdateUserVariables {
   id: string;
   data: {
-    firstName: string
-    lastName: string
-    email: string
-  }
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 }
 
 export const GET_USERS: TypedDocumentNode<GetUsersData> = gql`

@@ -1,12 +1,13 @@
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import { useFlash } from "./FlashProvider";
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+
+import { useFlash } from './FlashProvider';
 
 interface RunOptions {
-  sucessKey: string,
-  errorKey: string,
-  navigateTo?: string,
-  setError?: (error: any) => void
+  sucessKey: string;
+  errorKey: string;
+  navigateTo?: string;
+  setError?: (error: any) => void;
 }
 
 export const useRun = () => {
@@ -20,20 +21,20 @@ export const useRun = () => {
   ) => {
     try {
       const result = await fetch();
-    flash(t(sucessKey))
+      flash(t(sucessKey));
     
-    if (navigateTo) {
-      navigate(navigateTo)
-    }
+      if (navigateTo) {
+        navigate(navigateTo);
+      }
     
-    return result;
-  } catch (err) {
-    console.error(err)
-    flash(t(errorKey), 'danger')
+      return result;
+    } catch (err) {
+      console.error(err);
+      flash(t(errorKey), 'danger');
 
-    if (setError) {
-      setError(err)
+      if (setError) {
+        setError(err);
+      }
     }
-  }
-  }
-}
+  };
+};
